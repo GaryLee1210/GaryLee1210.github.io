@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "VLN 经典论文"
-date:   2026-09-01
+date:   2026-09-14
 tags: [VLN, VLA, Robotics, Computer Vision, Deep Learning]
 categories: research
 comments: true
@@ -7523,6 +7523,7 @@ SGM 构建（尤其是 SAM2 语义抽取与不确定性估计）推理开销较�
     { n: '20. CanonNav (2026)', a: 'canonnav', t: ['扩散模型', '连续环境', '实机部署'] },
     { n: '21. LookStep (2026)', a: 'lookstep', t: ['端到端', '连续环境', '加速优化', '实机部署'] },
     { n: '22. MacroAction-VLN (2026)', a: 'macroaction-vln', t: ['拓扑图', '强化学习', '连续环境'] },
+    { n: '23. NavMCP (2026)', a: 'navmcp', t: ['Agentic', '零样本', '实机部署', '连续环境'] },
   ];
 
   var ALL_TAGS = ['双系统', '端到端', 'Agentic', 'CoT', '扩散模型', '拓扑图', 'SLAM', '高斯表示',
