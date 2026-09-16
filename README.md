@@ -8,6 +8,10 @@
 [![Deploy](https://github.com/TingdeLiu/tingdeliu.github.io/actions/workflows/deploy.yml/badge.svg)](https://github.com/TingdeLiu/tingdeliu.github.io/actions/workflows/deploy.yml)
 [![Jekyll](https://img.shields.io/badge/Jekyll-4.3-CC0000?style=flat-square&logo=jekyll&logoColor=white)](https://jekyllrb.com/)
 
+[![Stars](https://img.shields.io/github/stars/TingdeLiu/tingdeliu.github.io?style=flat-square&logo=github&color=F5A623)](https://github.com/TingdeLiu/tingdeliu.github.io/stargazers)
+[![Code License: MIT](https://img.shields.io/badge/Code-MIT-3DA639?style=flat-square)](LICENSE)
+[![Content License: CC BY 4.0](https://img.shields.io/badge/Content-CC%20BY%204.0-EF9421?style=flat-square)](LICENSE-CONTENT)
+
 [访问网站](https://tingdeliu.github.io/) · [研究综述](https://tingdeliu.github.io/research/) · [技术博客](https://tingdeliu.github.io/blog/) · [开源项目](https://tingdeliu.github.io/home/) · [关于作者](https://tingdeliu.github.io/about/)
 
 </div>
@@ -20,7 +24,9 @@
 
 本站以系统梳理和持续更新为目标：既关注模型与数据的发展脉络，也关注训练方法、系统架构、评测基准和真实机器人部署。长篇综述用于建立完整的技术脉络，短篇文章用于记录阶段性观察与专题分析。
 
-目前收录 **15 篇研究综述与论文精读**（约 4.6 万行 Markdown）、**6 篇技术博客**、**按周更新的具身导航周报**与 **900 余张**论文与概念配图，仍在持续维护。
+目前收录 **17 篇研究综述与论文精读**（约 5.7 万行 Markdown）、**6 篇技术博客**、**按周更新的具身导航周报**与 **1000 余张**论文与概念配图，仍在持续维护。
+
+项目由 [@TingdeLiu](https://github.com/TingdeLiu) 创建并持续维护，自 2026-01-04 起连续 9 个月每月均有更新；读者通过文章反馈入口提交的 **5 条社区反馈已全部处理关闭**，完整记录见 [MAINTAINERS.md](MAINTAINERS.md)。
 
 ## 研究方向
 
@@ -94,7 +100,11 @@
 ├── tags/ · archive/       # 标签检索页与历史归档页
 ├── .github/workflows/     # GitHub Actions 部署流水线
 ├── _config.yml            # 站点、导航与插件配置
-└── AGENTS.md              # 仓库写作与维护规范（本地文件，未纳入版本控制）
+├── LICENSE                # 站点代码许可（MIT）
+├── LICENSE-CONTENT        # 原创内容许可（CC BY 4.0）+ 第三方图片例外声明
+├── CONTRIBUTING.md        # 反馈与贡献流程、写作约定
+├── SECURITY.md            # 安全报告渠道与著作权下架请求
+└── MAINTAINERS.md         # 维护者说明与社区反馈处理记录
 ```
 
 文章使用 Jekyll 内置的 `posts` 集合，永久链接为 `/:title/`。`categories` 取 `research` / `blog` / `weekly` 三值，是聚合页分区的唯一依据，`_posts/` 下的子目录仅用于维护源文件。
@@ -157,7 +167,7 @@ ruby -S bundle exec jekyll build
 
 ### 内容维护约定
 
-新增或修改文章前，请先阅读仓库根目录的 `AGENTS.md`（本地维护文档，未纳入版本控制），其中记录了 front matter 字段、图片归档目录、Mermaid 与公式写法等约定。其中一条硬性规则：**修改 `_posts/` 下任何已有文章后，必须把 front matter 的 `date:` 更新为当天日期**，以保证列表按最近更新排序。
+新增或修改文章前，请先阅读 [CONTRIBUTING.md](CONTRIBUTING.md)，其中记录了 front matter 字段、图片归档目录、Mermaid 与公式写法等约定。其中一条硬性规则：**修改 `_posts/` 下任何已有文章后，必须把 front matter 的 `date:` 更新为当天日期**，以保证列表按最近更新排序。
 
 ## 内容反馈
 
@@ -166,13 +176,49 @@ ruby -S bundle exec jekyll build
 - [提交 Issue](https://github.com/TingdeLiu/tingdeliu.github.io/issues/new)
 - 使用文章末尾的反馈入口提交错误报告、论文推荐或修改建议
 
-提交反馈时请尽量附上原始论文、官方文档或可复现资料，方便核验与更新。
+提交反馈时请尽量附上原始论文、官方文档或可复现资料，方便核验与更新。详细的提交格式与处理流程见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
-## 使用与引用
+维护者通常在 **3 个工作日内**首次回复，无论是否采纳都会说明理由。截至目前收到的 5 条外部反馈已 100% 处理关闭，逐条记录见 [MAINTAINERS.md](MAINTAINERS.md#社区反馈处理记录)。
 
-本仓库目前未附开源许可证。除非文件另有说明，仓库内容不构成对复制、修改或再分发的授权。部分论文图片与资料的版权属于原作者或原项目，使用时请遵循对应来源的许可要求。
+## 许可与使用
 
-引用本站研究笔记时，建议同时引用相关原始论文并附上对应文章链接。如需大段转载或复用站点主题，请先联系作者。
+本仓库采用**双许可**：代码与内容分开授权。
+
+| 部分 | 许可证 | 覆盖范围 |
+| --- | --- | --- |
+| **代码** | [MIT License](LICENSE) | `_layouts/` · `_includes/` · `_sass/` · `js/` · `style.scss` · `_config.yml` · `.github/workflows/` 等站点实现 |
+| **原创内容** | [CC BY 4.0](LICENSE-CONTENT) | `_posts/` 下全部文章正文、作者绘制的 Mermaid 图表与表格，以及仓库文档 |
+| **第三方论文图片** | ⚠️ **不在授权范围内** | `images/` 下取自论文、项目主页与官方文档的插图 |
+
+### ⚠️ 关于第三方论文图片
+
+`images/` 下的绝大多数图片是从学术论文中引用的插图（架构图、实验结果图等），**著作权归原论文作者及出版方所有**。本站基于学术评述与教学目的引用，**不拥有这些图片的著作权，因此无权以 CC BY 4.0 或任何其他条款转授权**。
+
+如需复用某张论文配图，请直接向原作者或出版方获取授权，或遵循该论文自身的许可条款（arXiv 页面会标注）。本站的合理引用基础**不会随转载传递给你**。详细说明见 [LICENSE-CONTENT](LICENSE-CONTENT) 第 4 节。
+
+若你是某张图片的权利人并认为使用超出合理引用范围，请按 [SECURITY.md](SECURITY.md) 中的著作权联系方式告知，核实后会及时移除或补充授权说明。
+
+### 引用本站
+
+复用原创内容时请按 CC BY 4.0 署名：
+
+```
+作者：Tingde Liu
+来源：https://tingdeliu.github.io/<文章链接>
+许可：CC BY 4.0
+```
+
+学术写作中引用本站结论时，**请同时引用相关原始论文**——本站的贡献在于筛选、翻译与评述，方法本身的功劳属于原作者。
+
+## 参与与维护
+
+| 文档 | 内容 |
+| --- | --- |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | 如何提交内容反馈与 PR、写作与图片约定、本地构建自查清单 |
+| [MAINTAINERS.md](MAINTAINERS.md) | 维护者身份与职责、完整的社区反馈处理记录、响应承诺、发布节奏 |
+| [SECURITY.md](SECURITY.md) | 安全问题的私密报告渠道、真实攻击面说明、著作权下架请求 |
+
+站点采用持续部署：推送 `main` 后由 GitHub Actions 构建并发布，线上版本始终对应 `main` 的最新提交。内容按需更新，不做版本化发布；需要引用某个确定时刻的版本时，可直接引用对应的 commit 链接。
 
 ## 联系方式
 

@@ -1,0 +1,125 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+Applies to: original written content of tingdeliu.github.io
+Copyright (c) 2026 Tingde Liu
+
+================================================================================
+1. 适用范围 / SCOPE
+================================================================================
+
+本许可证仅适用于本仓库中由 Tingde Liu 原创撰写的文字内容，具体包括：
+
+  - `_posts/` 下全部文章正文（研究综述、论文精读、技术博客、具身导航周报）
+  - 文章中由作者绘制的 Mermaid 图表、表格、公式推导与结构化整理
+  - `README.md`、`CONTRIBUTING.md`、`SECURITY.md`、`MAINTAINERS.md` 等仓库文档
+
+本仓库的**代码**（Jekyll 布局、样式、脚本、CI 配置等）不适用本许可证，改为适用
+根目录 `LICENSE` 中的 MIT License。代码与内容的分界见 README 的「许可与使用」一节。
+
+This license covers ONLY the original prose written by Tingde Liu, as listed
+above. Source code in this repository is licensed separately under the MIT
+License (see `LICENSE`).
+
+================================================================================
+2. 授权内容 / GRANT
+================================================================================
+
+在遵守下述署名条件的前提下，任何人可以自由地：
+
+  - **共享** —— 以任何媒介和格式复制、发行本内容
+  - **演绎** —— 修改、转换本内容，或基于本内容进行二次创作
+  - 以上权利适用于任何目的，**包括商业目的**
+
+许可方不得撤销上述授权。
+
+完整法律文本以 Creative Commons 官方版本为准：
+  https://creativecommons.org/licenses/by/4.0/legalcode
+中文说明：
+  https://creativecommons.org/licenses/by/4.0/deed.zh
+
+================================================================================
+3. 署名要求 / ATTRIBUTION
+================================================================================
+
+使用时须给出适当的署名、提供指向本许可证的链接，并注明是否作出了修改。
+
+建议的署名格式：
+
+  作者：Tingde Liu
+  来源：https://tingdeliu.github.io/<文章链接>
+  许可：CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+  修改：<说明是否修改，如"有删改"或"未修改">
+
+BibTeX：
+
+  @misc{liu_research_notes,
+    author       = {Tingde Liu},
+    title        = {Tingde Liu · Research Notes},
+    howpublished = {\url{https://tingdeliu.github.io/}},
+    year         = {2026},
+    note         = {Licensed under CC BY 4.0}
+  }
+
+不得以任何方式暗示许可方为你或你的使用背书。
+
+================================================================================
+4. 重要例外：第三方论文图片与引用材料
+================================================================================
+================================================================================
+IMPORTANT EXCEPTION: THIRD-PARTY FIGURES AND QUOTED MATERIAL
+================================================================================
+
+**`images/` 目录下的绝大多数图片不在本许可证的授权范围内。**
+
+本站文章大量引用学术论文中的插图（架构图、实验结果图、定性结果图等）用于
+评述与教学说明。这些图片的著作权归**原论文作者及其出版方**所有，而非本站作者。
+本站对这些图片**不拥有著作权，因此无权以 CC BY 4.0 或任何其他条款进行再授权**。
+
+具体而言，以下材料**明确排除**在本许可证之外：
+
+  (a) `images/` 下所有取自第三方论文、项目主页、官方文档的图片。这些图片在
+      文章中通常紧邻对应论文的引用或链接；图片文件名一般以论文/方法名开头
+      （例如 `images/vln/OccPlanner-architecture.webp` 取自 OccPlanner 论文）。
+
+  (b) 文章正文中引用的论文原文表述、实验数据表格中直接摘录的数值，其权利
+      归原作者所有。本站的贡献在于筛选、翻译、重组与评述，该部分适用 CC BY 4.0；
+      被引用的原始表述本身不适用。
+
+  (c) 任何在文件内、文章内或图注中另行声明了许可条款的材料，以该声明为准。
+
+**如果你要复用这些图片**，必须直接向原论文作者或出版方（如 IEEE、ACM、Springer）
+获取授权，或依据该论文自身的许可条款（例如 arXiv 上常见的 CC BY / CC BY-NC-ND，
+或出版方的转载政策）使用。本站的引用行为基于学术评述与教学目的的合理使用
+（fair use / fair dealing / 著作权法上的"适当引用"），这一基础**不会随图片的
+转载而传递给你**。
+
+作者已尽力在正文中标注每张图片的出处论文。若你是某张图片的权利人，认为本站的
+使用超出了合理引用范围，请通过 `SECURITY.md` 或 README 中的联系方式与作者联系，
+作者将在核实后及时移除或补充授权说明。
+
+--------------------------------------------------------------------------------
+
+Most images under `images/` are NOT covered by this license. They are figures
+reproduced from third-party academic papers for the purpose of commentary and
+teaching. Copyright in those figures remains with the original authors and
+publishers. This repository does not own them and therefore cannot sublicense
+them under CC BY 4.0 or any other terms.
+
+To reuse such a figure, obtain permission from the original rights holder or
+comply with that paper's own license (e.g. the arXiv license it was posted
+under, or the publisher's reprint policy). The fair-use / quotation basis on
+which this site includes them does NOT transfer to you.
+
+If you hold rights in a figure used here and believe the use exceeds fair
+quotation, please contact the author (see `SECURITY.md` / `README.md`); it will
+be removed or properly attributed promptly upon verification.
+
+================================================================================
+5. 免责声明 / DISCLAIMER
+================================================================================
+
+本内容按"现状"提供，不含任何明示或默示的保证。文章中的技术判断、性能数字与
+趋势分析代表作者在撰写时点的理解，可能存在错误或已经过时。用于学术引用或
+工程决策前，请回到原始论文与官方文档核实。
+
+To the extent possible under law, the content is provided "as is" without
+warranties of any kind.

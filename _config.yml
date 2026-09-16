@@ -114,7 +114,11 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - LICENSE
+  - LICENSE-CONTENT
   - README.md
+  - CONTRIBUTING.md
+  - SECURITY.md
+  - MAINTAINERS.md
   - CNAME
   - tmp
   - new_paper
