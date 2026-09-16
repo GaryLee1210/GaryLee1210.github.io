@@ -77,7 +77,8 @@ _posts/weekly-reports/  # 具身导航周报         →  categories: weekly
 - 放在 `images/<主题>/` 下，主题目录沿用现有划分：`vln` / `vla` / `vlm` / `wm` /
   `si` / `agent` / `llm-training` / `robotics_navigation` 等
 - 命名用 `<论文或方法名>-<内容>.webp`，例如 `OccPlanner-architecture.webp`
-- 统一转为**无损 WebP** 后提交，不要提交原始 PNG/JPG
+- **位图**（论文截图、架构图、实验结果图）统一转为**无损 WebP** 后提交，不要提交原始 PNG/JPG
+- **矢量示意图保留 SVG**、**算法演示动画保留 GIF**——这两类转 WebP 只会掉质量或丢失动画，不要转
 - **来源论文必须在正文中标注**
 
 > ⚠️ **关于第三方图片的重要提醒**

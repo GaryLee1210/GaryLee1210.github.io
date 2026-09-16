@@ -50,6 +50,7 @@
 | | [强化学习综述](https://tingdeliu.github.io/Reinforcement-Learning-Survey/) | 从理论基础到具身智能场景的算法全景 |
 | | [深度学习综述](https://tingdeliu.github.io/Deep-Learning-Survey/) | 网络结构、优化方法与训练技巧的系统梳理 |
 | | [机器学习综述](https://tingdeliu.github.io/Machine-Learning-Survey/) | 经典模型与统计学习基础 |
+| **工程实践** | [现代 Python 工程实践指南](https://tingdeliu.github.io/Python-Engineering-Survey/) | 环境与依赖边界、src 布局与 pyproject、uv 锁文件的真实保证范围、质量与 CI 流水线，以及 CUDA 依赖分层、ROS 2 与虚拟环境的兼容边界、实验可复现的四个层次 |
 
 ### 技术博客
 
@@ -68,11 +69,12 @@
 
 | 期号 | 覆盖区间 |
 | --- | --- |
+| [2026-09-12](https://tingdeliu.github.io/vln-weekly-2026-09-12/) | 2026-09-02 ~ 2026-09-10 |
 | [2026-09-05](https://tingdeliu.github.io/vln-weekly-2026-09-05/) | 2026-08-26 ~ 2026-09-03 |
 | [2026-08-30](https://tingdeliu.github.io/vln-weekly-2026-08-30/) | 2026-08-20 ~ 2026-08-29 |
 | [2026-08-22](https://tingdeliu.github.io/vln-weekly-2026-08-22/) | 2026-08-13 ~ 2026-08-20 |
 
-往期周报见 [Blog 页](https://tingdeliu.github.io/blog/) 的「具身导航周报」分区。
+后续新增周报同样发布在 [Blog 页](https://tingdeliu.github.io/blog/) 的「具身导航周报」分区。
 
 ### 推荐阅读路径
 
@@ -91,6 +93,7 @@
 │   ├── blog/              # 专题解析与工程文章（categories: blog）
 │   └── weekly-reports/    # 具身导航周报（categories: weekly）
 ├── images/                # 按研究主题分目录：vln / vla / vlm / wm / si / agent / llm-training ...
+├── Analysis/              # 专题技术分析报告（VLN 技术分析、Waypoint 候选方法）
 ├── paper_summary/         # 论文摘要草稿，供正文引用（本地目录，未纳入版本控制）
 ├── _layouts/              # 页面布局：default / post / page
 ├── _includes/             # 导航、目录、反馈、页脚等页面组件
@@ -119,7 +122,7 @@
 - **Jekyll 插件**：`jekyll-sitemap`、`jekyll-feed`、`jekyll-paginate`、`jekyll-seo-tag`
 - **阅读体验**：章节目录抽屉（随滚动高亮当前小节）、顶部阅读进度条、代码块一键复制、标题锚点复制、配图点击放大、宽表格横向滚动、返回顶部
 - **论文检索**：VLN 与 Embodied Agent 论文精读内置交互式标签筛选栏，支持按多维技术特征实时过滤（VLN 篇支持跨篇联动）
-- **图片资源**：正文配图统一转为无损 WebP 交付，兼顾清晰度与加载速度
+- **图片资源**：论文与概念位图统一转为无损 WebP 交付（888 / 1003），兼顾清晰度与加载速度；算法演示动画保留 GIF，矢量示意图保留 SVG，均不作有损转换
 - **内容反馈**：文章末尾一键提交 Issue（报告错误 / 推荐论文 / 修改建议），并回显相关 Issue 状态
 - **部署**：推送 `main` 分支后由 GitHub Actions 构建并发布到 GitHub Pages
 
