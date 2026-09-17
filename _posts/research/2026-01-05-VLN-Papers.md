@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "VLN 经典论文"
-date:   2026-09-16
+date:   2026-09-17
 tags: [VLN, VLA, Robotics, Computer Vision, Deep Learning]
 categories: research
 comments: true
@@ -44,6 +44,7 @@ excerpt: "本文系统梳理VLN领域的经典论文，涵盖DualVLN、StreamVLN
  | [VLN-Cache(单目)](#vln-cache) | 2026 | R2R-CE | Qwen2.5-VL-7B | 63.1 | 57.6 | – | – | 否 |
 | [ReflectVLN(单目)](#reflectvln) | 2026 | R2R-CE | Qwen2.5-VL-3B | 62.8 | 58.5 | 4.19 | 67.3 | [是](https://github.com/AIprogrammer/ReflectVLN) |
  | [GA-VLN(单目)](#ga-vln) | 2026 | R2R-CE | LLaVA-Video-7B | 61.0 | 55.2 | 4.80 | 67.6 | [是](https://github.com/jahhaoyang/GA-VLN) |
+| [HarnessVLN](#harnessvln) | 2026 | R2R-CE | GPT-5.5 | 60.8 | 43.5 | 4.01 | 72.7 | 否 |
  | [JanusVLN(单目)](#janusvln) | 2026 | R2R-CE | Janus-Pro-7B | 60.5 | 56.8 | 4.78 | 65.2 | [是](https://github.com/MIV-XJTU/JanusVLN) |
 | [MemVLN-8B(单目)](#memvln) | 2026 | R2R-CE | Qwen3-VL-8B | 58.4 | 51.2 | 4.98 | 65.3 | 否 |
  | [BudVLN(单目)](#budvln) | 2026 | R2R-CE | LLaVA-1.5-7B | 57.6 | 51.1 | – | – | [是](https://github.com/Beat992/CDC2F) |
@@ -83,6 +84,7 @@ excerpt: "本文系统梳理VLN领域的经典论文，涵盖DualVLN、StreamVLN
  | [RynnBrain-Nav (单目)](#rynnbrain) | 2026 | RxR-CE | – | 56.1 | – | 4.92 | – | [是](https://github.com/alibaba-damo-academy/RynnBrain) |
  | [GA-VLN (单目)](#ga-vln) | 2026 | RxR-CE | LLaVA-Video-7B | 55.4 | 45.2 | 5.88 | 67.0 | [是](https://github.com/jahhaoyang/GA-VLN) |
 | [DecoVLN(单目)](#decovln) | 2026 | RxR-CE | LLaVA-Video-7B | 54.2 | 46.3 | 5.73 | – | [是](https://github.com/Allenxinn/DecoVLN) | – |
+| [HarnessVLN](#harnessvln) | 2026 | RxR-CE | GPT-5.5 | 53.9 | 38.0 | 6.42 | – | 否 |
  | [StreamVLN (单目)](#streamvln) | 2025 | RxR-CE | LLaVA-Video-7B | 52.9 | 46.0 | 6.22 | – | [是](https://github.com/OpenRobotLab/StreamVLN) |
  | [Goal2Pixel (单目)](#goal2pixel) | 2025 | RxR-CE | LLaVA-1.5-7B | 43.8 | 40.4 | 7.50 | – | 否 |
  | [HSGM (单目)](#hsgm) | 2026 | RxR-CE | – | 41.8 | 25.1 | 7.43 | – | [是](https://github.com/Teacher-Tom/HSGM_public) |
@@ -129,8 +131,9 @@ excerpt: "本文系统梳理VLN领域的经典论文，涵盖DualVLN、StreamVLN
  | [3DGSNav (单目)](#nav-3dgs) | 2026 | HM3D-v1 | GPT-4o | 80.0 | 51.8 | 否 |
 | [LightNav-0(单目)](#lightnav-0) | 2026 | HM3D v2 | Qwen3-VL-4B | 79.5 | 43.7 | [是](https://github.com/lightorigins/LightNav-0) |
  | [VLingNav (单目)](#vlingnav) | 2026 | HM3D-v1 | LLaVA-Video-7B | 79.1 | 42.9 | [是](https://github.com/wsakobe/VLingNav-web) |
- | [NavDP (单目)](#navdp) | 2025 | Clutter/Intern (Point-Goal) | – | 77.8 | 74.8 | [是](https://github.com/InternRobotics/NavDP) |
+ | [NavDP (单目)](/VLN-Papers-Extended/#navdp) | 2025 | Clutter/Intern (Point-Goal) | – | 77.8 | 74.8 | [是](https://github.com/InternRobotics/NavDP) |
 | [ABot-N1](#abot-n1) | 2026 | ABotN-POIBench | Qwen-3.5-4B + 2B | 77.3 | 72.6 | [是](https://github.com/amap-cvlab/ABot-Navigation/tree/ABotN-Bench) |
+| [HarnessVLN](#harnessvln) | 2026 | HM3D-v2 | GPT-5.6-luna | 76.0 | 37.9 | 否 |
  | [Qwen-RobotNav (单目)](#qwen-robotnav) | 2026 | HM3Dv2 | Qwen3-VL-2B | 75.6 | 30.6 | 否 |
  | [3DGSNav (单目)](#nav-3dgs) | 2026 | HM3D-v2 | GPT-4o | 75.0 | 44.2 | 否 |
  | [GaussNav (单目)](/VLN-Papers-Extended/#gaussnav) | 2025 | HM3D（实例图像） | – | 72.5 | 57.8 | [是](https://github.com/XiaohanLei/GaussNav) |
@@ -139,6 +142,7 @@ excerpt: "本文系统梳理VLN领域的经典论文，涵盖DualVLN、StreamVLN
  | [EvoMemNav (单目)](#evomemnav) | 2026 | HM3D-v2 | Qwen-8B | 63.8 | 39.4 | [是](https://github.com/caicaiya123/EvoMemNav) |
  | [VLingNav (单目)](#vlingnav) | 2026 | HM3D (实例图像) | LLaVA-Video-7B | 60.8 | 37.4 | [是](https://github.com/wsakobe/VLingNav-web) |
  | [EvoMemNav (单目)](#evomemnav) | 2026 | GOAT-Bench | Qwen-8B | 59.6 | 38.9 | [是](https://github.com/caicaiya123/EvoMemNav) |
+| [HarnessVLN](#harnessvln) | 2026 | HM3D-OVON | GPT-5.6-luna | 59.3 | 36.6 | 否 |
  | [EvoMemNav (单目)](#evomemnav) | 2026 | HM3D-v1 | Qwen-8B | 59.2 | 33.6 | [是](https://github.com/caicaiya123/EvoMemNav) |
  | [OmniNav (多目)](#omninav) | 2026 | HM3D-OVON (Object-Goal) | Qwen2.5-VL-3B | 59.2 | 33.2 | [是](https://github.com/amap-cvlab/OmniNav) |
  | [VLingNav (单目)](#vlingnav) | 2026 | MP3D | LLaVA-Video-7B | 58.9 | 26.5 | [是](https://github.com/wsakobe/VLingNav-web) |
@@ -154,7 +158,7 @@ excerpt: "本文系统梳理VLN领域的经典论文，涵盖DualVLN、StreamVLN
  | [JanusVLN (单目)](#janusvln) | 2026 | HM3D-OVON | Janus-Pro-7B | 44.9 | 31.7 | [是](https://github.com/MIV-XJTU/JanusVLN) |
  | [3DGSNav (单目)](#nav-3dgs) | 2026 | MP3D | GPT-4o | 43.6 | 21.3 | 否 |
  | [PanoNav (全景)](#panonav) | 2025 | HM3D | LLaVA-1.5-7B | 43.5 | 23.7 | 否 |
- | [NavDP (单目)](#navdp) | 2025 | Clutter/Intern (Image-Goal) | – | 43.4 | 41.4 | [是](https://github.com/InternRobotics/NavDP) |
+ | [NavDP (单目)](/VLN-Papers-Extended/#navdp) | 2025 | Clutter/Intern (Image-Goal) | – | 43.4 | 41.4 | [是](https://github.com/InternRobotics/NavDP) |
 | [LocalNav (Claude) (单目)](#localnav) | 2026 | HM3D-OVON | Claude 3.5 Sonnet | 39.7 | 19.7 | 否 |
 | [LocalNav (Qwen) (单目)](#localnav) | 2026 | HM3D-OVON | Qwen3.5-4B | 34.5 | 17.2 | 否 |
 
@@ -257,7 +261,7 @@ VLN 任务要求智能体在无先验全局地图的 3D 环境中，仅依靠局
 
 * **语言指令编码器 (Language Instruction Encoder)**：
   * **输入**：自然语言指令 token 序列 $\bar{x} = \langle x_1, x_2, \dots, x_L \rangle$。
-  * **处理**：将词嵌入向量逆序（Reverse order）依次送入单层编码器 LSTM，计算隐状态 $h_i = \text{LSTM}_{\text{enc}}(x_i, h_{i-1})$。
+  * **处理**：将词嵌入向量逆序（Reverse order）依次送入单层编码器 LSTM，计算隐状态 $$h_i = \text{LSTM}_{\text{enc}}(x_i, h_{i-1})$$。
   * **输出**：生成编码上下文序列 $\bar{h} = \{h_1, h_2, \dots, h_L\}$，供后续注意力机制对齐。
   * **设计动机**：逆序输入语言序列能在处理序列开头时保持较短的记忆梯度距离，提升早期导航决策质量。
 
@@ -272,7 +276,7 @@ VLN 任务要求智能体在无先验全局地图的 3D 环境中，仅依靠局
   * **输入**：解码器隐状态 $h'_t$ 与语言编码上下文 $\bar{h}$。
   * **处理**：使用 Luong 全局注意力计算文本上下文向量 $c_t = f(h'_t, \bar{h})$，进而合成注意力隐状态：
     $$\tilde{h}_t = \tanh(W_c [c_t; h'_t])$$
-  * **输出**：通过 Softmax 预测离散动作分布 $a_t = \text{softmax}(\tilde{h}_t)$。
+  * **输出**：通过 Softmax 预测离散动作分布 $$a_t = \text{softmax}(\tilde{h}_t)$$。
   * **动作空间**：在简化模型中包含 6 种离散动作：`left`（左转 30°）、`right`（右转 30°）、`up`（仰角 +30°）、`down`（俯角 -30°）、`forward`（沿视角中央最近相邻视点前进）与 `stop`（终止导航）。
 
 #### ③ 训练目标与损失函数
@@ -281,7 +285,7 @@ VLN 任务要求智能体在无先验全局地图的 3D 环境中，仅依靠局
 
 $$L = -\sum_{t=1}^T \log P(a_t^* \mid s_0, a_0, \dots, s_t)$$
 
-其中真值目标动作 $a_t^*$ 为智能体当前状态 $s_t = \langle v_t, \psi_t, \theta_t \rangle$ 到目标视点 $v^*$ 在拓扑图 $G$ 上的最短路径下一步动作。
+其中真值目标动作 $$a_t^*$$ 为智能体当前状态 $s_t = \langle v_t, \psi_t, \theta_t \rangle$ 到目标视点 $$v^*$$ 在拓扑图 $G$ 上的最短路径下一步动作。
 
 #### ④ 训练范式对比 (Teacher-Forcing vs. Student-Forcing)
 
@@ -290,8 +294,8 @@ $$L = -\sum_{t=1}^T \log P(a_t^* \mid s_0, a_0, \dots, s_t)$$
 <figcaption>训练过程中验证集损失、导航误差与成功率变化曲线。模型在已见场景（Seen）持续提升，但在未见场景（Unseen）迅速过拟合。</figcaption>
 </div>
 
-* **Teacher-forcing**：在训练阶段每一步强行使用真值动作 $a_t^*$ 作为下一步输入。模型仅能在真值最短路径状态上训练，一旦推理中偏离路径即产生暴露偏差（Exposure Bias）。
-* **Student-forcing**（在线采样 / DAgger 变体）：训练阶段从模型预测的分布中采样动作 $a_t$ 并让智能体实际移动。若偏离原路径，系统在线重新计算当前位置到目标的最新最短路径动作作为 $a_t^*$ 继续监督。实验表明该范式能显著提升模型对导航偏差的自愈能力。
+* **Teacher-forcing**：在训练阶段每一步强行使用真值动作 $$a_t^*$$ 作为下一步输入。模型仅能在真值最短路径状态上训练，一旦推理中偏离路径即产生暴露偏差（Exposure Bias）。
+* **Student-forcing**（在线采样 / DAgger 变体）：训练阶段从模型预测的分布中采样动作 $a_t$ 并让智能体实际移动。若偏离原路径，系统在线重新计算当前位置到目标的最新最短路径动作作为 $$a_t^*$$ 继续监督。实验表明该范式能显著提升模型对导航偏差的自愈能力。
 
 ---
 
@@ -740,7 +744,7 @@ VLFM系统架构：初始化、语义前沿探索、目标导航三阶段流程
    - **错误定位预测头 (Error Localization Head, $f_l$)**：输入融合后的文本 token 序列，利用独立的 MLP（由 $\mathbb{R}^D \to \mathbb{R}^W$）预测每一个 token 为错误词的概率，实现细粒度的错误词定位。
 
 3. **训练目标 / 损失函数**：
-   采用多任务联合训练，损失函数由匹配分类损失 $\mathcal{L}_d$（采用二元交叉熵损失）与词级定位损失 $\mathcal{L}_l$（对指令中每个 token 计算标准交叉熵并求和）加权组成：
+   采用多任务联合训练，损失函数由匹配分类损失 $$\mathcal{L}_d$$（采用二元交叉熵损失）与词级定位损失 $$\mathcal{L}_l$$（对指令中每个 token 计算标准交叉熵并求和）加权组成：
    $$\mathcal{L} = \lambda_1 \mathcal{L}_d + \frac{\lambda_2}{E} \sum_{i=1}^{E} \mathcal{L}_l$$
    其中 $E$ 是指令中实际含有的错误词数量，$\lambda_1$ 和 $\lambda_2$ 为平衡权重参数（实验中均设为 1）。
 
@@ -824,7 +828,7 @@ NaVid 建立在通用视频语言大模型 LLaMA-VID 框架之上，由**视觉�
 #### ② 逐模块讲解
 
 - **视觉编码器与双路 Observation Token 编码**
-  - **输入**：从起始时刻 $0$ 到当前时刻 $t$ 的单目 RGB 视频帧序列 $\mathcal{O}_t = \{x_0, x_1, \dots, x_t\}$。每帧输入视觉编码器 EVA-CLIP 提取 patch 嵌入 $X_t \in \mathbb{R}^{N_x \times C}$（其中 $N_x = 256$）。
+  - **输入**：从起始时刻 $0$ 到当前时刻 $t$ 的单目 RGB 视频帧序列 $$\mathcal{O}_t = \{x_0, x_1, \dots, x_t\}$$。每帧输入视觉编码器 EVA-CLIP 提取 patch 嵌入 $X_t \in \mathbb{R}^{N_x \times C}$（其中 $N_x = 256$）。
   - **处理过程**：
     1. **指令相关 Token（Instruction-Queried Tokens $E_t^Q$）**：利用 Q-Former 查询生成器 $G_Q$ 结合文本指令 $I$ 与图像特征 $X_t$ 生成指令感知 Query $Q_t$，通过 Cross-Attention 交叉注意力与均值池化（Pool）压缩为单 token 表达 $E_t^Q \in \mathbb{R}^{1 \times C}$。
     2. **指令无关 Token（Instruction-Agnostic Tokens $E_t^V$）**：对图像特征 $X_t$ 执行 Grid Pooling 网格池化，将 $N_x$ 个特征压缩为 $N_v$ 个几何 token。为了兼顾计算效率与空间几何保留，当前帧 $x_t$ 设置 $N_v = 64$，而历史帧 $x_{0..t-1}$ 大幅压缩至每帧 $N_v = 4$。
@@ -858,7 +862,7 @@ NaVid 建立在通用视频语言大模型 LLaMA-VID 框架之上，由**视觉�
 #### ④ 训练目标 / 损失函数
 NaVid 采用标准自回归交叉熵损失（Autoregressive Cross-Entropy Loss）进行端到端微调：
 $$\mathcal{L}_{CE} = -\sum_{i=1}^N \log P\left(y_i \mid y_{<i}, \mathbf{X}_{obs}, \mathbf{X}_{inst}\right)$$
-其中 $y_i$ 表示输出文本序列（包含推理过程与定量动作命令）的第 $i$ 个 token，$\mathbf{X}_{obs}$ 为编码后的视频观察 token，$\mathbf{X}_{inst}$ 为指令 token。
+其中 $y_i$ 表示输出文本序列（包含推理过程与定量动作命令）的第 $i$ 个 token，$$\mathbf{X}_{obs}$$ 为编码后的视频观察 token，$$\mathbf{X}_{inst}$$ 为指令 token。
 
 #### ⑤ 推理流程
 在在线导航过程中，机器人单目 RGB 相机实时采集视频流。系统维护滑动观察缓冲区，抽取历史帧（每帧 4 token）与当前帧（64 token），拼接文本指令后送入 NaVid。大模型自回归解码输出动作文本，经正则解析器直接转化为底层控制命令（如前进 75cm），无需构建任何显式地图。
@@ -1289,113 +1293,7 @@ Social-VLN 仿真与真机避障实测：在 Habitat 3.0 仿真环境中注入�
 
 
 
-## 10. NavDP (2025) {#navdp}
-——只用仿真数据训练，零样本迁移到真实机器人的导航扩散策略
-
-📄 **Paper**: [arXiv:2505.08712](https://arxiv.org/abs/2505.08712) · 🏛️ **ICRA 2026** · [Code](https://github.com/InternRobotics/NavDP)
-
-> 一句话概括：NavDP 用**纯仿真数据**训练一个端到端导航网络，靠"**扩散模型生成多条候选轨迹 + Critic 打分选最安全的一条**"这一组合，做到**零样本 sim-to-real**、并能直接换装到 TurtleBot / Unitree Go2 / G1 / Galaxea R1 等不同形态的机器人上，全程不需要地图、不需要任何真机训练数据。
-
-**研究背景/问题**
-
-机器人要在动态、非结构化的开放世界里导航，理想状态是"换个机器人、换个场景都能直接用"。但现有两条路线都有硬伤：
-
-- **传统模块化方法**（感知 → 建图 → 定位 → 规划）：系统延迟大、模块间误差层层累积，且要反复手调超参数；
-- **学习型方法**：受限于真实数据稀缺。靠真机遥操作采数据又慢又贵，难以 scale up。
-
-NavDP（上海 AI Lab）的破题思路是**全面拥抱仿真数据**——仿真场景可以无限生成、自带"上帝视角"的特权信息（全局最优路径、全局 ESDF 距离场）。导航任务的物理交互远少于机械臂操作（manipulation），sim-to-real gap 本就更小，配合域随机化与高真实感渲染就能进一步弥合。问题随之变成两点：(1) 如何把仿真里的特权信息有效"蒸馏"进策略？(2) 如何保证策略在没见过的真实场景里**安全**？NavDP 的答案分别是**模仿学习生成轨迹**和**对比式 Critic 评估轨迹**。
-
-**NavDP 在双系统框架中的定位**：NavDP 扮演快慢双系统（Fast-Slow System）里的 **System 1**——负责高频、实时的局部避障与路径规划，可无缝挂到 VLM 驱动的 System 2（负责语义理解、任务分解、长期记忆）之下，构成完整的开放世界导航能力。本文专注 System 1。
-
-<div align="center">
-  <img src="/images/vln/NavDP-overview.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1421/954" />
-<figcaption>NavDP 全貌：左上的可扩展数据引擎（海量仿真场景 + 按本体规划 + 域随机化 + 并行渲染）产出训练数据 → 中间的导航扩散策略（无任何真机数据，同时学"生成轨迹"与"评估轨迹"）→ 右侧推理时先生成多条候选再选出安全轨迹 → 底部展示零样本迁移到多种真实机器人。</figcaption>
-</div>
-
-**主要方法/创新点**
-
-NavDP 由两大支柱组成：**(A) 可扩展的仿真数据引擎**，负责高效造数据；**(B) 统一的策略 Transformer**，在一个共享网络里同时学"生成轨迹"（Actor 头）和"评估轨迹安全性"（Critic 头）。下面逐一拆解。
-
-**(A) 可扩展仿真数据引擎（DataEngine）**
-
-目标是把"造导航数据"做到又快又多样。流程是：
-
-1. **场景与本体建模**：机器人简化为半径 $r_b=0.25\text{m}$ 的圆柱 + 两轮差速模型；为模拟不同机器人，**随机化机器人高度**（0.25–1.25 m）与**相机俯仰角**（−30°–0°），并提供两套相机 FOV（RealSense D435i 与 Zed 2）。高于相机配置高度的物体不计为障碍——这让"矮机器人能钻、高机器人要绕"成为数据里天然存在的常识。
-2. **生成无碰撞轨迹**：把场景网格体素化（0.05 m）算出可通行区的 **ESDF（欧氏符号距离场）**；A\* 规划初始路径后，对每个路径点在局部做贪心搜索**把它推离障碍更远**，最后用三次样条插值平滑成连续轨迹。
-3. **域随机化 + 并行渲染**：用 BlenderProc 渲染照片级 RGB-D，并施加**光照 / 纹理 / 视角**三类随机化提升多样性。
-
-效率上达到 **2500 条轨迹 / GPU / 天**，比真机采集快约 **20×**；最终数据集覆盖 **3154 个场景、约 1627 km、452 小时、4000 万张图片**（见论文 Table I），在规模与多样性上全面超越以往导航数据集。
-
-**(B) 统一策略 Transformer（一个网络，两个任务）**
-
-<div align="center">
-  <img src="/images/vln/NavDP-architecture.webp" width="90%" loading="lazy" decoding="async" style="aspect-ratio:712/866" />
-<figcaption>网络架构：多模态 RGB-D 融合 + 目标编码作为 Key/Value，轨迹经 Action Encoding 作为 Query，送入共享的 Transformer Decoder，再分出 Actor 头（预测扩散噪声 = 生成轨迹）与 Critic 头（预测安全分 = 评估轨迹）。两个任务**共享全部权重**，仅靠不同的 Query 与注意力掩码区分。</figcaption>
-</div>
-
-**① 多模态编码（输入怎么进网络）**
-- **RGB**：取最近 $N=8$ 帧，用预训练并**冻结**的 DepthAnything 编码器，每帧抽 256 个 patch token（带入时序信息）。
-- **深度**：只取**单帧**深度，用一个**从零训练**的 ViT 编码（为对齐绝对物理尺度，利于轨迹生成）；因深度图有 sim-to-real gap，只保留 (0.1 m, 5 m) 范围。
-- **融合压缩**：用带可学习 query 的轻量 transformer decoder，把 $(N+1)\times 256$ 个 token 压缩成 $N\times 16$ 个紧凑 token，降低后续计算量。
-- **目标编码**：遵循 PointGoal 定义，目标是相对当前位姿的 2D 坐标 $(x_g, y_g)$，经 MLP 投影到同一维度；**无目标（NoGoal）探索任务**则用全零张量当目标嵌入。
-
-**② Actor 头——扩散式轨迹生成**
-把专家轨迹按 DDPM 加噪，网络学习**预测被注入的噪声**，推理时从高斯噪声反复去噪得到一条由 $M=24$ 个密集路径点构成的轨迹。扩散过程天然能建模专家演示的**多模态分布**（同一处可能有"左绕"和"右绕"两条都对的路）。训练同时覆盖 PointGoal 与 NoGoal 两种目标，损失为两者噪声预测 MSE 的加权和（默认各 0.5）。
-
-**③ Critic 头——对比式轨迹评估（本文最关键创新）**
-这是 NavDP 区别于普通扩散策略的灵魂。纯模仿学习只见过"正确轨迹"，无法判断一条轨迹有多危险。NavDP 借用强化学习里的 **Critic 价值函数**思想：利用仿真里现成的全局 ESDF，给任意轨迹打一个"安全分"。具体地，对增广后的轨迹 $\hat\tau$，其在第 $m$ 个路径点上的 ESDF 值记作 $$d_{\hat\tau}^{m}$$，标签价值定义为：
-
-$$V(\hat\tau) = \gamma \cdot \sum_{m=0}^{M}(d_{\hat\tau}^{m+1} - d_{\hat\tau}^{m}) + \lambda \cdot \frac{1}{M}\sum_{m=0}^{M}\mathbb{I}(d_{\hat\tau}^{m} < d_{safe})$$
-
-直观理解：第一项奖励"越走离障碍越远"的趋势，第二项惩罚"靠得太近（小于安全阈值 $d_{safe}=0.5\text{m}$）"的路径点。训练时把专家轨迹做**随机旋转增广**，人为造出"碰撞 / 不碰撞"的对比样本喂给 Critic，让它学会区分安全与危险行为。
-
-> **关键 insight**：仿真专家轨迹因超参难调，常有轻微"贴边"现象。Critic 的真正价值不只是过滤碰撞，而是从一批候选里挑出**安全裕度最大**的那条，从而系统性提升 sim-to-real 的鲁棒性。
-
-**④ 推理流程：先生成、再选择**
-推理时 NavDP 先用 Actor 头**一次性生成一批候选轨迹**，再用 Critic 头给每条打分，**选出价值最高（最安全）的一条**执行。这就是"扩散生成多样性 + Critic 把关安全性"的两阶段闭环。下图把预测轨迹投影回图像、按 Critic 分值上色，蓝色=危险、红色=安全，直观展示 Critic 学到的空间常识：
-
-<div align="center">
-  <img src="/images/vln/NavDP-critic-visualization.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1413/565" />
-<figcaption>不同机器人（Unitree G1 / Go2 / Galaxea R1）上的候选轨迹可视化：颜色由 Critic 价值决定，越蓝风险越高、越红越安全。即使存在行人干扰、运动模糊、光照变化，NavDP 仍能选出安全路径。</figcaption>
-</div>
-
-**训练配置**：整个网络**单阶段联合训练** Actor + Critic 两个损失之和；扩散步数 10、预测路径点 $M=24$、RGB 历史 $N=8$、安全阈值 0.5 m，用 32 张 A100、batch 2048 训练。
-
-**核心结果/发现**
-
-- **PointGoal 点目标导航**：仿真中 SR 67.2 / SPL 62.6，比此前最强的 ViPlanner（60.9 / 58.6）高 **+6.3% SR**；真机跨本体平均 SR 76.7%，比 ViPlanner（53.3%）高 **+23.4%**，在 TurtleBot 9/10、Go2 7/10、G1 7/10 上全面领先。
-- **NoGoal 无目标探索**：仿真平均无碰撞时长是 NoMaD 的 **2.9×**、探索面积 **3.1×**；真机探索时长达 **3.8×**，展现极强的零样本泛化与避障一致性。
-- **三类失败模式对比**（Fig. 4）：iPlanner/ViPlanner 用单帧输入导致**时序不一致**（相机过了障碍但机体没过，路径突变引发碰撞）、对**深度噪声敏感**、被**带洞的不规则障碍几何"骗"**而试图穿墙；NavDP 凭多帧时序 + Critic 把关都能稳健处理。
-- **消融实验**（Table V，验证三组因素）：
-  - **RGB-D 融合不可或缺**：去掉深度 −10.3% SR，去掉 RGB −5.1% SR，单帧替代多帧 −2.8% SR。
-  - **Critic 是安全性的关键**：同权重下改用随机选轨迹（去掉 Critic 选择）−7.8% SR；去掉对比轨迹增广 −3.0% SR（家居场景）。
-  - **NoGoal 是有用的辅助任务**：联合训练 NoGoal 让 PointGoal 反而 +2.1% SR / +1.8% SPL。
-- **域随机化对跨本体至关重要**（Q5 / Fig. 6）：若只用矮机器人（< 0.5 m）数据训练，高个子 Galaxea R1 学不会"绕开桌子"的策略，成功率从 **90% 暴跌到 20%**（−70%），而矮个子 Go2 基本不受影响——证明**跨本体数据的多样性**才是泛化的根本。
-
-<div align="center">
-  <img src="/images/vln/NavDP-cross-embodiment-ablation.webp" width="60%" loading="lazy" decoding="async" style="aspect-ratio:697/796" />
-<figcaption>跨本体数据消融：场景 B 中矮机器人 Go2 可"钻桌底"、高机器人 Galaxea R1 必须"绕行"。缺少跨本体训练数据时，R1 学不到绕行策略，成功率从 90% 跌到 20%。</figcaption>
-</div>
-
-**局限性与未来方向**
-
-NavDP 性能高度依赖高质量仿真数据；扩散模型多步去噪虽带来轨迹多样性，但相比直接回归计算开销更大。作者点明三个未来方向：
-
-1. **显式本体信息编码**：当前仅从数据分布隐式学习运动约束，无法明确感知自身体型；理想系统应能判断"这条缝我过不去"，即把机器人几何参数作为显式条件引入决策。
-2. **运动技能与路径规划联合设计**：当前避障默认"只能行走绕行"；在极端地形（需跳跃 / 跨越）下，规划器应结合自身运动能力上限做更合理的通过 / 绕行决策。
-3. **高效后训练 + 语言目标 + 全局记忆**：探索后训练策略提升真机表现，把目标扩展到自然语言指令，并引入全局记忆支持长时探索。
-
----
-
-
-
-
-
-
-
-
-
-## 11. ODYSSEY (2025) {#odyssey}
+## 10. ODYSSEY (2025) {#odyssey}
 ——Open-World Quadrupeds Exploration and Manipulation for Long-Horizon Tasks
 
 📄 **Paper**: [arXiv:2508.08240](https://arxiv.org/abs/2508.08240) · 🏛️ **AAAI 2026**
@@ -1470,7 +1368,7 @@ ODYSSEY框架整体架构
 
 
 
-## 12. PanoNav (2025) {#panonav}
+## 11. PanoNav (2025) {#panonav}
 ——Mapless Zero-Shot Object Navigation
 
 📄 **Paper**: [arXiv:2511.06840](https://arxiv.org/abs/2511.06840) · 🏛️ **AAAI 2026 (Poster)**
@@ -1550,7 +1448,7 @@ PanoNav框架整体架构
 
 
 
-## 13. VLN-R1 (2025) {#vln-r1}
+## 12. VLN-R1 (2025) {#vln-r1}
 ——基于GRPO与Time-Decayed Reward的端到端导航
 
 📄 **Paper**: [arXiv:2506.17221](https://arxiv.org/abs/2506.17221)
@@ -1673,7 +1571,7 @@ VLN-R1在VLN-CE（视觉-语言导航连续环境）基准上进行了全面测�
 
 
 
-## 14. StreamVLN (2025) {#streamvln}
+## 13. StreamVLN (2025) {#streamvln}
 
 ——— 通过慢-快上下文建模实现流式视觉-语言导航
 
@@ -1802,7 +1700,7 @@ KV cache 复用对多轮对话解码延迟的影响：全轮次 KV cache 保持�
 
 
 
-## 15. NavFoM (2025) {#navfom}
+## 14. NavFoM (2025) {#navfom}
 ——Embodied Navigation Foundation Model
 
 📄 **Paper**: [arXiv:2509.12129](https://arxiv.org/abs/2509.12129) · 🏛️ **ICLR 2026**
@@ -1913,7 +1811,7 @@ NavFoM 基于 Vision-Language Model 架构,扩展为双分支系统:一个用于
 
 
 
-## 16. MapNav (2025) {#mapnav}
+## 15. MapNav (2025) {#mapnav}
 ———A Novel Memory Representation via Annotated Semantic Maps for Vision-and-Language Navigation
 
 📄 **Paper**: [arXiv:2502.13451](https://arxiv.org/abs/2502.13451) · 🏛️ **ACL 2025**
@@ -2052,7 +1950,7 @@ VLM 直接输出自然语言动作，通过正则表达式匹配解析为 {前�
 
 
 
-## 17. Open-Nav (2025) {#open-nav}
+## 16. Open-Nav (2025) {#open-nav}
 ———Zero-Shot VLN in Continuous Environment with Open-Source LLMs
 
 📄 **Paper**: [arXiv:2409.18794](https://arxiv.org/abs/2409.18794) · 🏛️ **ICRA 2025**
@@ -2086,7 +1984,7 @@ Open-Nav 框架由三个核心模块组成：
 
 $$v_i^{rgbd} = W_m(f_{\text{ResNet-RGB}}(I_i^{rgb}) \| f_{\text{ResNet-Depth}}(I_i^d))$$
 
-经 Transformer 处理后生成候选路径点热力图，再通过 NMS 筛选出 K 个候选方向点 $\Delta W = \{\Delta w_i\}_{i=1}^K$，每个候选点由角度和距离表示。
+经 Transformer 处理后生成候选路径点热力图，再通过 NMS 筛选出 K 个候选方向点 $$\Delta W = \{\Delta w_i\}_{i=1}^K$$，每个候选点由角度和距离表示。
 
 **2. Scene Perception 模块**
 
@@ -2178,7 +2076,7 @@ Open-Nav 在真实环境中的导航过程可视化，右侧显示 LLM Navigator
 
 
 
-## 18. Skill-Nav (2025) {#skill-nav}
+## 17. Skill-Nav (2025) {#skill-nav}
 ———Enhanced Navigation with Versatile Quadrupedal Locomotion via Waypoint Interface
 
 📄 **Paper**: [arXiv:2506.21853](https://arxiv.org/abs/2506.21853) · 🏛️ **Vicinagearth (Springer) 2025**
@@ -2263,7 +2161,7 @@ Omni-traverse 任务中各方法的位置访问热图：本方法（Ours）覆�
 
 
 
-## 19. VLN-Imagine (2025) {#vln-imagine}
+## 18. VLN-Imagine (2025) {#vln-imagine}
 ———用文本生成图像模型为导航智能体构建"视觉想象"
 
 📄 **Paper**: [arXiv:2503.16394](https://arxiv.org/abs/2503.16394) · 🏛️ **CVPR 2025**
@@ -2310,7 +2208,7 @@ Vision-and-Language Navigation（VLN）任务中，智能体需要根据自然�
 
 - **Imagination Encoder**：使用预训练 ViT-B/16 编码想象图像，加上 imagination modality 的类型嵌入 $t_{Im}$，再通过三层 MLP（768→512→768，ReLU + Dropout 0.15）得到 imagination embedding $h_i = \text{MLP}(\text{ViT}(Z_i) + t_{Im})$。
 - **模态融合**：imagination embedding 与指令的文本编码拼接后，一起送入 VLN 智能体的跨模态编码器。本文在 HAMT 和 DUET 两个代表性模型上验证了该方法。
-- **辅助对齐损失**：计算 imagination embedding $h_i$ 与对应子指令名词短语的平均文本嵌入 $\bar{S}_i$ 之间的 cosine similarity 损失 $\mathcal L_{cos}$，总损失为 $\mathcal L_{\text{base}} + \lambda \mathcal L_{cos}$（$\lambda=0.5$）。
+- **辅助对齐损失**：计算 imagination embedding $h_i$ 与对应子指令名词短语的平均文本嵌入 $$\bar{S}_i$$ 之间的 cosine similarity 损失 $\mathcal L_{cos}$，总损失为 $\mathcal L_{\text{base}} + \lambda \mathcal L_{cos}$（$\lambda=0.5$）。
 - **三阶段微调**：为缓解灾难性遗忘，先训练 MLP + 类型嵌入（25% 迭代）→ 联合训练所有模块（25%）→ 统一学习率训练（50%），总计 100k 迭代。
 
 <div align="center">
@@ -2347,7 +2245,7 @@ Vision-and-Language Navigation（VLN）任务中，智能体需要根据自然�
 
 
 
-## 20. VLN-PE (2025) {#vln-pe}
+## 19. VLN-PE (2025) {#vln-pe}
 ———重新思考视觉-语言导航中的具身化差距:物理和视觉差异的全面研究
 
 📄 **Paper**: [arXiv:2507.13019](https://arxiv.org/abs/2507.13019v2) · 🏛️ **ICCV 2025**
@@ -2458,7 +2356,7 @@ RDP(循环扩散策略)框架:使用GRU维护历史信息,交叉注意力融合�
 
 
 
-## 21. Goal2Pixel (2025) {#goal2pixel}
+## 20. Goal2Pixel (2025) {#goal2pixel}
 ———将导航目标接地到图像像素，以像素预测统一 VLN-CE 的决策空间
 
 📄 **Paper**: [arXiv:2606.01621](https://arxiv.org/abs/2606.01621)
@@ -2588,7 +2486,7 @@ ViKeyMem 以可见性为标准可能遗漏短暂出现或远距低分辨率的�
 
 
 
-## 22. AstraNav-World (2025) {#astranav-world}
+## 21. AstraNav-World (2025) {#astranav-world}
 ———将"想象未来"与"规划未来"统一进同一个生成式概率框架
 
 📄 **Paper**: [arXiv:2512.21714](https://arxiv.org/abs/2512.21714) · [Code](https://github.com/amap-cvlab/AstraNav-World)
@@ -2672,7 +2570,7 @@ ViKeyMem 以可见性为标准可能遗漏短暂出现或远距低分辨率的�
 
 
 
-## 23. CorrectNav (2025) {#correctnav}
+## 22. CorrectNav (2025) {#correctnav}
 ——— 自纠错飞轮赋能的单目 RGB 视觉-语言-动作导航模型
 
 📄 **Paper**: [arXiv:2508.10416](https://arxiv.org/abs/2508.10416) · 🏛️ **AAAI 2026** · [Code](https://github.com/owlet914/CorrectNav) · [Project Page](https://correctnav.github.io)
@@ -2810,7 +2708,7 @@ CorrectNav 在仅使用单目 RGB 的前提下，不仅刷新了单目 VLA 模�
 
 
 
-## 24. VLingNav (2026) {#vlingnav}
+## 23. VLingNav (2026) {#vlingnav}
 ——Embodied Navigation with Adaptive Reasoning and Visual-Assisted Linguistic Memory
 
 📄 **Paper**: [arXiv:2601.08665](https://arxiv.org/abs/2601.08665)
@@ -2889,7 +2787,7 @@ VLingNav的自适应CoT标注流程图。
 
 
 
-## 25. Slow4fast-VLN (2026) {#slow4fast-vln}
+## 24. Slow4fast-VLN (2026) {#slow4fast-vln}
 ——General Vision-Language Navigation via Fast-Slow Interactive Reasoning
 
 📄 **Paper**: [arXiv:2601.09111](https://arxiv.org/abs/2601.09111v1) · 🏛️ **CVPR 2026** · [Code](https://github.com/yl6017339/Slow4Fast-VLN)
@@ -2951,7 +2849,7 @@ VLingNav的自适应CoT标注流程图。
 
 
 
-## 26. DGNav (2026) {#dgnav}
+## 25. DGNav (2026) {#dgnav}
 ———动态拓扑感知：打破视觉-语言导航中的粒度刚性
 
 📄 **Paper**: [arXiv:2601.21751](https://arxiv.org/abs/2601.21751)
@@ -3041,15 +2939,15 @@ $\sigma_{med}$ 和 $\sigma_{max}$ 通过在 ETPNav 基线模型上统计推断�
 
 $$\mathbf{E}_{dynamic} = \mathbf{E}_{geo} + \omega_1 \cdot \mathbf{E}_{sem} + \omega_2 \cdot \mathbf{E}_{inst}$$
 
-- $\mathbf{E}_{geo}$：归一化欧式距离（物理可达性硬约束）
-- $\mathbf{E}_{sem}$：CLIP-ViT 提取的视觉特征通过 MLP 计算的成对相似度
-- $\mathbf{E}_{inst}$：节点特征与全局指令 token $\mathbf{W}_L$ 的外积相关性分数，即 $w_i = \text{MLP}([v_i; \mathbf{W}_L])$，$E_{inst}^{(i,j)} = w_i \cdot w_j$
+- $$\mathbf{E}_{geo}$$：归一化欧式距离（物理可达性硬约束）
+- $$\mathbf{E}_{sem}$$：CLIP-ViT 提取的视觉特征通过 MLP 计算的成对相似度
+- $$\mathbf{E}_{inst}$$：节点特征与全局指令 token $$\mathbf{W}_L$$ 的外积相关性分数，即 $$w_i = \text{MLP}([v_i; \mathbf{W}_L])$$，$E_{inst}^{(i,j)} = w_i \cdot w_j$
 
 **Graph-Aware Self-Attention (GASA)**：
 
 $$\text{GASA}(\mathbf{H}^l, \mathbf{E}_{dynamic}) = \text{Softmax}\!\left(\frac{(\mathbf{H}^l \mathbf{W}_Q)(\mathbf{H}^l \mathbf{W}_K)^\top}{\sqrt{d_k}} + \mathbf{E}_{dynamic}\right)\!(\mathbf{H}^l \mathbf{W}_V)$$
 
-将 $\mathbf{E}_{dynamic}$ 直接叠加到注意力分数上，强制模型关注语义相关（$\omega_1 \cdot \mathbf{E}_{sem}$）且指令对齐（$\omega_2 \cdot \mathbf{E}_{inst}$）的节点，同时 $\mathbf{E}_{geo}$ 保证物理约束不被完全忽略，实现从纯几何到语义驱动的平滑过渡。
+将 $$\mathbf{E}_{dynamic}$$ 直接叠加到注意力分数上，强制模型关注语义相关（$$\omega_1 \cdot \mathbf{E}_{sem}$$）且指令对齐（$$\omega_2 \cdot \mathbf{E}_{inst}$$）的节点，同时 $$\mathbf{E}_{geo}$$ 保证物理约束不被完全忽略，实现从纯几何到语义驱动的平滑过渡。
 
 **训练策略**：采用两阶段训练，Adaptive Strategy 仅在推理阶段激活，训练阶段固定 $\gamma = 0.5\text{m}$ 确保稳定的特征学习。
 
@@ -3069,7 +2967,7 @@ $$\text{GASA}(\mathbf{H}^l, \mathbf{E}_{dynamic}) = \text{Softmax}\!\left(\frac{
 **消融实验关键发现**：
 - 条件线性映射 vs 全局线性映射：SR +1.52%（稳定性门槛机制的贡献）
 - 动态 $\gamma$ vs 固定 $\gamma$（0.25/0.40/0.50m）：SR 最高提升 +1.63%，且计算开销仅增加 0.4 个节点
-- 完整 $\mathbf{E}_{dynamic}$ vs 仅几何：SR 大幅提升，验证语义软约束的关键作用
+- 完整 $$\mathbf{E}_{dynamic}$$ vs 仅几何：SR 大幅提升，验证语义软约束的关键作用
 - 定性分析（Fig.9）：在"绕过木质围栏"场景中，仅几何模型因物理距离过近而提前错误转向，DGNav 正确识别指令语义并忽略了几何干扰，成功到达目标
 
 ---
@@ -3087,7 +2985,7 @@ $$\text{GASA}(\mathbf{H}^l, \mathbf{E}_{dynamic}) = \text{Softmax}\!\left(\frac{
 
 
 
-## 27. Hydra-Nav (2026) {#hydra-nav}
+## 26. Hydra-Nav (2026) {#hydra-nav}
 ——Object Navigation via Adaptive Dual-Process Reasoning
 
 📄 **Paper**: [arXiv:2602.09972](https://arxiv.org/abs/2602.09972)
@@ -3156,7 +3054,7 @@ Stage 2 数据合成流程：左侧为启发式路点选择的轨迹生成策略
 1. **重复探索**：智能体在过去 $T_{stag}=20$ 步内回到距离 $\delta_{stag}=0.5$m 内的位置。
 2. **缺乏进展**：在随机时间窗口 $\Delta t \sim \mathcal{U}(20,35)$ 内到目标距离未缩短。
 
-IRFT 流程：在快系统模式下运行，于停滞点触发慢系统；对失败轨迹（超时或目标误识别）进行"拒绝-修复"——找到干预时间戳 $t^*$，用 A* 最优路径替换后续轨迹，重新合成修正段的推理文本；使用最新 checkpoint 迭代执行，每轮生成约 60K 条轨迹（4.5B tokens）。
+IRFT 流程：在快系统模式下运行，于停滞点触发慢系统；对失败轨迹（超时或目标误识别）进行"拒绝-修复"——找到干预时间戳 $$t^*$$，用 A* 最优路径替换后续轨迹，重新合成修正段的推理文本；使用最新 checkpoint 迭代执行，每轮生成约 60K 条轨迹（4.5B tokens）。
 
 ---
 
@@ -3213,7 +3111,7 @@ IRFT 流程：在快系统模式下运行，于停滞点触发慢系统；对失
 
 
 
-## 28. 3DGSNav (2026) {#nav-3dgs}
+## 27. 3DGSNav (2026) {#nav-3dgs}
 ———用主动 3DGS 记忆增强 VLM 空间推理，实现零样本目标导航
 
 📄 **Paper**: [arXiv:2602.12159](https://arxiv.org/abs/2602.12159)
@@ -3303,7 +3201,7 @@ div align="center">
 
 
 
-## 29. BudVLN (2026) {#budvln}
+## 28. BudVLN (2026) {#budvln}
 ———Nipping the Drift in the Bud: Retrospective Rectification for Robust Vision-Language Navigation
 
 📄 **Paper**: [arXiv:2602.06356](https://arxiv.org/abs/2602.06356)
@@ -3386,7 +3284,7 @@ BudVLN 并不对所有样本一视同仁，而是采用一种自适应策略进�
 
 
 
-## 30. CausalNav (2026) {#causalnav}
+## 29. CausalNav (2026) {#causalnav}
 ———First Scene Graph-based Semantic Navigation for Dynamic Outdoor Environments
 
 📄 **Paper**: [arXiv:2601.01872](https://arxiv.org/abs/2601.01872) · 🏛️ **IEEE RA-L**
@@ -3416,7 +3314,7 @@ CausalNav 提出了一个由三个核心模块构成的语义导航框架：
 
 **模块一：开放词汇目标跟踪与自我运动估计**
 
-使用 YOLO-World 从 RGB 图像中提取开放词汇的 2D 检测框和分割掩码，通过 ByteTrack 进行多目标跟踪。结合 LiDAR 点云将 2D 检测投影至 3D 空间，获得目标的 3D 姿态 $^w\mathbf{T}_{obj}$。自车运动通过 LiDAR-IMU 里程计（FAST-LIO2）估计，提供精确的定位与坐标变换基础。
+使用 YOLO-World 从 RGB 图像中提取开放词汇的 2D 检测框和分割掩码，通过 ByteTrack 进行多目标跟踪。结合 LiDAR 点云将 2D 检测投影至 3D 空间，获得目标的 3D 姿态 $$^w\mathbf{T}_{obj}$$。自车运动通过 LiDAR-IMU 里程计（FAST-LIO2）估计，提供精确的定位与坐标变换基础。
 
 **模块二：动态对象过滤与 Embodied Graph 构建**
 
@@ -3427,7 +3325,7 @@ CausalNav 三模块流水线架构：目标跟踪与自我运动估计 → 动�
 </figcaption>
 </div>
 
-- **时空走廊过滤**：将每个目标的历史轨迹编码为时空走廊 $\mathcal{T} = \{^w\mathbf{T}^n_{obj}, \text{3DBBox}_i, t_i\}_{i=1}^n$。若目标在 $k$ 步内位移超过阈值，则认定为动态目标并从图中移除，有效消除运动引起的虚假节点。
+- **时空走廊过滤**：将每个目标的历史轨迹编码为时空走廊 $$\mathcal{T} = \{^w\mathbf{T}^n_{obj}, \text{3DBBox}_i, t_i\}_{i=1}^n$$。若目标在 $k$ 步内位移超过阈值，则认定为动态目标并从图中移除，有效消除运动引起的虚假节点。
 
 - **Embodied Graph 层次构建**：静态环境由两类节点组成——建筑物节点 $\nu_i^{build}$ 来自离线地图，对象节点 $\nu_i^{obj}$ 来自实时感知。使用 LLM 对节点进行层次聚类（spatial-semantic similarity），形成多级抽象：对象层（Level $L-1$）→ 建筑物/Place 层（Level $L$）→ 聚类节点（Clustering Node）。每次自车移动超过距离阈值 $d$，新增自车节点 $\nu_i^l$ 记录历史轨迹。
 
@@ -3487,7 +3385,7 @@ CausalNav 在极端光照/天气条件下的鲁棒性有待提升，且长程图
 
 
 
-## 31. AgentVLN (2026) {#agentvln}
+## 30. AgentVLN (2026) {#agentvln}
 ———Towards Agentic Vision-and-Language Navigation
 
 📄 **Paper**: [arXiv:2603.17670](https://arxiv.org/abs/2603.17670)
@@ -3515,7 +3413,7 @@ AgentVLN 整体框架：VLM-as-Brain 范式将长时域导航分解为感知技�
 
 **VLM-as-Brain 范式与 POSMDP 建模**
 
-AgentVLN 将 VLN 任务形式化为 Partially Observable Semi-Markov Decision Process (POSMDP) $\mathcal{M} = \langle \mathcal{S}, \mathcal{O}, \mathcal{F}, \mathcal{T}, \mathcal{I}, \mathcal{H} \rangle$。VLM 作为中央控制器，在每个决策步 $t$ 基于历史上下文 $\mathcal{H}_t$、视觉观测 $o_t$ 和自然语言指令 $\mathcal{I}$ 生成技能调用指令：
+AgentVLN 将 VLN 任务形式化为 Partially Observable Semi-Markov Decision Process (POSMDP) $\mathcal{M} = \langle \mathcal{S}, \mathcal{O}, \mathcal{F}, \mathcal{T}, \mathcal{I}, \mathcal{H} \rangle$。VLM 作为中央控制器，在每个决策步 $t$ 基于历史上下文 $$\mathcal{H}_t$$、视觉观测 $o_t$ 和自然语言指令 $\mathcal{I}$ 生成技能调用指令：
 
 $$c_k \sim \pi_\theta(f \mid \mathcal{H}_{t_k}, o_{t_k}, \mathcal{I}), \quad f \in \mathcal{F}$$
 
@@ -3531,7 +3429,7 @@ $$s \cdot \mathbf{p}^{img}_{path} = KR_t^{-1}(\mathbf{P}^w_{path} - \mathbf{t}_t
 
 **上下文感知的细粒度自校正与主动探索**
 
-当当前观测 $o_t$ 中不存在满足指令语义的可行路点时（如遮挡、盲区、轨迹偏差），AgentVLN 不强制执行长距离盲位移，而是输出细粒度原子动作 $a_t \sim \pi_\theta(a \mid \mathcal{H}_t, o_t, \mathcal{I})$，$a \in \{\text{Forward, Left, Right}\}$，自主环顾恢复可见路点后切回宏观技能调用，有效抑制长轨迹误差累积。
+当当前观测 $o_t$ 中不存在满足指令语义的可行路点时（如遮挡、盲区、轨迹偏差），AgentVLN 不强制执行长距离盲位移，而是输出细粒度原子动作 $$a_t \sim \pi_\theta(a \mid \mathcal{H}_t, o_t, \mathcal{I})$$，$a \in \{\text{Forward, Left, Right}\}$，自主环顾恢复可见路点后切回宏观技能调用，有效抑制长轨迹误差累积。
 
 **Query-Driven Perceptual Chain-of-Thought (QD-PCoT)**
 
@@ -3581,7 +3479,7 @@ AgentVLN 当前依赖深度传感器（RGB-D）支持精确的 3D 反投影，�
 
 
 
-## 32. VLN-Cache (2026) {#vln-cache}
+## 31. VLN-Cache (2026) {#vln-cache}
 ———Enabling Token Caching for VLN Models with Visual/Semantic Dynamics Awareness
 
 📄 **Paper**: [arXiv:2603.07080](https://arxiv.org/abs/2603.07080)
@@ -3675,7 +3573,7 @@ VLN-Cache 目前仅针对 RGB-based 连续 VLN，不支持深度传感器或地�
 
 
 
-## 33. SysNav (2026) {#sysnav}
+## 32. SysNav (2026) {#sysnav}
 ———Multi-Level Systematic Cooperation Enables Real-World, Cross-Embodiment Object Navigation
 
 📄 **Paper**: [arXiv:2603.06914](https://arxiv.org/abs/2603.06914) · [Project Page](https://cmu-vln.github.io/) · [Code](https://github.com/zwandering/SysNav)
@@ -3772,7 +3670,7 @@ SysNav 在轮式、四足、人形三种机器人平台上的真实环境定性�
 
 
 
-## 34. R³: Run, Ruminate, and Regulate (2026) {#r3}
+## 33. R³: Run, Ruminate, and Regulate (2026) {#r3}
 ———一个面向视觉语言导航的双过程思考框架
 
 📄 **Paper**: [arXiv:2511.14131](https://arxiv.org/abs/2511.14131) · [Code](https://github.com/IAIII-CAS/navigation_R3) · 🏛️ **AAAI 2026**
@@ -3817,7 +3715,7 @@ R³ 由三个模块组成：
 <figcaption>图 2: R³ 完整 pipeline。Regulator 接收 $V_t=\{H_t, I, O_t, D_t, R_t\}$，通过三条 critical evaluation（Looping / Scoring / Ending）判断是否异常；异常则进入 critical formulation 由 LLM 产生修正规划 $P_t$，送往 Ruminator；正常则走 Runner 直接输出 $A_t$。</figcaption>
 </div>
 
-**问题形式化**：VLN 建模为 POMDP，智能体在时刻 $t$ 观察到位姿 $R_t$ 与全景 $O_t=\{o_t^i\}_{i=1}^{36}$（36 个相对 heading/elevation 的透视图），从可导航视点集合中选一个作为动作 $A_t$。策略 $\pi(A_t \mid I, O_t, H_t; \Theta)$ 基于指令 $I$、历史 $H_t=\{O_0, A_0, ..., O_{t-1}, A_{t-1}\}$ 与当前观察预测动作，直到智能体输出 `[STOP]` 或超步数上限。
+**问题形式化**：VLN 建模为 POMDP，智能体在时刻 $t$ 观察到位姿 $R_t$ 与全景 $$O_t=\{o_t^i\}_{i=1}^{36}$$（36 个相对 heading/elevation 的透视图），从可导航视点集合中选一个作为动作 $A_t$。策略 $\pi(A_t \mid I, O_t, H_t; \Theta)$ 基于指令 $I$、历史 $H_t=\{O_0, A_0, ..., O_{t-1}, A_{t-1}\}$ 与当前观察预测动作，直到智能体输出 `[STOP]` 或超步数上限。
 
 #### 2.3 Runner：轻量 transformer 快速响应
 
@@ -3889,7 +3787,7 @@ Ruminator 以 GPT-4o 为底座，用 CoT 组织三步：
 
 
 
-## 35. AwareVLN (2026) {#awarevln}
+## 34. AwareVLN (2026) {#awarevln}
 ———Reasoning with Self-awareness for Vision-Language Navigation
 
 📄 **Paper**: [arXiv:2605.22816](https://arxiv.org/abs/2605.22816) · [Project Page](https://gwxuan.github.io/AwareVLN/) · 🏛️ **CVPR 2026**
@@ -4000,7 +3898,7 @@ $$d, y_t = \pi_\theta\big(f_{tok}(I), f_{tok}(R'), f_{vis}(O_t)\big)$$
 
 
 
-## 36. Dual-Anchoring (2026) {#dual-anchoring}
+## 35. Dual-Anchoring (2026) {#dual-anchoring}
 ———用"指令进度"与"地标记忆"双重锚定，对抗 VLN 中的状态漂移（State Drift）
 
 📄 **Paper**: [arXiv:2604.17473v2](https://arxiv.org/abs/2604.17473)
@@ -4121,7 +4019,7 @@ $$\mathcal{L}_{Stage1} = \mathcal{L}_{nav} + \lambda_{prog}\mathcal{L}_{prog} + 
 
 
 
-## 37. WAM-Nav (2026) {#wam-nav}
+## 36. WAM-Nav (2026) {#wam-nav}
 ———非对称隐空间「世界-动作」联合建模，用一个 DiT 统一三类视觉导航
 
 📄 **Paper**: [arXiv:2606.04907](https://arxiv.org/abs/2606.04907) — WAM-Nav: Asymmetric Latent World-Action Modeling for Unified Visual Navigation
@@ -4226,7 +4124,7 @@ $$\mathcal L_{total}=\mathbb E\big[\lVert\hat u_A-u_A\rVert_2^2+\lambda_{img}\lV
 
 
 
-## 38. JanusVLN (2026) {#janusvln}
+## 37. JanusVLN (2026) {#janusvln}
 ——— 解耦语义与空间：使用双隐式神经内存的视觉语言导航
 
 📄 **Paper**: [arXiv:2509.22548v2](https://arxiv.org/abs/2509.22548v2) · 🏛️ **ICLR 2026**
@@ -4343,7 +4241,7 @@ $$\mathcal L_{total}=\mathbb E\big[\lVert\hat u_A-u_A\rVert_2^2+\lambda_{img}\lV
 
 
 
-## 39. HSGM (2026) {#hsgm}
+## 38. HSGM (2026) {#hsgm}
 ——— 层级式语义-几何地图，填补 VLM 2D 视觉与 3D 空间推理及运动规划的鸿沟
 
 📄 **Paper**: [arXiv:2606.00095](https://arxiv.org/abs/2606.00095)
@@ -4484,7 +4382,7 @@ HSGM 包含三个并行的层级，以维持高精度、长期稳定的 3D 环�
 
 
 
-## 40. OneVLA (2026) {#onevla-a-unified-framework-for-embodied-tasks}
+## 39. OneVLA (2026) {#onevla-a-unified-framework-for-embodied-tasks}
 OneVLA: A Unified Framework for Embodied Tasks
 ———首个在单一网络与动作头下统一具身导航和操作的 VLA 模型
 
@@ -4642,7 +4540,7 @@ OneVLA 在导航基准 **VLN-CE** (R2R & RxR) 以及操作基准 **SimplerEnv** 
 
 
 
-## 41. CA-VLN (2026) {#ca-vln}
+## 40. CA-VLN (2026) {#ca-vln}
 ——— 基于双智能体协作的多模态大模型具身导航框架
 
 📄 **Paper**: [Sensors 2026](https://doi.org/10.3390/s26041254) · 🏛️ **Sensors 2026** · [Code](https://github.com/ankursikarwar/Cosmic)
@@ -4694,7 +4592,7 @@ CA-VLN 提出了一个由知识推理智能体（Knowledge Reasoning Agent）和
     随后通过图注意力网络（Graph-Aware Transformer, GAT）建立全局依赖关系。GAT 内部包含交叉注意力层（用于建模节点特征关系）和自注意力层（用于编码拓扑布局），计算公式为：
     $$\tilde{h}'_t = \text{GAT}(\tilde{h}_t) = \text{softmax}\left(\frac{(\tilde{h}_t W_q)(\tilde{h}_t W_k)^T}{\sqrt{d}} + M\right)\tilde{h}_t W_v$$
     其中偏置矩阵 $M = D W_a + b_d$ 用于整合拓扑距离图，限制不可达节点间的影响。
-  - **输出**：增强后的全局历史轨迹特征表示 $\tilde{H}_t = \{\tilde{h}'_1, \tilde{h}'_2, \dots, \tilde{h}'_{t-1}\}$。
+  - **输出**：增强后的全局历史轨迹特征表示 $$\tilde{H}_t = \{\tilde{h}'_1, \tilde{h}'_2, \dots, \tilde{h}'_{t-1}\}$$。
   - **设计动机**：使历史表征既富有时序和语义信息，又兼备精确的几何结构约束，从而提升回溯决策的准确性。
 
 - **多模态融合与动作预测模块**
@@ -4714,7 +4612,7 @@ CA-VLN 提出了一个由知识推理智能体（Knowledge Reasoning Agent）和
 在每一个决策步骤 $t$：
 1. 智能体从当前环境获取全景视觉观测 $O_t$。
 2. 知识推理智能体结合当前指令与多模态模型在线生成的描述，检索出 Top-K 的语义事实知识 $K_{emb}$。
-3. 分层历史智能体更新图拓扑结构并利用 HEM 得到增强后的全局轨迹特征 $\tilde{H}_t$。
+3. 分层历史智能体更新图拓扑结构并利用 HEM 得到增强后的全局轨迹特征 $$\tilde{H}_t$$。
 4. 将提取的视觉特征、知识特征、指令特征和实体特征分别输入多模态融合模块，通过 KVSI 进行知识-视觉对齐，通过 IGFF 进行指令-视觉对齐，得到精炼的局部候选特征表示。
 5. 全局动作预测分支利用图注意力对全局拓扑图和指令交叉建模输出全局候选得分，局部动作预测分支则针对当前节点的相邻导航候选进行局部打分。
 6. 二者经过自适应加权融合，利用 Softmax 决策出概率最大的下一步动作（执行移动或停止），并更新下一时刻的历史和拓扑。
@@ -4743,7 +4641,7 @@ CA-VLN 提出了一个由知识推理智能体（Knowledge Reasoning Agent）和
 
 
 
-## 42. RynnBrain (2026) {#rynnbrain}
+## 41. RynnBrain (2026) {#rynnbrain}
 ———Open Spatiotemporal Foundation Model for Embodied Intelligence
 
 📄 **Paper**: [arXiv:2602.14979](https://arxiv.org/abs/2602.14979) · 🏛️ **ECCV 2026**
@@ -4826,7 +4724,7 @@ MoE 架构（30B-A3B）在 VLN 任务上未能超越 8B Dense 模型，稀疏激
 
 
 
-## 43. EvoMemNav (2026) {#evomemnav}
+## 42. EvoMemNav (2026) {#evomemnav}
 ——— 零样本具身导航中基于轻量化图先验与多视图反思的高效自进化细粒度拓扑记忆框架
 
 📄 **Paper**: [arXiv:2606.03509](https://arxiv.org/abs/2606.03509v1) · [Code](https://github.com/caicaiya123/EvoMemNav)
@@ -4949,7 +4847,7 @@ EvoMemNav 由三个核心部分构成：构建于 occupancy grid 上的层次化
 
 
 
-## 44. OmniNav (2026) {#omninav}
+## 43. OmniNav (2026) {#omninav}
 ———用快慢双系统统一点目标、物体目标、指令目标导航与前沿探索
 
 📄 **Paper**: [arXiv:2509.25687](https://arxiv.org/abs/2509.25687) · 🏛️ **ICLR 2026 (Poster)**
@@ -5143,7 +5041,7 @@ flowchart TD
 
 
 
-## 45. Qwen-RobotNav (2026) {#qwen-robotnav}
+## 44. Qwen-RobotNav (2026) {#qwen-robotnav}
 ———首个统一的多任务、时空可重构具身导航大模型
 
 📄 **Paper**: [arxiv:2606.18112 ](https://arxiv.org/abs/2606.18112)
@@ -5196,7 +5094,7 @@ Qwen-RobotNav 继承自 Qwen3-VL 多模态大模型，并在其基础上设计�
 ##### ③ 动作规划头与轨迹规划
 * **输入**：Qwen3-VL 在对应路点特征上的最后隐藏层状态 $E_A \in \mathbb{R}^d$。
 * **处理**：隐藏状态通过一个 4 层的高维 MLP（隐藏单元 512，使用 GELU 激活函数），在训练时使用每个数据集的第 99 百分位数作为尺度因子将真实路点坐标归一化到 $[-1, 1]$ 之间进行回归。
-* **输出**：$K=8$ 个带有航向角的未来 2D 轨迹路点 $W = \{(x_k, y_k, \theta_k)\}_{k=1}^8$。
+* **输出**：$K=8$ 个带有航向角的未来 2D 轨迹路点 $$W = \{(x_k, y_k, \theta_k)\}_{k=1}^8$$。
 * **设计动机**：动作头被设计得尽可能轻量，确保几乎所有的时空建模与常识推理都在大语言底座内部进行，从而保证强大的跨场景泛化能力。
 
 #### 端到端数据流与 Agent 协作
@@ -5294,7 +5192,7 @@ Qwen-RobotNav 部署在宇树 Unitree Go2 四足机器人以及移动底座上�
 
 
 
-## 46. GA-VLN (2026) {#ga-vln}
+## 45. GA-VLN (2026) {#ga-vln}
 ——— Geometry-Aware BEV Representation for Efficient Vision-Language Navigation
 
 📄 **Paper**: [arXiv:2605.22036](https://arxiv.org/abs/2605.22036) · 🏛️ **CVPR 2026** · [Code](https://github.com/jahhaoyang/GA-VLN)
@@ -5345,11 +5243,11 @@ GA-BEV 的构建流程主要包含以下三个步骤：
   $$V^g = f_{3DFM}(\{I_1, \dots, I_t\}) \in \mathbb{R}^{t \times H_g \times W_g \times d_g}$$
   通过一个 2 层 MLP（Linear-GeLU-Linear）投影层 $f_{project}$ 调整特征维度以匹配 SigLIP 特征：
   $$\tilde{V}^g = f_{project}(V^g) \in \mathbb{R}^{t \times H_g \times W_g \times d_p}$$
-  随后，使用与步骤 ① 相同的空间投影方式，将其投射到 3D 空间，得到对应的 3D 坐标 $\hat{p}_g \in \mathbb{R}^{t \times H_g \times W_g \times 3}$。
+  随后，使用与步骤 ① 相同的空间投影方式，将其投射到 3D 空间，得到对应的 3D 坐标 $$\hat{p}_g \in \mathbb{R}^{t \times H_g \times W_g \times 3}$$。
 - **输出**：富含隐式形状结构与多视角几何一致性的 3D 基础特征。
 
 **③ 网格化 BEV 聚合（Grid-Based BEV Aggregation）**
-- **输入**：统一的 3D 空间特征集 $V = V \cup \tilde{V}^g$ 及其对应的 3D 物理位置 $\hat{P} = \{\hat{p}\} \cup \{\hat{p}_g\}$。
+- **输入**：统一的 3D 空间特征集 $V = V \cup \tilde{V}^g$ 及其对应的 3D 物理位置 $$\hat{P} = \{\hat{p}\} \cup \{\hat{p}_g\}$$。
 - **处理**：由于室内空间物体在高度方向较矮，而智能体的动作主要约束在 2D 地面上，因此将所有 3D 特征投影到当前的以智能体为中心的 $(x, z)$ Bird's-Eye-View (BEV) 平面上。
   - 将 BEV 平面离散化为以智能体为中心、感知范围为 $[-R, R]$（取 $[-10\text{m}, 10\text{m}]$）、网格大小为 $\Delta \times \Delta$（取 $0.25\text{m} \times 0.25\text{m}$）的 $N \times N$ 网格。
   - 对于每个非空网格 $(i, j)$，收集落入该网格的所有 3D 特征集 $S_{i, j}$。
@@ -5414,7 +5312,7 @@ GA-VLN 在 Habitat 仿真环境中的多个连续导航数据集上进行了评�
 
 
 
-## 47. SEDualVLN (2026) {#sedualvln}
+## 46. SEDualVLN (2026) {#sedualvln}
 ———空间增强的双系统连续环境视觉语言导航框架
 
 📄 **Paper**: [arXiv:2605.17249](https://arxiv.org/abs/2605.17249)
@@ -5542,7 +5440,7 @@ SEDualVLN 由两个子系统以及一个协同调度器构成：
 
 
 
-## 48. Robostral Navigate (2026) {#robostral-navigate}
+## 47. Robostral Navigate (2026) {#robostral-navigate}
 ———仅需单目 RGB 相机的 8B 视语言导航大模型：超高效仿真训练与在线强化学习
 
 📄 **Paper**: [arXiv:2607.20785](https://arxiv.org/abs/2607.20785) · [Project Page](https://mistral.ai/news/robostral-navigate)
@@ -5737,7 +5635,7 @@ Robostral Navigate 在 Room-to-Room in Continuous Environments (R2R-CE) 和 Room
 
 
 
-## 49. LocalNav (2026) {#localnav}
+## 48. LocalNav (2026) {#localnav}
 ———基于知识蒸馏与具身强化学习的端侧轻量化三维场景图目标导航框架
 
 📄 **Paper**: [arXiv:2606.27871](https://arxiv.org/abs/2606.27871)
@@ -5849,7 +5747,7 @@ $$R_{tot} = R_{done} + R_{nav} + R_{exp} + R_{brev}$$
 
 
 
-## 50. ABot-N1 (2026) {#abot-n1}
+## 49. ABot-N1 (2026) {#abot-n1}
 ———基于慢速认知与快速控制双系统架构的通用视觉语言导航基础模型
 
 📄 **Paper**: [arXiv:2607.10383](https://arxiv.org/abs/2607.10383v2) · [Project Page](https://amap-cvlab.github.io/ABot-Navigation/ABot-N1/) · [Code](https://github.com/amap-cvlab/ABot-Navigation/tree/ABotN-Bench)
@@ -5956,7 +5854,7 @@ ABot-N1 在五项核心导航任务上均打破了先前的 SOTA 纪录，并且
 
 
 
-## 51. ReflectVLN (2026) {#reflectvln}
+## 50. ReflectVLN (2026) {#reflectvln}
 ———基于反思推理与双向交互机制的具身视觉语言导航
 
 📄 **Paper**: [arXiv:2607.12680](https://arxiv.org/abs/2607.12680) · 🏛️ **IROS 2026** · [Code](https://github.com/AIprogrammer/ReflectVLN)
@@ -6031,7 +5929,7 @@ ReflectVLN 架构由两个独立参数化的 Agent 组成：**意图 Agent（Int
     $$\mathcal{L}_{int}^{(z)} = -\sum_{j=1}^{T} \log p_{\theta_{int}}(y_j^* \mid y_{<j}^*, \ell, I_{t-H:t}, z)$$
   - **执行 Agent 目标**：联合预测动作与状态 Token：
     $$\mathcal{L}_{exe} = \mathbf{1}[z_t^* = A] \mathcal{L}_{WP} + \lambda_{status} \mathcal{L}_{status}$$
-    其中 $\mathcal{L}_{status} = -\log p_{\theta_{exe}}(z_t^* \mid \ell, c_t, I_{t-H:t})$。
+    其中 $$\mathcal{L}_{status} = -\log p_{\theta_{exe}}(z_t^* \mid \ell, c_t, I_{t-H:t})$$。
 
 #### ⑤ 反思驱动的数据构建流水线
 
@@ -6080,7 +5978,7 @@ ReflectVLN 架构由两个独立参数化的 Agent 组成：**意图 Agent（Int
 
 
 
-## 52. TuckerNav (2026) {#tuckernav}
+## 51. TuckerNav (2026) {#tuckernav}
 ———面向全天候多场景终身具身视觉语言导航的 Tucker 张量自适应
 
 📄 **Paper**: [arXiv:2603.14276](https://arxiv.org/abs/2603.14276) · 🏛️ **ICLR 2026**
@@ -6210,7 +6108,7 @@ $$\mathcal{L}_t = -\lambda \sum_{n=1}^N \log p_t(A_n, \hat{P}_n \mid I, \mathcal
 
 
 
-## 53. AgenticNav (2026) {#agenticnav}
+## 52. AgenticNav (2026) {#agenticnav}
 ———将零样本连续环境导航（VLN-CE）重构为 VLM 可调用的 Tool-Calling 架构
 
 📄 **Paper**: [arXiv:2606.10577](https://arxiv.org/abs/2606.10577)
@@ -6271,17 +6169,17 @@ AgenticNav 由 **VLM 决策核心** 与 **四个确定性 Tool 接口** 组成�
 - **设计动机**：摒弃有监督训练的航点预测器，赋予 VLM 直接选择视觉场景中任意可视可达位置（如特定门缝、走廊尽头、家具旁）的自由。
 
 ##### 2. On-Demand Pixel-Depth Tool (`query_depth(P)`)
-- **输入**：候选像素点批量集合 $P = \{ p_i = (k_i, u_i, v_i) \}_{i=1}^m$。
+- **输入**：候选像素点批量集合 $$P = \{ p_i = (k_i, u_i, v_i) \}_{i=1}^m$$。
 - **处理过程**：对每个查询点采样相位的深度图，返回结构化信息：
   $$D(p_i) = \left( d_i, s_i^{5 \times 5}, \hat{\theta}_i, \hat{\rho}_i \right)$$
-  其中 $d_i$ 为物理深度（米），$s_i^{5 \times 5}$ 为以该像素为中心的 $5\times 5$ 窗口内的深度最小值、均值与中位数（用于判断是否落在边缘或平整表面），$\hat{\theta}_i$ 与 $\hat{\rho}_i$ 为预计算的动作预览。
+  其中 $d_i$ 为物理深度（米），$s_i^{5 \times 5}$ 为以该像素为中心的 $5\times 5$ 窗口内的深度最小值、均值与中位数（用于判断是否落在边缘或平整表面），$$\hat{\theta}_i$$ 与 $$\hat{\rho}_i$$ 为预计算的动作预览。
 - **设计动机**：密集深度图对 VLM 而言极其难以定量解析。按需查询使 VLM 能够在决策前精准对比不同方向（如 "左侧通道是否畅通"、"前方开门处距离多远"），提供可靠的局部空间几何证据。
 
 ##### 3. Agentic Memory 与 Visual Recall Tool
-- **输入与结构**：Episode 内记忆表示为 $\mathcal{M}_t = (B_t, \mathcal{C}_t)$。
+- **输入与结构**：Episode 内记忆表示为 $$\mathcal{M}_t = (B_t, \mathcal{C}_t)$$。
   - $B_t$ 为直接放入 Prompt 中的**拓扑 Map Image**，直观展示历史轨迹节点与当前方位。
-  - $\mathcal{C}_t$ 为过去所有观察视图的缓存。
-- **Recall 机制**：当 VLM 需要核对早期路标（如 "刚才路过路口看到的指示牌"）时，调用 `recall(p, k)`，仅提取第 $p$ 步视角 $k$ 的单帧 RGB 图 $R_t(p, k) = \mathcal{C}_t[p, k]$ 并追加到 Prompt 中。
+  - $$\mathcal{C}_t$$ 为过去所有观察视图的缓存。
+- **Recall 机制**：当 VLM 需要核对早期路标（如 "刚才路过路口看到的指示牌"）时，调用 `recall(p, k)`，仅提取第 $p$ 步视角 $k$ 的单帧 RGB 图 $$R_t(p, k) = \mathcal{C}_t[p, k]$$ 并追加到 Prompt 中。
 - **设计动机**：防止 Prompt 随导航步数暴增而溢出，避免无用视觉帧干扰 VLM 注意力，实现高效长程导航。
 
 #### ③ 推理与交互流程
@@ -6333,7 +6231,7 @@ AgenticNav 由 **VLM 决策核心** 与 **四个确定性 Tool 接口** 组成�
 
 
 
-## 54. MemVLN (2026) {#memvln}
+## 53. MemVLN (2026) {#memvln}
 ———模拟人类双重记忆机制的高效连续环境视觉语言导航框架
 
 📄 **Paper**: [arXiv:2607.23504](https://arxiv.org/abs/2607.23504)
@@ -6409,7 +6307,7 @@ MemVLN 框架由**情景记忆模块（Episodic Memory）**、**视觉编码与�
 5. 程序记忆 Head 输出单个动作 Token $a_t \in A_{aug}$ 并由 Habitat 仿真器/底盘执行。
 
 #### ④ 训练目标 / 损失函数
-采用监督微调（SFT）训练策略，对于长度为 $T$ 的轨迹，最小化真值动作 $a_t^*$ 的标准交叉熵损失（Cross-Entropy Loss）：
+采用监督微调（SFT）训练策略，对于长度为 $T$ 的轨迹，最小化真值动作 $$a_t^*$$ 的标准交叉熵损失（Cross-Entropy Loss）：
 
 $$L = -\frac{1}{T} \sum_{t=1}^{T} \log P(a_t^* \mid F_t, I; \theta)$$
 
@@ -6443,7 +6341,7 @@ $$L = -\frac{1}{T} \sum_{t=1}^{T} \log P(a_t^* \mid F_t, I; \theta)$$
 
 ---
 
-## 55. X-NavDP (2026) {#x-navdp}
+## 54. X-NavDP (2026) {#x-navdp}
 ———多构型机器人通用视觉导航的组内 Q 值重加权 Diffusion RL 强化学习微调框架
 
 📄 **Paper**: [arXiv:2607.28560](https://arxiv.org/abs/2607.28560)
@@ -6497,7 +6395,7 @@ X-NavDP 采用分层控制架构：
 #### ② 自引导轨迹扰动（Self-Bootstrapped Perturbation）
 直观上，直接给轨迹添加高斯噪声会破坏航点的时间连续性与动力学可行性。X-NavDP 发现：**预训练策略在无目标（Goal-Agnostic）条件下的输出天然保持场景一致性且探索更激进**。
 
-因此，对同一视觉观测，算法同时采样有目标轨迹 $\tilde{\tau}_{\text{pointgoal}}$ 与无目标轨迹 $\tilde{\tau}_{\text{nogoal}}$，并进行带符号外推混合：
+因此，对同一视觉观测，算法同时采样有目标轨迹 $$\tilde{\tau}_{\text{pointgoal}}$$ 与无目标轨迹 $$\tilde{\tau}_{\text{nogoal}}$$，并进行带符号外推混合：
 
 $$
 \tau_{\text{mixed}}
@@ -6511,8 +6409,8 @@ $$
 其中 $\mathbf{s} = ((-1)^{B_1}, (-1)^{B_2})$ 是由伯努利分布生成的随机符号向量，对整体 Chunk 的 $x, y$ 坐标独立按概率 $\epsilon$ 进行翻转。这种设计能够原生地生成平滑的倒车、侧向避障与侧退自救轨迹。
 
 > **举个例子（自引导扰动数据流）**：
-> 假设机器人陷入死胡同，有目标预测 $\tilde{\tau}_{\text{pointgoal}}$ 给出向前微动 $[+0.2, 0.0]$，单纯加高斯噪声可能得到 $[+0.2+\mathcal N, 0.0+\mathcal N]$（机器人剧烈抖动碰撞）；
-> 而无目标预测 $\tilde{\tau}_{\text{nogoal}}$ 给出大范围探索航点 $[+0.5, +0.6]$。通过外推和符号翻转 $\mathbf s = (-1, -1)$，合成轨迹变为 $[-0.2, -0.6]$——产生了一条极其平滑且符合物理约束的倒车绕行轨迹！
+> 假设机器人陷入死胡同，有目标预测 $$\tilde{\tau}_{\text{pointgoal}}$$ 给出向前微动 $[+0.2, 0.0]$，单纯加高斯噪声可能得到 $[+0.2+\mathcal N, 0.0+\mathcal N]$（机器人剧烈抖动碰撞）；
+> 而无目标预测 $$\tilde{\tau}_{\text{nogoal}}$$ 给出大范围探索航点 $[+0.5, +0.6]$。通过外推和符号翻转 $\mathbf s = (-1, -1)$，合成轨迹变为 $[-0.2, -0.6]$——产生了一条极其平滑且符合物理约束的倒车绕行轨迹！
 
 #### ③ 组内 Q 值重加权匹配（Group Q-Score Reweighted Matching, GQRM）
 为解决标准 DPMD 在 Minibatch 全局归一化时“简单状态高收益掩盖困难状态低收益”的缺陷，GQRM 强制在**同一状态下的候选动作组 $G(s)$ 内**计算统计量：
@@ -6536,7 +6434,7 @@ $$\mathcal L_{\text{GQRM}}(\theta; s, t) = \mathbb E_{a_0 \sim \pi_{\text{old}}(
 
 #### ④ 构型 FiLM 调制与闭环时域引导
 - **构型 FiLM 调制（Embodiment Modulation）**：将机器人 ID 转换为 Embedding $\mathbf z_e = E_{\text{emb}}(e)$，一方面作为 Action Token 前的偏置 $\mathbf u_e = \mathbf u + f_\Delta(\mathbf z_e)$，另一方面通过 FiLM 生成缩放与偏移参数 $[\Delta \gamma_e, \Delta \beta_e] = f_{\text{FiLM}}(\mathbf z_e)$ 调制解码器输出特征 $\mathbf h_e = (1 + \Delta \gamma_e) \odot \mathbf h + \Delta \beta_e$，使得单套主干模型能感知不同机器人的宽度、转弯半径及推力特性。
-- **闭环时域引导（RTC Guidance）**：推理部署时，在 DDPM 反向去噪步骤中引入前一预测轨迹的时域平滑梯度，更新公式为 $\mathbf x_t^{(k-1)} = \boldsymbol \mu_k + \sigma_k \mathbf z + \sqrt{\bar{\alpha}_k} \eta_{\text{guide}} \mathbf g$，有效消除了滚动时域预测中的轨迹抖动。
+- **闭环时域引导（RTC Guidance）**：推理部署时，在 DDPM 反向去噪步骤中引入前一预测轨迹的时域平滑梯度，更新公式为 $$\mathbf x_t^{(k-1)} = \boldsymbol \mu_k + \sigma_k \mathbf z + \sqrt{\bar{\alpha}_k} \eta_{\text{guide}} \mathbf g$$，有效消除了滚动时域预测中的轨迹抖动。
 
 ```mermaid
 graph TD
@@ -6581,7 +6479,7 @@ graph TD
 
 ---
 
-## 56. Image2Sim (2026) {#image2sim}
+## 55. Image2Sim (2026) {#image2sim}
 ———解耦 3D 空间锚定与超真实图像合成的实时神经仿真引擎
 
 📄 **Paper**: [arXiv:2607.05765](https://arxiv.org/abs/2607.05765) · 🏛️ **CVPR 2026** · [Code](https://github.com/MrZihan/Image2Sim)
@@ -6622,15 +6520,15 @@ Image2Sim 的核心创新在于将神经环境建模拆分为两个解耦的模�
 
 #### ① 前馈 3D 特征高斯几何构建（Feed-Forward 3D Gaussian Encoder）
 - **输入**：任意姿态的 RGB-D 帧（支持针孔相机与全景相机），通过射线方向编码（Ray-Direction Encoding）统一表达。
-- **处理**：双流编码器提取特征——冻结的 DINOv3 主干捕捉高层语义特征，轻量级几何细节流保留 RGB、深度与法向量。特征融合后由预测头一次性反投影并生成 3D 特征高斯集合 $\mathcal G = \{g_j\}_{j=1}^M$。每个高斯元组包含中心 $\mathbf \mu_j \in \mathbb R^3$、缩放 $\mathbf s_j$、旋转 $\mathbf q_j$、不透明度 $\alpha_j$、颜色 $\mathbf c_j$ 及语义特征 $\mathbf f_j$。
-- **输出**：在目标位姿 $p$ 下投影得到的全景 RGB 图 $\tilde{\mathbf I}_p$、深度图 $\tilde{\mathbf D}_p$、透明度图 $\tilde{\mathbf A}_p$ 和特征图 $\mathbf C_p$。
+- **处理**：双流编码器提取特征——冻结的 DINOv3 主干捕捉高层语义特征，轻量级几何细节流保留 RGB、深度与法向量。特征融合后由预测头一次性反投影并生成 3D 特征高斯集合 $$\mathcal G = \{g_j\}_{j=1}^M$$。每个高斯元组包含中心 $\mathbf \mu_j \in \mathbb R^3$、缩放 $\mathbf s_j$、旋转 $\mathbf q_j$、不透明度 $\alpha_j$、颜色 $\mathbf c_j$ 及语义特征 $\mathbf f_j$。
+- **输出**：在目标位姿 $p$ 下投影得到的全景 RGB 图 $$\tilde{\mathbf I}_p$$、深度图 $$\tilde{\mathbf D}_p$$、透明度图 $$\tilde{\mathbf A}_p$$ 和特征图 $\mathbf C_p$。
 - **设计动机**：摒弃传统 NeRF/3DGS 逐场景优化（Per-Scene Optimization）耗时数小时的缺点，实现单次前馈毫秒级构建 3D 场景。
 
 #### ② 几何感知单步 Pixel Flow 渲染器（Geometry-Aware One-Step Pixel Flow）
 
 当智能体移动到未观测视角时，直接用 3DGS 飞溅渲染会产生大量破洞与伪影（黑洞盲区）。Image2Sim 设计了一个以概率流 ODE（Probability Flow ODE）为基础的 Pixel Flow 生成模型：
 
-1. **Alpha 门控源状态（Alpha-Gated Source State）**：利用 3DGS 渲染得到的透明度图 $\tilde{\mathbf A}_p$ 衡量 3D 投影的几何可靠度。构造空间自适应噪声尺度：
+1. **Alpha 门控源状态（Alpha-Gated Source State）**：利用 3DGS 渲染得到的透明度图 $$\tilde{\mathbf A}_p$$ 衡量 3D 投影的几何可靠度。构造空间自适应噪声尺度：
    $$\Sigma(\tilde{\mathbf A}_p) = \tilde{\mathbf A}_p \odot \sigma_{\mathrm{small}} + (1 - \tilde{\mathbf A}_p) \odot \sigma_{\mathrm{large}}$$
    由此生成 Alpha 门控源状态：
    $$\mathbf z_{\mathrm{src}} = \tilde{\mathbf A}_p \odot \tilde{\mathbf X}_p + \Sigma(\tilde{\mathbf A}_p) \odot \mathbf \epsilon, \quad \mathbf \epsilon \sim \mathcal N(\mathbf 0, \mathbf I)$$
@@ -6639,7 +6537,7 @@ Image2Sim 的核心创新在于将神经环境建模拆分为两个解耦的模�
 2. **网络结构**：基于 UNet 架构，卷积编码器压缩源状态 $\mathbf z_{\mathrm{src}}$ 与几何条件 $\mathbf C_p$，Deep Transformer 瓶颈层引入 AdaLN 时间注入与 SPADE 式空间自适应归一化（注入 DINOv3 语义特征 $\Phi(\mathbf C_p)$）。上采样阶段采用 Alpha 金字塔门控跳跃连接（Alpha-Gated Skip Connections），保护高透明度区域的几何细节不被生成网络破坏。
 
 > **举个例子（Alpha 门控手算推演）**：
-> 假设智能体转头看向门后区域，全景图某像素在 3DGS 投影中透明度为 $\tilde{A}_p = 0.95$（已有已知几何），而旁边未被扫描到的墙角透明度为 $\tilde{A}_p = 0.05$（纯盲区）。
+> 假设智能体转头看向门后区域，全景图某像素在 3DGS 投影中透明度为 $$\tilde{A}_p = 0.95$$（已有已知几何），而旁边未被扫描到的墙角透明度为 $$\tilde{A}_p = 0.05$$（纯盲区）。
 > 设 $\sigma_{\mathrm{small}}=0.01$，$\sigma_{\mathrm{large}}=1.0$。
 > - 已知区域噪声标准差仅为 $0.95 \times 0.01 + 0.05 \times 1.0 = 0.0595$，网络输入近乎纯净的投影 RGB-D 证据；
 > - 盲区像素噪声标准差达到 $0.05 \times 0.01 + 0.95 \times 1.0 = 0.9505$，网络收到强噪声信号，触发 generative 扩散/流匹配机制填充合理纹理与深度。
@@ -6734,7 +6632,7 @@ graph TD
 
 ---
 
-## 57. DecoVLN (2026) {#decovln}
+## 56. DecoVLN (2026) {#decovln}
 ———Decoupling Observation, Reasoning, and Correction for Vision-and-Language Navigation
 
 📄 **Paper**: [arXiv:2603.13133](https://arxiv.org/abs/2603.13133) · 🏛️ **CVPR 2026** · [Project Page](https://allenxinn.github.io/DecoVLN/) · [Code](https://github.com/Allenxinn/DecoVLN)
@@ -6792,17 +6690,17 @@ AMR 将长程记忆构建建模为显式多准则迭代优化问题。在导航�
 $$f^* = \arg\max_{f \in \mathcal C \setminus \mathcal M} \left[ \lambda_R \cdot \mathrm{Sim}_{Sem}(f, I) - (1 - \lambda_R) \cdot \left( w_V \cdot \mathrm{Sim}_{Vis}(f, \mathcal M) + w_T \cdot \mathrm{Sim}_{Temp}(f, \mathcal M) \right) \right]$$
 
 其中各项物理意义如下：
-1. **语义相关性（$\mathrm{Sim}_{Sem}$）**：计算候选帧视觉嵌入 $e_f$ 与导航指令全局文本嵌入 $e_I$ 的余弦相似度：
+1. **语义相关性（$$\mathrm{Sim}_{Sem}$$）**：计算候选帧视觉嵌入 $e_f$ 与导航指令全局文本嵌入 $e_I$ 的余弦相似度：
    $$\mathrm{Sim}_{Sem}(f, I) = \frac{e_f \cdot e_I}{\lVert e_f \rVert \lVert e_I \rVert}$$
-2. **视觉多样性惩罚（$\mathrm{Sim}_{Vis}$）**：计算候选帧 $f$ 与当前记忆库 $\mathcal M$ 中所有已有帧的最大视觉余弦相似度，惩罚视场高度雷同的重复地标：
+2. **视觉多样性惩罚（$$\mathrm{Sim}_{Vis}$$）**：计算候选帧 $f$ 与当前记忆库 $\mathcal M$ 中所有已有帧的最大视觉余弦相似度，惩罚视场高度雷同的重复地标：
    $$\mathrm{Sim}_{Vis}(f, \mathcal M) = \max_{m \in \mathcal M} \frac{\mathrm{embed}(f) \cdot \mathrm{embed}(m)}{\lVert \mathrm{embed}(f) \rVert \lVert \mathrm{embed}(m) \rVert}$$
-3. **时间跨度覆盖惩罚（$\mathrm{Sim}_{Temp}$）**：惩罚时间戳过近的候选帧，鼓励记忆库在整条长轨迹上保持均匀的时间覆盖度（$\epsilon$ 为防除零微小常数）：
+3. **时间跨度覆盖惩罚（$$\mathrm{Sim}_{Temp}$$）**：惩罚时间戳过近的候选帧，鼓励记忆库在整条长轨迹上保持均匀的时间覆盖度（$\epsilon$ 为防除零微小常数）：
    $$\mathrm{Sim}_{Temp}(f, \mathcal M) = \frac{1}{\min_{m \in \mathcal M} \lvert t_f - t_m \rvert + \epsilon}$$
 
 > **举个例子（AMR 权重平衡如何选出关键地标）**：
 > 机器人执行一条 50 步的长指令：“穿过走廊，进入客厅并在黑色双人沙发旁停下”。
 > 机器人在客厅停留了 15 步，如果只看语义相关性（$\lambda_R = 1.0$），选出的 8 张记忆帧会全被客厅同一角度的沙发特写占满，导致前半段走廊的记忆完全丢失；
-> 当引入视觉多样性与时间惩罚（$\lambda_R = 0.5, w_V = 0.5, w_T = 0.5$）后，第二张客厅沙发帧因与已存沙发帧的 $\mathrm{Sim}_{Vis} > 0.95$ 且时间差极小，得分被大幅扣减；
+> 当引入视觉多样性与时间惩罚（$\lambda_R = 0.5, w_V = 0.5, w_T = 0.5$）后，第二张客厅沙发帧因与已存沙发帧的 $$\mathrm{Sim}_{Vis} > 0.95$$ 且时间差极小，得分被大幅扣减；
 > 最终算法会自动保留：1 帧起始房间、2 帧走廊拐角、2 帧客厅入口、3 帧不同朝向的沙发地标，实现全时空高保真记忆。
 
 <div align="center">
@@ -6828,8 +6726,8 @@ graph TD
 ```
 
 具体算法细节如下：
-- **偏离度度量**：利用环境拓扑的测地距离（Geodesic Distance）定义偏离度 $\mathrm{DM}(s_t) = \min_{s^* \in \mathcal P_{exp}} d_g(s_t, s^*)$。
-- **信任域阈值 $\tau$**：设定信任域截断阈值 $\tau = 3\text{m}$。当 $0 < \mathrm{DM}(s_t) \le \tau$ 时，智能体偏离但仍处于可感知原始目标的有效上下文范围内，此时向最短路径专家策略（SPF）查询一步返回正轨的最优动作 $a_t^{\mathrm{exp}} = \pi^*(s_t)$，存入微调数据集 $\mathcal D_c$；
+- **偏离度度量**：利用环境拓扑的测地距离（Geodesic Distance）定义偏离度 $$\mathrm{DM}(s_t) = \min_{s^* \in \mathcal P_{exp}} d_g(s_t, s^*)$$。
+- **信任域阈值 $\tau$**：设定信任域截断阈值 $\tau = 3\text{m}$。当 $0 < \mathrm{DM}(s_t) \le \tau$ 时，智能体偏离但仍处于可感知原始目标的有效上下文范围内，此时向最短路径专家策略（SPF）查询一步返回正轨的最优动作 $$a_t^{\mathrm{exp}} = \pi^*(s_t)$$，存入微调数据集 $\mathcal D_c$；
 - **越界截断**：一旦 $\mathrm{DM}(s_t) > \tau$，说明已发生灾难性迷航，强行纠偏只会引入与语言指令脱节的奇异状态分布，算法立即中断该 Episode。
 - **防灾难性遗忘混合训练**：在纠错微调阶段，将 180K 导航纠错样本与 178K 的通用视频问答数据集（LLaVA-Video-178K）按比例混合，保证模型在获得闭环自愈能力的同时，维持基础多模态时空推理能力。
 
@@ -6866,7 +6764,7 @@ graph TD
 
 ---
 
-## 58. TAMP-Nav (2026) {#tamp-nav}
+## 57. TAMP-Nav (2026) {#tamp-nav}
 ———Point, Think, Memorize, and Align for Efficient Navigation
 
 📄 **Paper**: [arXiv:2608.17512](https://arxiv.org/abs/2608.17512) · [Code](https://github.com/ZJU-OmniAI/Embodied-Omni)
@@ -7041,7 +6939,7 @@ graph TD
 
 ---
 
-## 59. LightNav-0 (2026) {#lightnav-0}
+## 58. LightNav-0 (2026) {#lightnav-0}
 ———把 VLM 已有的空间智能"引出来"，而不是给它外挂一个导航模块
 
 📄 **Paper**: [arXiv:2608.30935](https://arxiv.org/abs/2608.30935) · [Code](https://github.com/lightorigins/LightNav-0)
@@ -7254,7 +7152,7 @@ $$R_{VLN} = \left(1 + \mathrm{nDTW}\right)\mathbf 1[\text{success}] + \exp\!\lef
 
 ---
 
-## 60. Uncertainty-Aware Gaussian Map for VLN (2026) {#uncertainty-aware-gaussian-map}
+## 59. Uncertainty-Aware Gaussian Map for VLN (2026) {#uncertainty-aware-gaussian-map}
 ———三类感知不确定性 × Semantic Gaussian Map，赋予 VLN 智能体可靠决策能力
 
 📄 **Paper**: [arXiv:2607.13500](https://arxiv.org/abs/2607.13500) · 🏛️ **ICLR 2026** · [Code](https://github.com/Gaozzzz/Uncertainty-Aware-VLN)
@@ -7347,6 +7245,233 @@ SGM 构建（尤其是 SAM2 语义抽取与不确定性估计）推理开销较�
 
 
 
+## 60. HarnessVLN (2026) {#harnessvln}
+———一套 Agent Harness，把"指令跟随"和"找物体"两类导航压进同一个工具调用协议
+
+📄 **Paper**: [arXiv:2609.15195](https://arxiv.org/abs/2609.15195) · [Project Page](https://agibot-harnessvln.netlify.app/)
+
+---
+
+### 精华
+
+训练无关导航真正的瓶颈不在于 planner 够不够聪明，而在于「语义上合理的提议」与「物理上能不能执行」之间缺一个仲裁层——HarnessVLN 就是把这个仲裁层显式做出来。做法是把 MLLM 从决策者降级为**提议者**：它输出的每一次工具调用，都要先过证据新鲜度、几何可达性、子目标一致性三道校验才允许派发，连 Stop 都只是「申请」而非「命令」。记忆被拆成互补的两套——事件记忆（任务中心，存完整失败轨迹）与时空图 ST Graph（环境中心，存可复用空间证据加轻量失败标注和回指事件的引用），既保住可追溯性，又让进入 MLLM 上下文的东西不随轨迹长度线性膨胀。协议保持不变、执行器可替换，于是同一套 Harness 同时吃下 VLN-CE R2R/RxR 与 HM3D-v2/OVON 四个基准，并直接迁到人形机器人上。可迁移的核心思想是：**给 agent 加一层「派发前校验 + 结构化反馈回灌」的运行时，比继续调 prompt 更能把语义推理接回物理执行**。
+
+---
+
+### 1. 研究背景/问题
+
+指令跟随与目标物体导航这两类任务，都要求 agent 把语言接到部分可观测的环境上、边走边积累空间知识、并判断自己的动作是否真的推进了任务。训练式方法在目标任务上有效，但换任务形式或换环境就要重新采数据；MLLM 驱动的训练无关方法绕开了训练，却普遍把模型当成任务专用流水线里的一个 planner——**证据怎么留存、提议怎么校验、失败如何影响后续决策，仍由外围流水线决定**。于是老问题依旧：认出目标不等于走得到，发出动作不等于子目标完成；陈旧观测、不可达目标与执行失败会让后续规划与真实任务状态越走越偏，表现为反复尝试或错误终止。
+
+---
+
+### 2. 主要方法/创新点
+
+**整体框架**：HarnessVLN 由四个部件构成——**MLLM Planner** 只负责提出语义操作，**Agent Harness** 负责组装上下文、校验提议、派发工具并回灌反馈，**分层事件记忆**负责记录任务进展与执行事件，**持久化 ST Graph** 负责沉淀可复用的空间证据。四者通过一套**统一工具接口**闭环：上下文组装 → 提议校验 → 工具派发 → 反馈整合 → 再组装。
+
+<div align="center">
+  <img src="/images/vln/HarnessVLN-architecture.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1320/950" />
+<figcaption>HarnessVLN 总体架构：MLLM Planner 只提"操作提议"，Agent Harness 在派发前完成证据/几何/任务一致性校验，工具返回的结构化反馈再更新事件记忆与 ST Graph</figcaption>
+</div>
+
+#### 卡点一：说了半天，Harness 和普通的「MLLM 当 planner」流水线到底差在哪？
+
+差别只有一句话：**MLLM 说的话不再直接算数**。传统流水线里模型输出什么就执行什么，Harness 则在模型和环境之间插了一道闸。
+
+| 维度 | 传统 MLLM-as-planner 流水线 | HarnessVLN 的 Agent Harness |
+|---|---|---|
+| MLLM 的角色 | 决策者：输出的动作直接下发执行 | 提议者：输出的是"操作提议"，待审 |
+| 提议怎么落地 | 下游模块尽力执行，成不成看运气 | 派发前查三件事：证据来源与新鲜度、目标几何可达性、与当前子目标是否一致 |
+| 失败怎么用 | 只体现为"这步没成"，下一轮照样提同一个 | 写入 reflection memory，并在 ST Graph 对应地点挂轻量标注，压低下一轮检索得分 |
+| 停不停 | 模型说 stop 就 stop | 模型只能"申请"，语义 ∧ 几何 ∧ 进度三重门控全过才真下发 |
+
+画成运行时循环就是下面这张图。注意那条**校验不通过的回边**——它是整个框架区别于流水线的地方：被拒的提议不会消失，而是变成下一轮上下文里的一条负面证据。
+
+```mermaid
+graph TD
+    A["观测 + 位姿 (RGB-D)"] --> B["上下文组装: 任务 · 当前观测 · 检索到的证据"]
+    B --> C["MLLM Planner 提出一个语义操作"]
+    C --> D{"Harness 三审: 证据够新吗 / 几何可达吗 / 与当前子目标一致吗"}
+    D -- "不通过" --> E["写入 Reflection Memory 与 ST Graph 标注"]
+    E --> B
+    D -- "通过" --> F["派发工具调用 (统一输入输出契约)"]
+    F --> G["结构化反馈: 到达 / 碰撞 / 不可达 / 无进展"]
+    G --> H["更新 Harness 状态 · 任务进度 · ST Graph"]
+    H --> B
+```
+
+#### 2.1 Harness 的状态与决策循环
+
+在决策步 $t$，Harness 维护状态
+
+$$
+S_t = \langle x,\ \omega_t,\ p_t,\ z_t,\ M_t,\ G_t \rangle
+$$
+
+其中 $x$ 是任务规格（一条路线指令，或一个目标物体类别），$\omega_t$ 是位姿对齐的 RGB-D 观测与局部几何地图，$p_t$ 是 agent 位姿，$z_t$ 是任务进度，$M_t$ 是分层事件记忆，$G_t$ 是持久化 ST Graph。
+
+**两类任务共用同一份状态定义，差别只落在 $z_t$ 上**：指令跟随时 $z_t$ 记录当前路线片段、已满足的运动约束与已观测到的地标；ObjectNav 时 $z_t$ 记录已探索区域、候选目标假设及其验证状态。任务变了，进度表示和完成判据变，但 Harness 协议本身一个字不改——这是它能同时覆盖两类任务的根本原因。
+
+单步循环（论文 Algorithm 1）：观测与位姿不一致就重新 `Observe` → 记录事件 → 合并图 → 取当前活跃子目标 → 按子目标检索经验 → 组装上下文 → MLLM 出提议 → **Validate** → 派发工具 → 用反馈更新状态。
+
+#### 2.2 统一工具接口
+
+所有异构能力被包进一个共享的输入输出契约，因此**换掉任何单个工具都不必改动 MLLM Planner 或 Harness 协议**：
+
+| 工具 | 角色 | 功能 |
+|---|---|---|
+| `observe` | 感知 | 抓取当前 RGB-D 观测与 agent 位姿 |
+| `observe_panorama` | 感知 | 在预设朝向上抓取全景观测 |
+| `retrieve_memory` | 检索 | 从事件记忆与 ST Graph 取任务相关证据 |
+| `ground_target` | 接地 | 把子目标落到某个候选视角的图像区域 |
+| `query_depth` | 感知 | 估计已接地区域的深度及其不确定度 |
+| `navigate_to` | 导航 | 对已通过校验的目标调用 Navigation Executor |
+| `backtrack` | 恢复 | 回到此前访问过的位置并确认到达 |
+| `request_stop` | 终止 | 终止执行前验证任务是否真的完成 |
+
+#### 2.3 分层事件记忆 $M_t$（任务中心）
+
+- **Working memory（工作记忆）**：当前观测、有界的全景历史、活跃目标假设、近期工具反馈。**只留下一步决策需要的短期上下文，因此不随轨迹长度无限增长**。
+- **Progress memory（进度记忆）**：任务分解与完成状态。每个子目标有唯一 id 和四种状态之一——pending / active / completed / blocked；**同一时刻至多一个 active**，且标记 completed 必须有位姿对齐的观测或成功的工具结果作支撑，堵死了 planner「嘴上说完成了」就推进任务的路。
+- **Reflection memory（反思记忆）**：完整记录子目标级执行事件——不可达目标、接地不一致、碰撞、无进展、回溯失败、被拒的停止请求。每条含事件 id、任务上下文、位置、时间戳、工具反馈与支撑观测。
+
+#### 2.4 Harness 托管的时空图 $G_t$（环境中心）
+
+$$
+G_t = \left( V_t^P \cup V_t^E,\ E_t,\ T_t \right)
+$$
+
+$V_t^P$ 为 place 节点，$V_t^E$ 为 entity 节点，$E_t$ 为带类型的空间关系，$T_t$ 存时间戳与轻量事件标注。
+
+- **Place 节点**汇总已访问位置、支撑观测与可通行 waypoint；空间上相容的观测合并进已有 place，否则新建节点；相邻 place 用双向 `NavigableTo` 边连接，形成可供前进与回溯复用的持久拓扑。
+- **Entity 节点**表示 ObjectNav 目标与指令中提及的地标，带语义别名、空间假设、置信度与支撑视角；`ObservedFrom` 边保留「在何时、从哪个视角看到」的溯源信息，`Contains` 边编码粗粒度的 place–entity 归属。**正因为存了溯源，Harness 才能同时取回「目标假设」和「验证这个假设所需的证据」**。
+- **任务条件检索**：每次 MLLM 决策前，按当前活跃子目标 $g_t$ 给 place 节点打分
+
+$$
+s(v_i \mid g_t) = R(v_i, g_t) + \lambda_{rec} C(v_i) + \lambda_{sal} A(v_i) - \lambda_{fail} P(v_i, g_t)
+$$
+
+其中 $R$ 为语义相关性（用局部 IDF 加权余弦相似度实现），$C$ 为新鲜度，$A$ 为空间显著性，$P$ 惩罚适用的历史失败。
+
+#### 卡点二：事件记忆和 ST Graph 看起来都在存历史，为什么要分两套？
+
+因为它们回答的是两个不同的问题：事件记忆回答「**这次任务我干了什么**」，ST Graph 回答「**这个房子长什么样**」。前者随任务推进滚动、有界；后者跨子目标持久累积。
+
+| 维度 | Event Memory（事件记忆） | ST Graph（时空图） |
+|---|---|---|
+| 视角与寿命 | 任务中心，随子目标滚动，working 部分有界 | 环境中心，跨子目标持久，整个 episode 累积 |
+| 存什么 | 三层：working（当前观测与近期反馈）/ progress（子目标状态机）/ reflection（完整失败事件） | place 节点、entity 节点、带类型空间关系、时间戳 |
+| 失败记录 | 权威全量：事件 id、任务上下文、位置、时间戳、工具反馈、支撑观测 | 只挂"此处在该子目标下栽过"的轻标注，外加一个指回原事件的引用 |
+| 被谁读 | 组装当前决策上下文 | 按 $s(v_i \mid g_t)$ 打分选 top-K 地点，喂给 MLLM |
+
+关键设计在最后两行：**失败的完整轨迹只存一份（在 reflection memory），图里只放"指针加权重"**。这样既能做失败感知的检索与恢复，又不用把执行历史在图里复制一遍。标注的相关性还会动态调整——子目标变了或新证据推翻了它，权重下降；同类失败反复出现，权重上升；同时惩罚有上限，**避免某条支路因为失败过一次就被永久拉黑**。
+
+> **举个例子（检索打分怎么算）**：假设图里只有 3 个 place 节点，当前子目标是"去厨房找洗碗机"。按论文附录给的权重（新鲜度 0.3、显著性 0.3、每条适用失败扣 0.5、扣分上限 1.0）：
+>
+> - 节点 A（厨房，3 步前刚看过）：$0.9 + 0.3 \times 1.0 + 0.3 \times 0.8 = 1.44$
+> - 节点 B（厨房另一侧，60 步前看过，且上次从这里导航过去撞墙失败过一次）：$0.85 + 0.3 \times 0.2 + 0.3 \times 0.7 - 0.5 = 0.62$
+> - 节点 C（卧室）：$0.1 + 0.3 \times 0.5 + 0.3 \times 0.3 = 0.34$
+>
+> 取分数最高的 3 个作种子、各向外扩一跳、最多返回 5 个 place —— **进入 MLLM 上下文的永远是这 5 个地点及其实体，图却可以随轨迹一直长下去**。这就是「图增长但上下文不增长」的具体含义。
+
+#### 2.5 接地执行与基于证据的终止
+
+MLLM 提出的是语义命令，物理执行需要接地的目标和可执行的控制量，所以 Navigation Executor 被做成一个**可替换的 Harness 托管工具**：Harness 负责接地与校验，Executor 只负责路径规划与局部控制。命令只有在「有证据支撑 + 几何可达 + 与活跃子目标和适用失败历史一致」时才派发；Executor 回传到达 / 碰撞 / 不可达 / 无进展等结构化反馈，用于更新状态、事件记忆与图。**前进与回溯走的是同一条「校验—执行—更新」回路**。
+
+终止同样由 Harness 仲裁——MLLM 可以提议停止，但**不能直接下发环境级 Stop 动作**。请求被接受当且仅当
+
+$$
+F_{stop} = F_{semantic} \wedge F_{geometric} \wedge F_{progress}
+$$
+
+三项分别校验目标身份、几何有效性与任务完成度。ObjectNav 要求目标在视觉上有支撑且落在停止半径内；指令跟随则要求当前证据支持最后一个路线片段、被引用的地标与接地的终点。**被拒的请求会写进事件记忆，并触发进一步观测、目标细化、继续靠近或回溯**。
+
+> **举个例子（停止门控怎么救回一次失败）**：论文 Figure 8，HM3D-OVON 第 1297 集，目标类别是 picture。
+>
+> 第 216 步，agent 认为自己到了：按投影导航目标点算，距离只有 **0.40 m**，低于 1.0 m 的投影目标阈值，"看起来"该停了。
+> 但 Harness 不信这个数——它优先抓一帧**新鲜深度**：在检测框锚点上取 5×5 邻域的中位数（要求 patch 标准差不超过 0.5 m），读到 **4.65 m**，远超 2.5 m 的深度阈值，于是 $F_{geometric}$ 不成立，停止申请被驳回，事件入库。
+> agent 继续靠近，第 429 步新深度读到 **1.53 m**，门通过；第 430 步真正停下，基准评测的终点距离是 **0.13 m**，成功。
+>
+> 一句话：**投影目标点只能说明"我走到了我以为的地方"，新鲜深度才能说明"我真的挨着那个物体"**。Harness 的价值就是在这两者冲突时，选择相信传感器而不是相信规划。
+
+<div align="center">
+  <img src="/images/vln/HarnessVLN-stop-validation-case.webp" width="95%" loading="lazy" decoding="async" style="aspect-ratio:1320/491" />
+<figcaption>停止门控的实际效果：第 216 步的停止申请因新鲜深度 4.65 m 被拒，agent 继续靠近，第 430 步在 0.13 m 处成功终止</figcaption>
+</div>
+
+下面这张运行时面板把前面所有抽象状态一次性落地了——注意面板 ⑤ 里的 STOP GATE 计数（requested / gate pass / gate fail / rejected）、ST Graph 的节点边计数，以及面板 ⑦ 里每条 TODO 后面挂的 `evidence` id：**"完成"这两个字在系统里始终绑着一条可回溯的观测**。
+
+<div align="center">
+  <img src="/images/vln/HarnessVLN-runtime-dashboard.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1320/836" />
+<figcaption>运行时面板：①运行状态 ②带接地框的 RGB 观测 ③导航地图 ④图例 ⑤Harness 状态（决策、停止门控、ST Graph 计数、执行器计数） ⑥任务与当前动作 ⑦带证据 id 的 TODO 记忆</figcaption>
+</div>
+
+**实现配置**：640×480 同步 RGB-D、79° 水平视场；GroundingDINO 加 SAM 提供开放词表目标区域与分割掩码；Navigation Executor 平面运动用 FMM 规划器，需要上下楼梯时调用 NavDP。仿真主实验中，指令跟随用 GPT-5.5、ObjectNav 用 GPT-5.6-luna——**同一个 episode 内所有推理功能（任务分解、导航规划、目标接地、停止验证、恢复）共用一个模型，只换 prompt**。
+
+---
+
+### 3. 核心结果/发现
+
+**指令跟随（VLN-CE val-unseen）**：在训练无关方法中 R2R 与 RxR 的 SR 均为最高。相比同样用 GPT-5.5 的 AgenticNav，R2R 的 SR 高 5.8 分、OSR 高 7.7 分；相比 HSGM，RxR 的 SR 高 12.1 分、SPL 高 12.9 分，nDTW 相当。
+
+| 方法 | R2R NE↓ | R2R OSR↑ | R2R SR↑ | R2R SPL↑ | RxR SR↑ | RxR SPL↑ | RxR nDTW↑ |
+|---|---|---|---|---|---|---|---|
+| *NavFoM [ICLR26]（有监督）* | *3.78* | *70.8* | *61.7* | *55.3* | *64.4* | *56.2* | *–* |
+| *ABot-N0 [CVPR26]（有监督）* | *3.78* | *70.8* | *66.4* | *63.9* | *69.3* | *60.0* | *–* |
+| GC-VLN [CoRL25] | 7.30 | 41.8 | 33.6 | 16.3 | 33.8 | 13.8 | – |
+| HSGM [CVPR26] | 5.42 | 58.7 | 47.9 | 32.8 | 41.8 | 25.1 | 54.9 |
+| AgenticNav-GPT-5.5 | 5.19 | 65.0 | 55.0 | **48.4** | – | – | – |
+| **HarnessVLN-GPT-5.5** | **4.01** | **72.7** | **60.8** | 43.5 | **53.9** | **38.0** | 54.8 |
+
+**目标物体导航**：HM3D-v2 拿到训练无关方法中最高的 SR（76.0%）；HM3D-OVON 上 SR 59.3%、SPL 36.6%，**在所有列出方法中最高（含有监督方法）**，比 DRIVE-Nav 高 9.1 分与 4.0 分。
+
+| 方法 | 需训练 | HM3D-v2 SR↑ | HM3D-v2 SPL↑ | OVON SR↑ | OVON SPL↑ |
+|---|---|---|---|---|---|
+| FiLM-Nav [arXiv25] | ✓ | 77.0 | **41.3** | 40.8 | 24.4 |
+| ABot-N0 [CVPR26] | ✓ | – | – | 54.0 | 30.5 |
+| DRIVE-Nav [arXiv26] | ✗ | 72.4 | **41.3** | 50.2 | 32.6 |
+| MSGNav [CVPR26] | ✗ | 74.4 | 33.4 | 48.3 | 27.0 |
+| **HarnessVLN** | ✗ | **76.0** | 37.9 | **59.3** | **36.6** |
+
+**消融（各 100 集固定子集，累积开启）**：事件记忆是最大单项增益，ST Graph 次之且同时改善 SPL，停止验证再补一刀。完整 Harness 相比基础 agent，R2R 与 OVON 的 SR 分别提升 18.0 与 10.0 分，OSR–SR 差距在两个任务上都收窄。
+
+| Mem. | Graph | Stop | R2R SR↑ | R2R SPL↑ | R2R Gap↓ | OVON SR↑ | OVON SPL↑ | OVON Gap↓ |
+|---|---|---|---|---|---|---|---|---|
+| ✗ | ✗ | ✗ | 46.0 | 23.7 | 26.0 | 45.0 | 32.0 | 27.0 |
+| ✓ | ✗ | ✗ | 54.0 | 33.0 | 19.0 | 52.0 | 32.4 | 20.0 |
+| ✓ | ✓ | ✗ | 60.0 | 35.4 | 15.0 | 53.0 | 34.2 | 18.0 |
+| ✓ | ✓ | ✓ | **64.0** | **35.8** | **13.0** | **55.0** | 33.0 | 19.0 |
+
+**一个诚实的反例**：停止验证在 OVON 上把 SR 从 53.0 提到 55.0，却让 SPL 从 34.2 掉到 33.0、OSR–SR 差距从 18.0 涨到 19.0——**更严的验证换来更高的完成率，代价是绕路和更谨慎的终止**，两者并不同向。
+
+**模型敏感性（固定 100 集 OVON 子集）**：协议与工具不变只换基座，SR 在 51.0（Qwen3.8-flash）到 63.0（GPT-6-astra）之间摆动；而在同一基座 GPT-5.6-luna 下，HarnessVLN 的 55.0 对 MSGNav 的 37.0，说明**增益主要来自 Harness 而非模型本身**。
+
+| 方法 | 基座模型 | SR↑ | SPL↑ | OSR↑ | Gap↓ |
+|---|---|---|---|---|---|
+| MSGNav | GPT-5.6-luna | 37.0 | 18.9 | 46.0 | **9.0** |
+| HarnessVLN | GPT-5.6-luna | 55.0 | 33.0 | 74.0 | 19.0 |
+| HarnessVLN | GPT-6-astra | **63.0** | **39.4** | **76.0** | 13.0 |
+| HarnessVLN | Qwen3.8-flash | 51.0 | 32.8 | 75.0 | 24.0 |
+
+**真机部署**：AgiBot A3U 全尺寸人形机器人（1.74 m，3D LiDAR 加多路 RGB-D 与鱼眼相机，NVIDIA Thor 板载算力），头部立体相机作主视觉传感器，Fast FoundationStereo 出稠密度量深度，**规划模型换成本地的 Qwen-3.8-27B**。三个场景：连续指令跟随（走到 806 室前路口、左转停在饮水机旁垃圾桶、再去冰箱）、开放词表物体搜索、以及「先停在门口指示牌再找自动售货机」的组合任务。ST Graph 在路线跟随与物体搜索之间保留了地标与目标证据，支撑了阶段之间的连续性。
+
+<div align="center">
+  <img src="/images/vln/HarnessVLN-real-world.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1317/873" />
+<figcaption>真机导航三例：连续指令跟随、开放词表物体搜索、以及路线跟随与物体搜索混合的组合任务；右侧为同步构建的 ST Graph</figcaption>
+</div>
+
+<div align="center">
+  <img src="/images/vln/HarnessVLN-teaser.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1320/839" />
+<figcaption>一套 Harness 通吃四个基准与两类任务，并可 Sim2Real 迁移到人形机器人</figcaption>
+</div>
+
+---
+
+### 4. 局限性
+
+论文自述：当前 Harness 的编排与校验规则是预先设定的，缺少在开放环境交互中自我演化的机制。从数据上看还有两点值得注意——**更严的校验不免费**，HarnessVLN 的 R2R SPL（43.5）低于同用 GPT-5.5 的 AgenticNav（48.4），HM3D-v2 SPL（37.9）也低于 FiLM-Nav 与 DRIVE-Nav 的 41.3，停止验证在 OVON 上甚至同时拉低 SPL 并拉大 OSR–SR 差距；**对基座模型仍相当敏感**，换成 Qwen3.8-flash 后 OVON 的 SR 掉 4 分、OSR–SR 差距从 19 扩到 24，说明"看见了却没能通过门走到"依然是主要失败模式。
+
+---
+
 # 参考资料
 
 ## 已发表论文（会议 / 期刊）
@@ -7357,7 +7482,7 @@ SGM 构建（尤其是 SAM2 语义抽取与不确定性估计）推理开销较�
 |---|---|
 | **CVPR** | [VLN-Imagine](#vln-imagine) (2025)、[Slow4fast-VLN](#slow4fast-vln) (2026)、[AwareVLN](#awarevln) (2026)、[GA-VLN](#ga-vln) (2026)、[Image2Sim](#image2sim) (2026)、[DecoVLN](#decovln) (2026)、[R2R](#r2r) (2018, Spotlight)、[DUET](#duet) (2022) |
 | **ICLR** | [NavFoM](#navfom) (2026)、[JanusVLN](#janusvln) (2026)、[OmniNav](#omninav) (2026, Poster)、[TuckerNav](#tuckernav) (2026)、[Uncertainty-Aware Gaussian Map](#uncertainty-aware-gaussian-map) (2026) |
-| **ICRA** | [NoMaD](#nomad) (2024)、[VLFM](#vlfm) (2024)、[Open-Nav](#open-nav) (2025)、[NavDP](#navdp) (2026)、[StreamVLN](#streamvln) (2026) |
+| **ICRA** | [NoMaD](#nomad) (2024)、[VLFM](#vlfm) (2024)、[Open-Nav](#open-nav) (2025)、[NavDP](/VLN-Papers-Extended/#navdp) (2026)、[StreamVLN](#streamvln) (2026) |
 | **ECCV** | [VLN-CE](#vln-ce) (2020)、[NavGPT-2](#navgpt-2) (2024)、[RynnBrain](#rynnbrain) (2026) |
 | **AAAI** | [ODYSSEY](#odyssey) (2026)、[CorrectNav](#correctnav) (2026)、[R³](#r3) (2026)、[PanoNav](#panonav) (2026, Poster) |
 | **ICCV** | [VLN-PE](#vln-pe) (2025) |
@@ -7378,57 +7503,57 @@ SGM 构建（尤其是 SAM2 语义抽取与不确定性估计）推理开销较�
 7. **NaVid** (2024). 首个无需依赖地图、基于视频大模型的单目连续视觉语言导航模型. arXiv: [2402.15852](https://arxiv.org/abs/2402.15852) · RSS 2024 · Code: [jzhzhang/NaVid-VLN-CE](https://github.com/jzhzhang/NaVid-VLN-CE)
 8. **NavGPT-2** (2024). 释放大型视觉语言模型的导航推理能力. arXiv: [2407.12366](https://arxiv.org/abs/2407.12366) · ECCV 2024 · Code: [GengzeZhou/NavGPT-2](https://github.com/GengzeZhou/NavGPT-2)
 9. **DualVLN/InternVLN** (2025). Ground Slow, Move Fast: 具备世界模型与快慢双系统的端到端连续导航. arXiv: [2512.08186](https://arxiv.org/abs/2512.08186) · Code: [InternRobotics/InternNav](https://github.com/InternRobotics/InternNav)
-10. **NavDP** (2025). 只用仿真数据训练，零样本迁移到真实机器人的导航扩散策略. arXiv: [2505.08712](https://arxiv.org/abs/2505.08712) · ICRA 2026 · Code: [InternRobotics/NavDP](https://github.com/InternRobotics/NavDP)
-11. **ODYSSEY** (2025). Open-World Quadrupeds Exploration and Manipulation for Long-Horizon Tasks. arXiv: [2508.08240](https://arxiv.org/abs/2508.08240) · AAAI 2026
-12. **PanoNav** (2025). Mapless Zero-Shot Object Navigation. arXiv: [2511.06840](https://arxiv.org/abs/2511.06840) · AAAI 2026 (Poster)
-13. **VLN-R1** (2025). 基于GRPO与Time-Decayed Reward的端到端导航. arXiv: [2506.17221](https://arxiv.org/abs/2506.17221) · Code: [Qi-Zhangyang/GPT4Scene-and-VLN-R1](https://github.com/Qi-Zhangyang/GPT4Scene-and-VLN-R1)
-14. **StreamVLN** (2025). 通过慢-快上下文建模实现流式视觉-语言导航. arXiv: [2507.05240](https://arxiv.org/abs/2507.05240) · ICRA 2026 · Code: [OpenRobotLab/StreamVLN](https://github.com/OpenRobotLab/StreamVLN)
-15. **NavFoM** (2025). Embodied Navigation Foundation Model. arXiv: [2509.12129](https://arxiv.org/abs/2509.12129) · ICLR 2026
-16. **MapNav** (2025). A Novel Memory Representation via Annotated Semantic Maps for Vision-and-Language Navigation. arXiv: [2502.13451](https://arxiv.org/abs/2502.13451) · ACL 2025 · Code: [linglingxiansen/MapNav](https://github.com/linglingxiansen/MapNav)
-17. **Open-Nav** (2025). Zero-Shot VLN in Continuous Environment with Open-Source LLMs. arXiv: [2409.18794](https://arxiv.org/abs/2409.18794) · ICRA 2025
-18. **Skill-Nav** (2025). Enhanced Navigation with Versatile Quadrupedal Locomotion via Waypoint Interface. arXiv: [2506.21853](https://arxiv.org/abs/2506.21853) · Vicinagearth (Springer) 2025
-19. **VLN-Imagine** (2025). 用文本生成图像模型为导航智能体构建"视觉想象". arXiv: [2503.16394](https://arxiv.org/abs/2503.16394) · CVPR 2025 · Code: [akhilperincherry/VLN-Imagine](https://github.com/akhilperincherry/VLN-Imagine)
-20. **VLN-PE** (2025). 重新思考视觉-语言导航中的具身化差距:物理和视觉差异的全面研究. arXiv: [2507.13019v2](https://arxiv.org/abs/2507.13019v2) · ICCV 2025
-21. **Goal2Pixel** (2025). 将导航目标接地到图像像素，以像素预测统一 VLN-CE 的决策空间. arXiv: [2606.01621](https://arxiv.org/abs/2606.01621)
-22. **AstraNav-World** (2025). 将"想象未来"与"规划未来"统一进同一个生成式概率框架. arXiv: [2512.21714](https://arxiv.org/abs/2512.21714) · Code: [amap-cvlab/AstraNav-World](https://github.com/amap-cvlab/AstraNav-World)
-23. **CorrectNav** (2025). 自纠错飞轮赋能的单目 RGB 视觉-语言-动作导航模型. arXiv: [2508.10416](https://arxiv.org/abs/2508.10416) · AAAI 2026 · Code: [owlet914/CorrectNav](https://github.com/owlet914/CorrectNav)
-24. **VLingNav** (2026). Embodied Navigation with Adaptive Reasoning and Visual-Assisted Linguistic Memory. arXiv: [2601.08665](https://arxiv.org/abs/2601.08665) · Code: [wsakobe/VLingNav-web](https://github.com/wsakobe/VLingNav-web)
-25. **Slow4fast-VLN** (2026). General Vision-Language Navigation via Fast-Slow Interactive Reasoning. arXiv: [2601.09111v1](https://arxiv.org/abs/2601.09111v1) · CVPR 2026 · Code: [yl6017339/Slow4Fast-VLN](https://github.com/yl6017339/Slow4Fast-VLN)
-26. **DGNav** (2026). 动态拓扑感知：打破视觉-语言导航中的粒度刚性. arXiv: [2601.21751](https://arxiv.org/abs/2601.21751) · Code: [shannanshouyin/DGNav](https://github.com/shannanshouyin/DGNav)
-27. **Hydra-Nav** (2026). Object Navigation via Adaptive Dual-Process Reasoning. arXiv: [2602.09972](https://arxiv.org/abs/2602.09972)
-28. **3DGSNav** (2026). 用主动 3DGS 记忆增强 VLM 空间推理，实现零样本目标导航. arXiv: [2602.12159](https://arxiv.org/abs/2602.12159)
-29. **BudVLN** (2026). Nipping the Drift in the Bud: Retrospective Rectification for Robust Vision-Language Navigation. arXiv: [2602.06356](https://arxiv.org/abs/2602.06356) · Code: [Beat992/CDC2F](https://github.com/Beat992/CDC2F)
-30. **CausalNav** (2026). First Scene Graph-based Semantic Navigation for Dynamic Outdoor Environments. arXiv: [2601.01872](https://arxiv.org/abs/2601.01872) · IEEE RA-L
-31. **AgentVLN** (2026). Towards Agentic Vision-and-Language Navigation. arXiv: [2603.17670](https://arxiv.org/abs/2603.17670) · Code: [Allenxinn/AgentVLN](https://github.com/Allenxinn/AgentVLN)
-32. **VLN-Cache** (2026). Enabling Token Caching for VLN Models with Visual/Semantic Dynamics Awareness. arXiv: [2603.07080](https://arxiv.org/abs/2603.07080)
-33. **SysNav** (2026). Multi-Level Systematic Cooperation Enables Real-World, Cross-Embodiment Object Navigation. arXiv: [2603.06914](https://arxiv.org/abs/2603.06914) · Code: [zwandering/SysNav](https://github.com/zwandering/SysNav)
-34. **R³: Run, Ruminate, and Regulate** (2026). 一个面向视觉语言导航的双过程思考框架. arXiv: [2511.14131](https://arxiv.org/abs/2511.14131) · AAAI 2026 · Code: [IAII-CAS/navigation-R3](https://github.com/IAII-CAS/navigation-R3)
-35. **AwareVLN** (2026). Reasoning with Self-awareness for Vision-Language Navigation. arXiv: [2605.22816](https://arxiv.org/abs/2605.22816) · CVPR 2026 · Code: [GWxuan/AwareVLN](https://github.com/GWxuan/AwareVLN)
-36. **Dual-Anchoring** (2026). 用"指令进度"与"地标记忆"双重锚定，对抗 VLN 中的状态漂移（State Drift）. arXiv: [2604.17473](https://arxiv.org/abs/2604.17473)
-37. **WAM-Nav** (2026). 非对称隐空间「世界-动作」联合建模，用一个 DiT 统一三类视觉导航. arXiv: [2606.04907](https://arxiv.org/abs/2606.04907)
-38. **JanusVLN** (2026). 解耦语义与空间：使用双隐式神经内存的视觉语言导航. arXiv: [2509.22548v2](https://arxiv.org/abs/2509.22548v2) · ICLR 2026 · Code: [MIV-XJTU/JanusVLN](https://github.com/MIV-XJTU/JanusVLN)
-39. **HSGM** (2026). 层级式语义-几何地图，填补 VLM 2D 视觉与 3D 空间推理及运动规划的鸿沟. arXiv: [2606.00095](https://arxiv.org/abs/2606.00095) · Code: [Teacher-Tom/HSGM_public](https://github.com/Teacher-Tom/HSGM_public)
-40. **OneVLA** (2026). 首个在单一网络与动作头下统一具身导航和操作的 VLA 模型. arXiv: [2606.01241](https://arxiv.org/abs/2606.01241) · Code: [linglingxiansen/OneVLA](https://github.com/linglingxiansen/OneVLA)
-41. **CA-VLN** (2026). 基于双智能体协作的多模态大模型具身导航框架. DOI: [10.3390/s26041254](https://doi.org/10.3390/s26041254) · Sensors 2026 · Code: [ankursikarwar/Cosmic](https://github.com/ankursikarwar/Cosmic)
-42. **RynnBrain** (2026). Open Spatiotemporal Foundation Model for Embodied Intelligence. arXiv: [2602.14979](https://arxiv.org/abs/2602.14979) · ECCV 2026 · Code: [alibaba-damo-academy/RynnBrain](https://github.com/alibaba-damo-academy/RynnBrain)
-43. **EvoMemNav** (2026). 零样本具身导航中基于轻量化图先验与多视图反思的高效自进化细粒度拓扑记忆框架. arXiv: [2606.03509v1](https://arxiv.org/abs/2606.03509v1) · Code: [caicaiya123/EvoMemNav](https://github.com/caicaiya123/EvoMemNav)
-44. **OmniNav** (2026). 用快慢双系统统一点目标、物体目标、指令目标导航与前沿探索. arXiv: [2509.25687](https://arxiv.org/abs/2509.25687) · ICLR 2026 (Poster) · Code: [amap-cvlab/OmniNav](https://github.com/amap-cvlab/OmniNav)
-45. **Qwen-RobotNav** (2026). 首个统一的多任务、时空可重构具身导航大模型. arXiv: [2606.18112](https://arxiv.org/abs/2606.18112)
-46. **GA-VLN** (2026). Geometry-Aware BEV Representation for Efficient Vision-Language Navigation. arXiv: [2605.22036](https://arxiv.org/abs/2605.22036) · CVPR 2026 · Code: [jahhaoyang/GA-VLN](https://github.com/jahhaoyang/GA-VLN)
-47. **SEDualVLN** (2026). 空间增强的双系统连续环境视觉语言导航框架. arXiv: [2605.17249](https://arxiv.org/abs/2605.17249) · Code: [kim-os/SEDualVLN](https://github.com/kim-os/SEDualVLN)
-48. **Robostral Navigate** (2026). 仅需单目 RGB 相机的 8B 视语言导航大模型：超高效仿真训练与在线强化学习. arXiv: [2607.20785](https://arxiv.org/abs/2607.20785)
-49. **LocalNav** (2026). 基于知识蒸馏与具身强化学习的端侧轻量化三维场景图目标导航框架. arXiv: [2606.27871](https://arxiv.org/abs/2606.27871)
-50. **ABot-N1** (2026). 基于慢速认知与快速控制双系统架构的通用视觉语言导航基础模型. arXiv: [2607.10383v2](https://arxiv.org/abs/2607.10383v2) · Code: [amap-cvlab/ABot-Navigation](https://github.com/amap-cvlab/ABot-Navigation/tree/ABotN-Bench)
-51. **ReflectVLN** (2026). 基于反思推理与双向交互机制的具身视觉语言导航. arXiv: [2607.12680](https://arxiv.org/abs/2607.12680) · IROS 2026 · Code: [AIprogrammer/ReflectVLN](https://github.com/AIprogrammer/ReflectVLN)
-52. **TuckerNav** (2026). 面向全天候多场景终身具身视觉语言导航的 Tucker 张量自适应. arXiv: [2603.14276](https://arxiv.org/abs/2603.14276) · ICLR 2026
-53. **AgenticNav** (2026). 将零样本连续环境导航（VLN-CE）重构为 VLM 可调用的 Tool-Calling 架构. arXiv: [2606.10577](https://arxiv.org/abs/2606.10577)
-54. **MemVLN** (2026). 模拟人类双重记忆机制的高效连续环境视觉语言导航框架. arXiv: [2607.23504](https://arxiv.org/abs/2607.23504)
-55. **X-NavDP** (2026). 多构型机器人通用视觉导航的组内 Q值重加权 Diffusion RL 强化学习微调框架. arXiv: [2607.28560](https://arxiv.org/abs/2607.28560) · Code: [InternRobotics/NavDP](https://github.com/InternRobotics/NavDP)
-56. **Image2Sim** (2026). 解耦 3D 空间锚定与超真实图像合成的实时神经仿真引擎. arXiv: [2607.05765](https://arxiv.org/abs/2607.05765) · CVPR 2026 · Code: [MrZihan/Image2Sim](https://github.com/MrZihan/Image2Sim)
-57. **DecoVLN** (2026). Decoupling Observation, Reasoning, and Correction for Vision-and-Language Navigation. arXiv: [2603.13133](https://arxiv.org/abs/2603.13133) · CVPR 2026 · Code: [Allenxinn/DecoVLN](https://github.com/Allenxinn/DecoVLN)
-58. **TAMP-Nav** (2026). Point, Think, Memorize, and Align for Efficient Navigation. arXiv: [2608.17512](https://arxiv.org/abs/2608.17512) · Code: [ZJU-OmniAI/Embodied-Omni](https://github.com/ZJU-OmniAI/Embodied-Omni)
-59. **LightNav-0** (2026). 把 VLM 已有的空间智能"引出来"，而不是给它外挂一个导航模块. arXiv: [2608.30935](https://arxiv.org/abs/2608.30935) · Code: [lightorigins/LightNav-0](https://github.com/lightorigins/LightNav-0)
-60. **Uncertainty-Aware Gaussian Map for VLN** (2026). 三类感知不确定性 × Semantic Gaussian Map，赋予 VLN 智能体可靠决策能力. arXiv: [2607.13500](https://arxiv.org/abs/2607.13500) · ICLR 2026 · Code: [Gaozzzz/Uncertainty-Aware-VLN](https://github.com/Gaozzzz/Uncertainty-Aware-VLN)
+10. **ODYSSEY** (2025). Open-World Quadrupeds Exploration and Manipulation for Long-Horizon Tasks. arXiv: [2508.08240](https://arxiv.org/abs/2508.08240) · AAAI 2026
+11. **PanoNav** (2025). Mapless Zero-Shot Object Navigation. arXiv: [2511.06840](https://arxiv.org/abs/2511.06840) · AAAI 2026 (Poster)
+12. **VLN-R1** (2025). 基于GRPO与Time-Decayed Reward的端到端导航. arXiv: [2506.17221](https://arxiv.org/abs/2506.17221) · Code: [Qi-Zhangyang/GPT4Scene-and-VLN-R1](https://github.com/Qi-Zhangyang/GPT4Scene-and-VLN-R1)
+13. **StreamVLN** (2025). 通过慢-快上下文建模实现流式视觉-语言导航. arXiv: [2507.05240](https://arxiv.org/abs/2507.05240) · ICRA 2026 · Code: [OpenRobotLab/StreamVLN](https://github.com/OpenRobotLab/StreamVLN)
+14. **NavFoM** (2025). Embodied Navigation Foundation Model. arXiv: [2509.12129](https://arxiv.org/abs/2509.12129) · ICLR 2026
+15. **MapNav** (2025). A Novel Memory Representation via Annotated Semantic Maps for Vision-and-Language Navigation. arXiv: [2502.13451](https://arxiv.org/abs/2502.13451) · ACL 2025 · Code: [linglingxiansen/MapNav](https://github.com/linglingxiansen/MapNav)
+16. **Open-Nav** (2025). Zero-Shot VLN in Continuous Environment with Open-Source LLMs. arXiv: [2409.18794](https://arxiv.org/abs/2409.18794) · ICRA 2025
+17. **Skill-Nav** (2025). Enhanced Navigation with Versatile Quadrupedal Locomotion via Waypoint Interface. arXiv: [2506.21853](https://arxiv.org/abs/2506.21853) · Vicinagearth (Springer) 2025
+18. **VLN-Imagine** (2025). 用文本生成图像模型为导航智能体构建"视觉想象". arXiv: [2503.16394](https://arxiv.org/abs/2503.16394) · CVPR 2025 · Code: [akhilperincherry/VLN-Imagine](https://github.com/akhilperincherry/VLN-Imagine)
+19. **VLN-PE** (2025). 重新思考视觉-语言导航中的具身化差距:物理和视觉差异的全面研究. arXiv: [2507.13019v2](https://arxiv.org/abs/2507.13019v2) · ICCV 2025
+20. **Goal2Pixel** (2025). 将导航目标接地到图像像素，以像素预测统一 VLN-CE 的决策空间. arXiv: [2606.01621](https://arxiv.org/abs/2606.01621)
+21. **AstraNav-World** (2025). 将"想象未来"与"规划未来"统一进同一个生成式概率框架. arXiv: [2512.21714](https://arxiv.org/abs/2512.21714) · Code: [amap-cvlab/AstraNav-World](https://github.com/amap-cvlab/AstraNav-World)
+22. **CorrectNav** (2025). 自纠错飞轮赋能的单目 RGB 视觉-语言-动作导航模型. arXiv: [2508.10416](https://arxiv.org/abs/2508.10416) · AAAI 2026 · Code: [owlet914/CorrectNav](https://github.com/owlet914/CorrectNav)
+23. **VLingNav** (2026). Embodied Navigation with Adaptive Reasoning and Visual-Assisted Linguistic Memory. arXiv: [2601.08665](https://arxiv.org/abs/2601.08665) · Code: [wsakobe/VLingNav-web](https://github.com/wsakobe/VLingNav-web)
+24. **Slow4fast-VLN** (2026). General Vision-Language Navigation via Fast-Slow Interactive Reasoning. arXiv: [2601.09111v1](https://arxiv.org/abs/2601.09111v1) · CVPR 2026 · Code: [yl6017339/Slow4Fast-VLN](https://github.com/yl6017339/Slow4Fast-VLN)
+25. **DGNav** (2026). 动态拓扑感知：打破视觉-语言导航中的粒度刚性. arXiv: [2601.21751](https://arxiv.org/abs/2601.21751) · Code: [shannanshouyin/DGNav](https://github.com/shannanshouyin/DGNav)
+26. **Hydra-Nav** (2026). Object Navigation via Adaptive Dual-Process Reasoning. arXiv: [2602.09972](https://arxiv.org/abs/2602.09972)
+27. **3DGSNav** (2026). 用主动 3DGS 记忆增强 VLM 空间推理，实现零样本目标导航. arXiv: [2602.12159](https://arxiv.org/abs/2602.12159)
+28. **BudVLN** (2026). Nipping the Drift in the Bud: Retrospective Rectification for Robust Vision-Language Navigation. arXiv: [2602.06356](https://arxiv.org/abs/2602.06356) · Code: [Beat992/CDC2F](https://github.com/Beat992/CDC2F)
+29. **CausalNav** (2026). First Scene Graph-based Semantic Navigation for Dynamic Outdoor Environments. arXiv: [2601.01872](https://arxiv.org/abs/2601.01872) · IEEE RA-L
+30. **AgentVLN** (2026). Towards Agentic Vision-and-Language Navigation. arXiv: [2603.17670](https://arxiv.org/abs/2603.17670) · Code: [Allenxinn/AgentVLN](https://github.com/Allenxinn/AgentVLN)
+31. **VLN-Cache** (2026). Enabling Token Caching for VLN Models with Visual/Semantic Dynamics Awareness. arXiv: [2603.07080](https://arxiv.org/abs/2603.07080)
+32. **SysNav** (2026). Multi-Level Systematic Cooperation Enables Real-World, Cross-Embodiment Object Navigation. arXiv: [2603.06914](https://arxiv.org/abs/2603.06914) · Code: [zwandering/SysNav](https://github.com/zwandering/SysNav)
+33. **R³: Run, Ruminate, and Regulate** (2026). 一个面向视觉语言导航的双过程思考框架. arXiv: [2511.14131](https://arxiv.org/abs/2511.14131) · AAAI 2026 · Code: [IAII-CAS/navigation-R3](https://github.com/IAII-CAS/navigation-R3)
+34. **AwareVLN** (2026). Reasoning with Self-awareness for Vision-Language Navigation. arXiv: [2605.22816](https://arxiv.org/abs/2605.22816) · CVPR 2026 · Code: [GWxuan/AwareVLN](https://github.com/GWxuan/AwareVLN)
+35. **Dual-Anchoring** (2026). 用"指令进度"与"地标记忆"双重锚定，对抗 VLN 中的状态漂移（State Drift）. arXiv: [2604.17473](https://arxiv.org/abs/2604.17473)
+36. **WAM-Nav** (2026). 非对称隐空间「世界-动作」联合建模，用一个 DiT 统一三类视觉导航. arXiv: [2606.04907](https://arxiv.org/abs/2606.04907)
+37. **JanusVLN** (2026). 解耦语义与空间：使用双隐式神经内存的视觉语言导航. arXiv: [2509.22548v2](https://arxiv.org/abs/2509.22548v2) · ICLR 2026 · Code: [MIV-XJTU/JanusVLN](https://github.com/MIV-XJTU/JanusVLN)
+38. **HSGM** (2026). 层级式语义-几何地图，填补 VLM 2D 视觉与 3D 空间推理及运动规划的鸿沟. arXiv: [2606.00095](https://arxiv.org/abs/2606.00095) · Code: [Teacher-Tom/HSGM_public](https://github.com/Teacher-Tom/HSGM_public)
+39. **OneVLA** (2026). 首个在单一网络与动作头下统一具身导航和操作的 VLA 模型. arXiv: [2606.01241](https://arxiv.org/abs/2606.01241) · Code: [linglingxiansen/OneVLA](https://github.com/linglingxiansen/OneVLA)
+40. **CA-VLN** (2026). 基于双智能体协作的多模态大模型具身导航框架. DOI: [10.3390/s26041254](https://doi.org/10.3390/s26041254) · Sensors 2026 · Code: [ankursikarwar/Cosmic](https://github.com/ankursikarwar/Cosmic)
+41. **RynnBrain** (2026). Open Spatiotemporal Foundation Model for Embodied Intelligence. arXiv: [2602.14979](https://arxiv.org/abs/2602.14979) · ECCV 2026 · Code: [alibaba-damo-academy/RynnBrain](https://github.com/alibaba-damo-academy/RynnBrain)
+42. **EvoMemNav** (2026). 零样本具身导航中基于轻量化图先验与多视图反思的高效自进化细粒度拓扑记忆框架. arXiv: [2606.03509v1](https://arxiv.org/abs/2606.03509v1) · Code: [caicaiya123/EvoMemNav](https://github.com/caicaiya123/EvoMemNav)
+43. **OmniNav** (2026). 用快慢双系统统一点目标、物体目标、指令目标导航与前沿探索. arXiv: [2509.25687](https://arxiv.org/abs/2509.25687) · ICLR 2026 (Poster) · Code: [amap-cvlab/OmniNav](https://github.com/amap-cvlab/OmniNav)
+44. **Qwen-RobotNav** (2026). 首个统一的多任务、时空可重构具身导航大模型. arXiv: [2606.18112](https://arxiv.org/abs/2606.18112)
+45. **GA-VLN** (2026). Geometry-Aware BEV Representation for Efficient Vision-Language Navigation. arXiv: [2605.22036](https://arxiv.org/abs/2605.22036) · CVPR 2026 · Code: [jahhaoyang/GA-VLN](https://github.com/jahhaoyang/GA-VLN)
+46. **SEDualVLN** (2026). 空间增强的双系统连续环境视觉语言导航框架. arXiv: [2605.17249](https://arxiv.org/abs/2605.17249) · Code: [kim-os/SEDualVLN](https://github.com/kim-os/SEDualVLN)
+47. **Robostral Navigate** (2026). 仅需单目 RGB 相机的 8B 视语言导航大模型：超高效仿真训练与在线强化学习. arXiv: [2607.20785](https://arxiv.org/abs/2607.20785)
+48. **LocalNav** (2026). 基于知识蒸馏与具身强化学习的端侧轻量化三维场景图目标导航框架. arXiv: [2606.27871](https://arxiv.org/abs/2606.27871)
+49. **ABot-N1** (2026). 基于慢速认知与快速控制双系统架构的通用视觉语言导航基础模型. arXiv: [2607.10383v2](https://arxiv.org/abs/2607.10383v2) · Code: [amap-cvlab/ABot-Navigation](https://github.com/amap-cvlab/ABot-Navigation/tree/ABotN-Bench)
+50. **ReflectVLN** (2026). 基于反思推理与双向交互机制的具身视觉语言导航. arXiv: [2607.12680](https://arxiv.org/abs/2607.12680) · IROS 2026 · Code: [AIprogrammer/ReflectVLN](https://github.com/AIprogrammer/ReflectVLN)
+51. **TuckerNav** (2026). 面向全天候多场景终身具身视觉语言导航的 Tucker 张量自适应. arXiv: [2603.14276](https://arxiv.org/abs/2603.14276) · ICLR 2026
+52. **AgenticNav** (2026). 将零样本连续环境导航（VLN-CE）重构为 VLM 可调用的 Tool-Calling 架构. arXiv: [2606.10577](https://arxiv.org/abs/2606.10577)
+53. **MemVLN** (2026). 模拟人类双重记忆机制的高效连续环境视觉语言导航框架. arXiv: [2607.23504](https://arxiv.org/abs/2607.23504)
+54. **X-NavDP** (2026). 多构型机器人通用视觉导航的组内 Q值重加权 Diffusion RL 强化学习微调框架. arXiv: [2607.28560](https://arxiv.org/abs/2607.28560) · Code: [InternRobotics/NavDP](https://github.com/InternRobotics/NavDP)
+55. **Image2Sim** (2026). 解耦 3D 空间锚定与超真实图像合成的实时神经仿真引擎. arXiv: [2607.05765](https://arxiv.org/abs/2607.05765) · CVPR 2026 · Code: [MrZihan/Image2Sim](https://github.com/MrZihan/Image2Sim)
+56. **DecoVLN** (2026). Decoupling Observation, Reasoning, and Correction for Vision-and-Language Navigation. arXiv: [2603.13133](https://arxiv.org/abs/2603.13133) · CVPR 2026 · Code: [Allenxinn/DecoVLN](https://github.com/Allenxinn/DecoVLN)
+57. **TAMP-Nav** (2026). Point, Think, Memorize, and Align for Efficient Navigation. arXiv: [2608.17512](https://arxiv.org/abs/2608.17512) · Code: [ZJU-OmniAI/Embodied-Omni](https://github.com/ZJU-OmniAI/Embodied-Omni)
+58. **LightNav-0** (2026). 把 VLM 已有的空间智能"引出来"，而不是给它外挂一个导航模块. arXiv: [2608.30935](https://arxiv.org/abs/2608.30935) · Code: [lightorigins/LightNav-0](https://github.com/lightorigins/LightNav-0)
+59. **Uncertainty-Aware Gaussian Map for VLN** (2026). 三类感知不确定性 × Semantic Gaussian Map，赋予 VLN 智能体可靠决策能力. arXiv: [2607.13500](https://arxiv.org/abs/2607.13500) · ICLR 2026 · Code: [Gaozzzz/Uncertainty-Aware-VLN](https://github.com/Gaozzzz/Uncertainty-Aware-VLN)
+60. **HarnessVLN** (2026). 一套 Agent Harness，把"指令跟随"和"找物体"两类导航压进同一个工具调用协议. arXiv: [2609.15195](https://arxiv.org/abs/2609.15195)
 
 
 <script>
@@ -7436,7 +7561,6 @@ SGM 构建（尤其是 SAM2 语义抽取与不确定性估计）推理开销较�
   var TAG_MAP = [
     { m: 'DualVLN/InternVLN', t: ['双系统', '扩散模型', '连续环境', '实机部署'] },
     { m: 'X-NavDP',               t: ['扩散模型', '强化学习', '连续环境', '实机部署'] },
-    { m: 'NavDP',             t: ['端到端', '扩散模型', '连续环境', '零样本', '实机部署'] },
     { m: 'NoMaD',             t: ['端到端', '扩散模型', '零样本', '实机部署'] },
     { m: 'ODYSSEY',           t: ['Agentic', '实机部署'] },
     { m: 'PanoNav',           t: ['Agentic', '零样本', '离散环境'] },
@@ -7490,6 +7614,7 @@ SGM 构建（尤其是 SAM2 语义抽取与不确定性估计）推理开销较�
         { m: 'DecoVLN',               t: ['端到端', '连续环境', '实机部署', '加速优化', '纠错'] },
         { m: 'TAMP-Nav',              t: ['CoT', '强化学习', '连续环境', '实机部署'] },
         { m: 'LightNav-0',            t: ['端到端', '连续环境', '实机部署', '强化学习', '零样本', 'CoT'] },
+        { m: 'HarnessVLN',            t: ['Agentic', '零样本', '实机部署', '拓扑图'] },
     { m: 'VLN-CE',            t: ['数据集', '连续环境', '基础工作'] },
     { m: 'VLN-PE',            t: ['数据集', '连续环境', '基础工作'] },
     { m: 'RynnBrain',         t: ['基础工作'] },
@@ -7505,26 +7630,27 @@ SGM 构建（尤其是 SAM2 语义抽取与不确定性估计）推理开销较�
     { n: '2. LoGoPlanner (2025)', a: 'logoplanner', t: ['端到端', '扩散模型', '连续环境', '实机部署'] },
     { n: '3. VL-Nav (2025)', a: 'vl-nav', t: ['端到端', '零样本', '实机部署'] },
     { n: '4. GaussNav (2025)', a: 'gaussnav', t: ['SLAM', '高斯表示'] },
-    { n: '5. FantasyVLN (2026)', a: 'fantasyvln', t: ['世界模型', '数据增强', '连续环境', 'CoT'] },
-    { n: '6. SparseVideoNav (2026)', a: 'sparsevideonav', t: ['端到端', '扩散模型', '世界模型'] },
-    { n: '7. WorldVLN (2026)', a: 'worldvln', t: ['世界模型', '强化学习', '端到端', '实机部署'] },
-    { n: '8. NavWAM (2026)', a: 'navwam', t: ['世界模型', '扩散模型', '连续环境', '实机部署'] },
-    { n: '9. ABot-AgentOS (2026)', a: 'abot-agentos', t: ['Agentic', '拓扑图', '实机部署'] },
-    { n: '10. Agentic Embodied Control (2026)', a: 'agentic-embodied-control', t: ['Agentic', '零样本', '连续环境', '实机部署'] },
-    { n: '11. Route2Step (2026)', a: 'route2step', t: ['双系统', '连续环境', '实机部署'] },
-    { n: '12. HumanoidVLN (2026)', a: 'humanoidvln', t: ['数据集', '强化学习', '实机部署', '高斯表示'] },
-    { n: '13. CONDVLN (2026)', a: 'condvln', t: ['数据集', '连续环境', '拓扑图'] },
-    { n: '14. ReMEmbR (2024)', a: 'remembr', t: ['Agentic', '实机部署', '数据集', '连续环境'] },
-    { n: '15. SuperMap (2026)', a: 'supermap', t: ['SLAM', '拓扑图', '零样本', '实机部署', 'Agentic'] },
-    { n: '16. GSMem (2026)', a: 'gsmem', t: ['Agentic', '高斯表示', '零样本'] },
-    { n: '17. PROSPECT (2026)', a: 'prospect', t: ['端到端', '世界模型', '连续环境', '实机部署'] },
-    { n: '18. Qwen-Drive (2026)', a: 'qwen-drive', t: ['端到端', '扩散模型', '强化学习', '连续环境'] },
-    { n: '19. CGFM-Nav (2026)', a: 'cgfm-nav', t: ['拓扑图', 'Agentic', '零样本'] },
-    { n: '20. CanonNav (2026)', a: 'canonnav', t: ['扩散模型', '连续环境', '实机部署'] },
-    { n: '21. LookStep (2026)', a: 'lookstep', t: ['端到端', '连续环境', '加速优化', '实机部署'] },
-    { n: '22. MacroAction-VLN (2026)', a: 'macroaction-vln', t: ['拓扑图', '强化学习', '连续环境'] },
-    { n: '23. NavMCP (2026)', a: 'navmcp', t: ['Agentic', '零样本', '实机部署', '连续环境'] },
-    { n: '24. OccPlanner (2026)', a: 'occplanner', t: ['扩散模型', '端到端', '数据增强', '连续环境'] },
+    { n: '5. NavDP (2025)', a: 'navdp', t: ['端到端', '扩散模型', '连续环境', '零样本', '实机部署'] },
+    { n: '6. FantasyVLN (2026)', a: 'fantasyvln', t: ['世界模型', '数据增强', '连续环境', 'CoT'] },
+    { n: '7. SparseVideoNav (2026)', a: 'sparsevideonav', t: ['端到端', '扩散模型', '世界模型'] },
+    { n: '8. WorldVLN (2026)', a: 'worldvln', t: ['世界模型', '强化学习', '端到端', '实机部署'] },
+    { n: '9. NavWAM (2026)', a: 'navwam', t: ['世界模型', '扩散模型', '连续环境', '实机部署'] },
+    { n: '10. ABot-AgentOS (2026)', a: 'abot-agentos', t: ['Agentic', '拓扑图', '实机部署'] },
+    { n: '11. Agentic Embodied Control (2026)', a: 'agentic-embodied-control', t: ['Agentic', '零样本', '连续环境', '实机部署'] },
+    { n: '12. Route2Step (2026)', a: 'route2step', t: ['双系统', '连续环境', '实机部署'] },
+    { n: '13. HumanoidVLN (2026)', a: 'humanoidvln', t: ['数据集', '强化学习', '实机部署', '高斯表示'] },
+    { n: '14. CONDVLN (2026)', a: 'condvln', t: ['数据集', '连续环境', '拓扑图'] },
+    { n: '15. ReMEmbR (2024)', a: 'remembr', t: ['Agentic', '实机部署', '数据集', '连续环境'] },
+    { n: '16. SuperMap (2026)', a: 'supermap', t: ['SLAM', '拓扑图', '零样本', '实机部署', 'Agentic'] },
+    { n: '17. GSMem (2026)', a: 'gsmem', t: ['Agentic', '高斯表示', '零样本'] },
+    { n: '18. PROSPECT (2026)', a: 'prospect', t: ['端到端', '世界模型', '连续环境', '实机部署'] },
+    { n: '19. Qwen-Drive (2026)', a: 'qwen-drive', t: ['端到端', '扩散模型', '强化学习', '连续环境'] },
+    { n: '20. CGFM-Nav (2026)', a: 'cgfm-nav', t: ['拓扑图', 'Agentic', '零样本'] },
+    { n: '21. CanonNav (2026)', a: 'canonnav', t: ['扩散模型', '连续环境', '实机部署'] },
+    { n: '22. LookStep (2026)', a: 'lookstep', t: ['端到端', '连续环境', '加速优化', '实机部署'] },
+    { n: '23. MacroAction-VLN (2026)', a: 'macroaction-vln', t: ['拓扑图', '强化学习', '连续环境'] },
+    { n: '24. NavMCP (2026)', a: 'navmcp', t: ['Agentic', '零样本', '实机部署', '连续环境'] },
+    { n: '25. OccPlanner (2026)', a: 'occplanner', t: ['扩散模型', '端到端', '数据增强', '连续环境'] },
   ];
 
   var ALL_TAGS = ['双系统', '端到端', 'Agentic', 'CoT', '扩散模型', '拓扑图', 'SLAM', '高斯表示',
