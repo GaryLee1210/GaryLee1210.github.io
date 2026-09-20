@@ -7738,6 +7738,7 @@ $$R_y = \alpha_a R_{act} + \alpha_t R_{task} + \alpha_g R_{goal} + \lambda_g R_{
     { n: '26. OccPlanner (2026)', a: 'occplanner', t: ['扩散模型', '端到端', '数据增强', '连续环境'] },
     { n: '27. Harness Robotic OS (2026)', a: 'harness-robotic-os', t: ['Agentic', '实机部署', 'SLAM'] },
     { n: '28. EgoPathBench (2026)', a: 'egopathbench', t: ['数据集', '零样本', 'CoT', '连续环境'] },
+    { n: '29. AdaGeoVLN (2026)', a: 'adageovln', t: ['端到端', '连续环境', '实机部署', '加速优化'] },
   ];
 
   var ALL_TAGS = ['双系统', '端到端', 'Agentic', 'CoT', '扩散模型', '拓扑图', 'SLAM', '高斯表示',
