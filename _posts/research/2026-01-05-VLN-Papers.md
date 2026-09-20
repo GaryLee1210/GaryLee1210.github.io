@@ -7652,6 +7652,7 @@ $$
     { n: '24. NavMCP (2026)', a: 'navmcp', t: ['Agentic', '零样本', '实机部署', '连续环境'] },
     { n: '25. OccPlanner (2026)', a: 'occplanner', t: ['扩散模型', '端到端', '数据增强', '连续环境'] },
     { n: '26. Harness Robotic OS (2026)', a: 'harness-robotic-os', t: ['Agentic', '实机部署', 'SLAM'] },
+    { n: '27. EgoPathBench (2026)', a: 'egopathbench', t: ['数据集', '零样本', 'CoT', '连续环境'] },
   ];
 
   var ALL_TAGS = ['双系统', '端到端', 'Agentic', 'CoT', '扩散模型', '拓扑图', 'SLAM', '高斯表示',
