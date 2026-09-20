@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "VLN 经典论文"
-date:   2026-09-17
+date:   2026-09-20
 tags: [VLN, VLA, Robotics, Computer Vision, Deep Learning]
 categories: research
 comments: true
@@ -7601,7 +7601,7 @@ $$
         { m: 'R2RIE-CE & IEDL',       t: ['连续环境', '数据集'] },
         { m: 'Robostral Navigate',    t: ['端到端', '强化学习', '连续环境', '加速优化'] },
         { m: 'LocalNav',              t: ['拓扑图', '强化学习', '实机部署', '加速优化'] },
-        { m: 'ABot-N1',               t: ['双系统', 'CoT', '强化学习', '实机部署'] },
+        { m: 'ABot-N1',               t: ['双系统', 'CoT', '强化学习', '实机部署', '数据集'] },
         { m: 'ReflectVLN',            t: ['双系统', 'Agentic', 'CoT', '连续环境'] },
         { m: 'CorrectNav',            t: ['端到端', '连续环境', '实机部署'] },
         { m: 'TuckerNav', t: ['连续环境', '加速优化'] },
@@ -7613,7 +7613,7 @@ $$
         { m: 'Image2Sim',             t: ['世界模型', '数据增强', '高斯表示', '连续环境', '实机部署', '零样本'] },
         { m: 'DecoVLN',               t: ['端到端', '连续环境', '实机部署', '加速优化', '纠错'] },
         { m: 'TAMP-Nav',              t: ['CoT', '强化学习', '连续环境', '实机部署'] },
-        { m: 'LightNav-0',            t: ['端到端', '连续环境', '实机部署', '强化学习', '零样本', 'CoT'] },
+        { m: 'LightNav-0',            t: ['端到端', '连续环境', '实机部署', '强化学习', '零样本', 'CoT', '数据集'] },
         { m: 'HarnessVLN',            t: ['Agentic', '零样本', '实机部署', '拓扑图'] },
     { m: 'VLN-CE',            t: ['数据集', '连续环境', '基础工作'] },
     { m: 'VLN-PE',            t: ['数据集', '连续环境', '基础工作'] },
