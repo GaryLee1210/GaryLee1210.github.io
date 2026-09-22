@@ -1,0 +1,65 @@
+name: Sync upstream research notes
+
+on:
+  schedule:
+    # Daily at 09:17 China Standard Time (UTC+8).
+    - cron: '17 1 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.repository == 'GaryLee1210/GaryLee1210.github.io'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    outputs:
+      changed: ${{ steps.merge.outputs.changed }}
+      sha: ${{ steps.merge.outputs.sha }}
+    steps:
+      - name: Merge upstream without overwriting local changes
+        id: merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # GitHub's fork merge API performs a normal merge. Conflicts fail
+          # this step; no force push, branch reset, or automatic conflict choice.
+          result=$(gh api --method POST "repos/$REPOSITORY/merge-upstream" -f branch=main)
+          merge_type=$(jq -r '.merge_type' <<< "$result")
+          case "$merge_type" in
+            none) changed=false ;;
+            merge|fast-forward) changed=true ;;
+            *) echo "Unexpected merge result: $merge_type" >&2; exit 1 ;;
+          esac
+          sha=$(gh api "repos/$REPOSITORY/git/ref/heads/main" --jq '.object.sha')
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          {
+            echo '### Upstream sync'
+            echo "Source: TingdeLiu/tingdeliu.github.io (main)"
+            echo "Result: $merge_type"
+            echo "Current commit: $sha"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  deploy:
+    needs: sync
+    # Explicitly call deployment: GITHUB_TOKEN merges do not trigger push workflows.
+    # A manual run also republishes the site when it is already up to date.
+    if: needs.sync.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/deploy.yml
+    with:
+      ref: ${{ needs.sync.outputs.sha }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write

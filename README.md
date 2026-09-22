@@ -6,7 +6,11 @@
 
 本镜像仅调整站点账号、网址、站内跳转、反馈入口、页面元数据及来源说明，并关闭原站 Google Analytics。文章 Markdown 与配图文件保持原样；原作者的个人介绍与项目也保留并明确标注。
 
-后续维护：修改 `_posts/` 下的 Markdown 或 `images/` 下的配图后，提交到 `main` 分支，GitHub Actions 会自动构建并发布到上述网址。本次为快照复制，后续原站更新不会自动合并。
+后续维护：修改 `_posts/` 下的 Markdown 或 `images/` 下的配图后，提交到 `main` 分支，GitHub Actions 会自动构建并发布到上述网址。
+
+自动同步：每天北京时间 **09:17** 检查原仓库 `main` 分支，通过 GitHub 的 Fork 合并接口同步文章、图片和网站源码；有更新时随后自动发布。采用正常合并，保留本站定制；如有冲突则停止并在 Actions 中报告失败，不强行覆盖。也可在 [Sync upstream research notes](https://github.com/GaryLee1210/GaryLee1210.github.io/actions/workflows/sync-upstream.yml) 点击 **Run workflow** 手动检查并重新发布。此流程在 GitHub 上运行，不依赖个人电脑开机。
+
+GitHub 定时任务可能延迟，公开仓库连续 60 天无活动时可能被平台暂停；若任务被暂停，可在 Actions 中重新启用。原作者署名与内容许可继续保留。规则参考：[GitHub 定时事件说明](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)。
 
 以下保留原项目 README：
 
