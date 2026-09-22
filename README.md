@@ -1,3 +1,17 @@
+# GaryLee1210 · AI 与机器人研究笔记学习镜像
+
+[访问我的网站](https://garylee1210.github.io/) · [VLN 经典论文](https://garylee1210.github.io/VLN-Papers/) · [自动发布状态](https://github.com/GaryLee1210/GaryLee1210.github.io/actions/workflows/deploy.yml)
+
+本仓库完整 Fork 自 [TingdeLiu/tingdeliu.github.io](https://github.com/TingdeLiu/tingdeliu.github.io)，初始快照为 `dee0211b3acdeb531ac5e4b914e967b27b6e2f41`（2026-09-22）。保留全部文章、配图文件、页面和原仓库历史。原创文字作者为 **Tingde Liu**，依照 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 署名转载；代码沿用 [MIT](LICENSE)。第三方论文配图与引用材料不属于原作者的 CC BY 授权范围，具体说明保留在 [LICENSE-CONTENT](LICENSE-CONTENT) 中。
+
+本镜像仅调整站点账号、网址、站内跳转、反馈入口、页面元数据及来源说明，并关闭原站 Google Analytics。文章 Markdown 与配图文件保持原样；原作者的个人介绍与项目也保留并明确标注。
+
+后续维护：修改 `_posts/` 下的 Markdown 或 `images/` 下的配图后，提交到 `main` 分支，GitHub Actions 会自动构建并发布到上述网址。本次为快照复制，后续原站更新不会自动合并。
+
+以下保留原项目 README：
+
+---
+
 <div align="center">
 
 # Tingde Liu · Research Notes

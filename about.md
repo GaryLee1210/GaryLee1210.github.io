@@ -1,8 +1,10 @@
 ---
 layout: page
-title: Tingde Liu
+title: 原作者 Tingde Liu
 permalink: /about/
 ---
+
+> 本站由 [GaryLee1210](https://github.com/GaryLee1210) 维护，完整保留原站的研究内容供学习阅读。下面是原作者 **Tingde Liu** 的个人介绍，其经历与项目属于原作者。[查看原站介绍](https://tingdeliu.github.io/about/)。
 
 I am a robotics and AI engineer with an M.Sc. in Mechatronics and Robotics from [Leibniz Universität Hannover](https://www.uni-hannover.de/) (LUH), now based in Beijing and working on embodied intelligence. My current research centers on Vision-Language Navigation (VLN), Embodied Agent Frameworks, and 3D Large Language Models (3DLLM) — and the broader question of what it would actually take for a robot to understand and act in the world the way we do. I am interested in genuine embodied intelligence, not just systems that appear to navigate, but ones that truly reason about space, language, and intention.
 

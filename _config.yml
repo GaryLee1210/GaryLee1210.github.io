@@ -3,18 +3,18 @@
 #
 
 # Name of your site (displayed in the header)
-name: "Tingde Liu"
+name: "GaryLee1210"
 # Short bio or description (displayed in the header)
 description: "Personal Blog & Research Notes"
 # Job title and company (displayed in sidebar)
-tagline: "AI Engineer"
-company: "Tyndall Labs"
+tagline: "学习镜像 · 原文 Tingde Liu"
+company: ""
 #
 # Flags below are optional
 #
 
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
-avatar: /images/Tingde.webp
+avatar: https://github.com/GaryLee1210.png
 
 # 你的favicon（出现在浏览器tab上）图片URL，建议使用较小(64px × 64px)的图片
 favicon: # 暂时留空，之后可以添加您的logo
@@ -39,14 +39,14 @@ excerpt_separator: <!-- more -->
 
 # Includes an icon in the footer for each username you enter（配置各种社交链接，请见_includes\svg-icons.html）
 footer-links:
-  home: https://tingdeliu.github.io/
-  email: tingde.liu.luh@gmail.com
+  home: https://garylee1210.github.io/
+  email:
   google_scholar: # 如果有Google Scholar可以填写
   ORCID: # "0000-0003-4518-7852"
   Clarivate: # "AAV-2613-2020"
   Scopus_id: # "56957694200"
   ResearchGate: # "Your-ResearchGate-ID"
-  github: TingdeLiu
+  github: GaryLee1210
   youtube: # "@Your-YouTube"
   bilibili: # "Your-Bilibili-ID"
 
@@ -66,11 +66,15 @@ disqus: # fromendworld
 #   owner: TingdeLiu
 
 # Enter your Google Analytics web tracking code (e.g. UA-2110908-2) to activate tracking
-google_analytics: G-KXKFYB0T0H
+google_analytics:
 
 # Your website URL (e.g. http://barryclark.github.io or http://www.barryclark.co)
 # Used for Sitemap.xml and your RSS feed
-url: https://tingdeliu.github.io
+url: https://garylee1210.github.io
+repository: GaryLee1210/GaryLee1210.github.io
+content_author: Tingde Liu
+source_url: https://tingdeliu.github.io
+source_revision: dee0211b3acdeb531ac5e4b914e967b27b6e2f41
 
 # If you're hosting your site at a Project repository on GitHub pages
 # (http://yourusername.github.io/repository-name)

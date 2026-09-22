@@ -1734,4 +1734,16 @@ footer {
 @import "highlights";
 @import "gitalk";
 
+.post-attribution {
+  margin: 2rem 0;
+  padding: 1rem 1.25rem;
+  border-left: 3px solid #d0d7de;
+  background: #f6f8fa;
+  color: #57606a;
+  font-size: 0.875rem;
+  line-height: 1.7;
+
+  p { margin: 0.25rem 0; }
+}
+
 

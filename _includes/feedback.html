@@ -44,11 +44,11 @@
   </div>
   <div class="feedback-buttons">
     <a class="feedback-btn" target="_blank" rel="noopener"
-       href="https://github.com/TingdeLiu/Tingde.Liu.github.io/issues/new?title={{ '[错误反馈] ' | append: page.title | url_encode }}&labels=bug&body={{ bug_body | url_encode }}">🐛 报告错误</a>
+       href="https://github.com/{{ site.repository }}/issues/new?title={{ '[错误反馈] ' | append: page.title | url_encode }}&labels=bug&body={{ bug_body | url_encode }}">🐛 报告错误</a>
     <a class="feedback-btn" target="_blank" rel="noopener"
-       href="https://github.com/TingdeLiu/Tingde.Liu.github.io/issues/new?title={{ '[论文推荐] ' | append: page.title | url_encode }}&labels=paper&body={{ paper_body | url_encode }}">📄 推荐论文</a>
+       href="https://github.com/{{ site.repository }}/issues/new?title={{ '[论文推荐] ' | append: page.title | url_encode }}&labels=paper&body={{ paper_body | url_encode }}">📄 推荐论文</a>
     <a class="feedback-btn" target="_blank" rel="noopener"
-       href="https://github.com/TingdeLiu/Tingde.Liu.github.io/issues/new?title={{ '[修改建议] ' | append: page.title | url_encode }}&labels=suggestion&body={{ suggest_body | url_encode }}">✏️ 修改建议</a>
+       href="https://github.com/{{ site.repository }}/issues/new?title={{ '[修改建议] ' | append: page.title | url_encode }}&labels=suggestion&body={{ suggest_body | url_encode }}">✏️ 修改建议</a>
   </div>
   <div class="feedback-contributors" id="feedback-contributors" hidden>
     <h4>🙌 社区贡献者</h4>
@@ -58,7 +58,7 @@
 
 <script>
 (function () {
-  var OWNER = "TingdeLiu";
+  var OWNER = {{ site.footer-links.github | jsonify }};
   var CACHE_KEY = "gh-contributors-v1";
   var CACHE_TTL = 60 * 60 * 1000; // 1 hour
 
@@ -109,7 +109,7 @@
     return;
   }
 
-  fetch("https://api.github.com/repos/TingdeLiu/Tingde.Liu.github.io/issues?state=all&per_page=100")
+  fetch("https://api.github.com/repos/{{ site.repository }}/issues?state=all&per_page=100")
     .then(function (res) {
       if (!res.ok) throw new Error("GitHub API " + res.status);
       return res.json();
