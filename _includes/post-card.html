@@ -1,8 +1,9 @@
 {% assign rp = include.post %}
+{% assign rc_title = include.title | default: rp.title %}
 {% assign post_ts = rp.date | date: "%s" | plus: 0 %}
 {% assign age = site.time | date: "%s" | minus: post_ts %}
 <a class="rc-card" href="{% if rp.link %}{{ rp.link }}{% else %}{{ site.baseurl }}{{ rp.url }}{% endif %}">
-  <h3 class="rc-title">{{ rp.title }}</h3>
+  <h3 class="rc-title">{{ rc_title }}</h3>
   <p class="rc-excerpt">{{ rp.excerpt | strip_html | strip_newlines | truncate: 160 }}</p>
   <div class="rc-meta">
     <time datetime="{{ rp.date | date_to_xmlschema }}">更新于 {{ rp.date | date: "%Y-%m-%d" }}</time>

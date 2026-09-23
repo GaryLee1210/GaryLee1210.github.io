@@ -4,27 +4,9 @@ title: Blog
 permalink: /blog/
 ---
 
+{% include card-grid-style.html %}
+
 <style>
-.blog-section {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #444;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 0.4rem;
-  margin: 1.8rem 0 0.8rem;
-}
-
-.blog-section:first-of-type {
-  margin-top: 0.5rem;
-}
-
-.blog-section .count {
-  font-size: 0.78rem;
-  font-weight: 400;
-  color: #999;
-  margin-left: 0.45rem;
-}
-
 .blog-empty {
   color: #999;
   font-size: 0.9rem;
@@ -34,44 +16,30 @@ permalink: /blog/
 {% assign blog_posts = site.posts | where: "categories", "blog" %}
 {% assign weekly_posts = site.posts | where: "categories", "weekly" %}
 
-<h2 class="blog-section">技术随笔<span class="count">{{ blog_posts.size }}</span></h2>
+<p class="rc-intro">技术随笔与具身导航周报，按最近更新排序。</p>
+
+<h2 class="rc-group" id="notes">技术随笔<span class="count">{{ blog_posts.size }} 篇</span></h2>
 
 {% if blog_posts.size == 0 %}
   <p class="blog-empty">暂无文章</p>
 {% else %}
-<ul class="archive">
+<div class="rc-grid">
   {% for post in blog_posts %}
-    <li>
-      {% if post.link %}
-      <a href="{{ post.link }}">
-      {% else %}
-      <a href="{{ site.baseurl }}{{ post.url }}">
-      {% endif %}
-        {{ post.title }}
-      </a>
-      <time>{{ post.date | date: "%Y-%m-%d" }}</time>
-    </li>
+    {% include post-card.html post=post %}
   {% endfor %}
-</ul>
+</div>
 {% endif %}
 
-<h2 class="blog-section">具身导航周报<span class="count">{{ weekly_posts.size }}</span></h2>
+<h2 class="rc-group" id="weekly">具身导航周报<span class="count">{{ weekly_posts.size }} 期</span></h2>
 
 {% if weekly_posts.size == 0 %}
   <p class="blog-empty">暂无周报</p>
 {% else %}
-<ul class="archive">
+<div class="rc-grid">
   {% for post in weekly_posts %}
-    <li>
-      {% if post.link %}
-      <a href="{{ post.link }}">
-      {% else %}
-      <a href="{{ site.baseurl }}{{ post.url }}">
-      {% endif %}
-        {{ post.title }}
-      </a>
-      <time>{{ post.date | date: "%Y-%m-%d" }}</time>
-    </li>
+    {% comment %} 标题都是"具身导航周报（区间）"，卡片上只保留区间，避免每张卡重复同一前缀 {% endcomment %}
+    {% assign weekly_title = post.title | remove: "具身导航周报（" | remove: "）" %}
+    {% include post-card.html post=post title=weekly_title %}
   {% endfor %}
-</ul>
+</div>
 {% endif %}
