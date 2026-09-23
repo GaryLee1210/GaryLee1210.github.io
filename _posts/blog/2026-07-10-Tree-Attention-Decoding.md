@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "树状注意力训练：Robostral Navigate 如何将 VLN 训练 Token 压缩 22×"
-date:   2026-07-17
+title: "树状注意力：VLN 训练 Token 压缩 22×"
+date:   2026-09-23
 last_modified_at: 2026-07-29
 tags: [VLA, VLN, Robostral, Prefix Caching, Tree Attention, LLM Training]
 categories: blog

@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "Graph Engineering：大模型时代的智能体图拓扑编排与设计模式"
-date:   2026-07-25
+title: "Graph Engineering：智能体图编排"
+date:   2026-09-23
 tags: [Graph Engineering, LangGraph, Multi-Agent, Agentic Workflow, AI Engineering, LlamaIndex Workflows]
 categories: blog
 comments: true
