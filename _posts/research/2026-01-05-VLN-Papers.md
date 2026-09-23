@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "VLN 经典论文"
-date:   2026-09-20
+date:   2026-09-23
 tags: [VLN, VLA, Robotics, Computer Vision, Deep Learning]
 categories: research
 comments: true
@@ -7501,7 +7501,7 @@ graph TD
 
 $$Q_t(p) = \lambda_r \exp\left(-\frac{d_\perp(p)^2}{2\sigma_r^2}\right) + \lambda_p \exp\left(-\frac{(s(p)-s_t^*)^2}{2\sigma_p^2}\right) + \lambda_e \exp\left(-\frac{d_e(p)^2}{2\sigma_e^2}\right)$$
 
-三项分别管三件事：$d_\perp(p)$ 是到参考路线的**横向偏离**（管路线一致性）；$s(p)-s_t^*$ 是与参考目标的**路线进度差**（管语义进度，走太少或冲太远都扣分）；$d_e(p) = \lVert P_t(p) - P_t^* \rVert_2$ 是**执行端点误差**（管物理可执行性）。无效像素直接拿全图最低分。
+三项分别管三件事：$d_\perp(p)$ 是到参考路线的**横向偏离**（管路线一致性）；$s(p)-s_t^{\ast}$ 是与参考目标的**路线进度差**（管语义进度，走太少或冲太远都扣分）；$d_e(p) = \lVert P_t(p) - P_t^{\ast} \rVert_2$ 是**执行端点误差**（管物理可执行性）。无效像素直接拿全图最低分。
 
 > **举个例子**：标注的参考目标在厨房门口地板上。模型给出两个候选像素——A 在门口地板上、离参考点 40 px；B 在紧挨门框的墙面上、离参考点同样 40 px。按 2D 像素距离，两者得分完全一样。但反投影到 3D 之后：A 落在可走地面上、离参考端点约 0.3 m，三项高斯都给高分；B 落在墙上，被可通行性掩膜直接判为无效、拿最低分。**奖励图问的不是"你点得离标注近不近"，而是"照你点的走，机器人真能走到哪、离目标还差多远"。**
 
