@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "世界模型（具身智能方向）全景综述"
+title: "世界模型综述"
 date:  2026-09-23
 tags: [VLA, World Models, Robotics, Embodied AI, Survey]
 categories: research
