@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "RoboTTT 深度解析：TTT 模块如何将 History 压缩进 Fast Weights 实现长时程存储与实时检索"
-date:   2026-07-28
+title: "RoboTTT：用 Fast Weights 压缩长时程历史"
+date:   2026-09-23
 tags: [Robotics, VLA, TTT, Fast-Weights, Long-Context]
 categories: blog
 comments: true

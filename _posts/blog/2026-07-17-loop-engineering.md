@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "Loop Engineering：Agent 工程化的下一代闭环范式"
-date:   2026-07-20
+title: "Loop Engineering：Agent 闭环范式"
+date:   2026-09-23
 tags: [Loop Engineering, Agentic Workflow, Harness Engineering, AI Engineering, Claude Code, Codex]
 categories: blog
 comments: true

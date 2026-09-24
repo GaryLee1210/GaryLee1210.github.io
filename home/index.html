@@ -1,123 +1,59 @@
 ---
-layout: default
+layout: page
+title: Projects
 ---
 
+{% include card-grid-style.html %}
+
 <style>
-.project-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1rem;
-  margin-top: 0.8rem;
-}
-
-.project-card {
-  border: 1px solid #e1e4e8;
-  border-radius: 8px;
-  padding: 1rem 1.2rem;
-  transition: box-shadow 0.2s;
-}
-
-.project-card:hover {
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-}
-
-.project-card-title {
+.rc-card .rc-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.project-card-title a {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: #0366d6;
-  text-decoration: none;
-}
-
-.project-card-title a:hover {
-  text-decoration: underline;
+  gap: 0.5rem;
 }
 
 .lang-badge {
+  flex: none;
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  background: #e7f5ff;
+  color: #1864ab;
   font-size: 0.72rem;
-  background: #f1f8ff;
-  color: #0366d6;
-  border-radius: 10px;
-  padding: 2px 8px;
-  white-space: nowrap;
+  font-weight: 400;
+  line-height: 1.7;
 }
 
-.project-card p {
-  font-size: 0.85rem;
-  color: #666;
-  margin: 0;
-  line-height: 1.55;
+/* 项目少，固定两列，避免最后一行只剩一张卡 */
+.home-projects {
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
 }
 
-.section-heading {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #444;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 0.4rem;
-  margin: 1.8rem 0 0.8rem;
-}
-
-.section-heading:first-of-type {
-  margin-top: 0.5rem;
+.home-projects .rc-excerpt {
+  -webkit-line-clamp: 3;
 }
 </style>
 
-<h2 class="section-heading">Projects · 原作者项目</h2>
-<div class="project-grid">
+<div class="rc-grid home-projects">
 
-  <div class="project-card">
-    <div class="project-card-title">
-      <a href="https://github.com/TingdeLiu/AgentNav" target="_blank">AgentNav</a>
-      <span class="lang-badge">Python</span>
-    </div>
-    <p>Agent-based navigation system for real robots. Natural language control via AI agents.</p>
-  </div>
+  <a class="rc-card" href="https://github.com/TingdeLiu/AgentNav" target="_blank" rel="noopener">
+    <h3 class="rc-title">AgentNav<span class="lang-badge">Python</span></h3>
+    <p class="rc-excerpt">Agent-based navigation system for real robots. Natural language control via AI agents.</p>
+  </a>
 
-  <div class="project-card">
-    <div class="project-card-title">
-      <a href="https://github.com/TingdeLiu/MMS-LLM" target="_blank">MMS-LLM</a>
-      <span class="lang-badge">Python</span>
-    </div>
-    <p>Multimodal LLM for urban LiDAR point clouds. Point-BERT + Vicuna-7B, +40% over PointLLM baseline. Master's thesis (1.0).</p>
-  </div>
+  <a class="rc-card" href="https://github.com/TingdeLiu/MMS-LLM" target="_blank" rel="noopener">
+    <h3 class="rc-title">MMS-LLM<span class="lang-badge">Python</span></h3>
+    <p class="rc-excerpt">Multimodal LLM for urban LiDAR point clouds. Point-BERT + Vicuna-7B, +40% over PointLLM baseline. Master's thesis (1.0).</p>
+  </a>
 
-  <div class="project-card">
-    <div class="project-card-title">
-      <a href="https://github.com/TingdeLiu/miniagent" target="_blank">miniagent</a>
-      <span class="lang-badge">Python</span>
-    </div>
-    <p>Lightweight agent framework for building tool-using AI agents.</p>
-  </div>
+  <a class="rc-card" href="https://github.com/TingdeLiu/quant.ai" target="_blank" rel="noopener">
+    <h3 class="rc-title">quant.ai<span class="lang-badge">Python</span></h3>
+    <p class="rc-excerpt">US-equity quant research inside your AI assistant via MCP: explainable ratings, key levels, and daily briefs from one command.</p>
+  </a>
 
-  <div class="project-card">
-    <div class="project-card-title">
-      <a href="https://github.com/TingdeLiu/RAG_pdf" target="_blank">RAG_pdf</a>
-      <span class="lang-badge">Python</span>
-    </div>
-    <p>Intelligent document Q&amp;A system built on RAG and LangChain.</p>
-  </div>
-
-  <div class="project-card">
-    <div class="project-card-title">
-      <a href="https://github.com/TingdeLiu/Tyndall-Skills" target="_blank">Tyndall-Skills</a>
-      <span class="lang-badge">Python</span>
-    </div>
-    <p>A collection of development skills and custom Claude Code SKILL.md templates for research workflows.</p>
-  </div>
-
-  <div class="project-card">
-    <div class="project-card-title">
-      <a href="https://github.com/TingdeLiu/quant.ai" target="_blank">quant.ai</a>
-      <span class="lang-badge">Python</span>
-    </div>
-    <p>US-equity quant research inside your AI assistant via MCP: explainable ratings, key levels, and daily briefs from one command.</p>
-  </div>
+  <a class="rc-card" href="https://github.com/TingdeLiu/Tyndall-Skills" target="_blank" rel="noopener">
+    <h3 class="rc-title">Tyndall-Skills<span class="lang-badge">Python</span></h3>
+    <p class="rc-excerpt">A collection of development skills and custom Claude Code SKILL.md templates for research workflows.</p>
+  </a>
 
 </div>

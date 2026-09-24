@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "现代 Python 工程实践指南：环境、依赖、项目结构与 AI/机器人落地"
-date: 2026-09-16
+title: "Python 工程实践指南"
+date: 2026-09-23
 tags: [Python, uv, pyproject, Packaging, Ruff, pytest, PyTorch, ROS2, Engineering, Reproducibility]
 categories: research
 comments: true
@@ -2202,7 +2202,7 @@ uv venv --python 3.14+freethreaded
 
 **本站相关**
 
-- [ROS 2 核心架构与机器人软件工程完全指南]({{ site.baseurl }}/ROS2-Survey/) — ROS 2 侧的工程实践
+- [ROS 2 核心架构指南]({{ site.baseurl }}/ROS2-Survey/) — ROS 2 侧的工程实践
 - [具身驾驭系统（Embodied Agent Harness）综述]({{ site.baseurl }}/Embodied-Agent-Harness-Survey/) — 分布式系统与分层解耦
 
 ---

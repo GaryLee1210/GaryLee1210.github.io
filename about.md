@@ -10,7 +10,7 @@ I am a robotics and AI engineer with an M.Sc. in Mechatronics and Robotics from 
 
 ## Experience
 
-- **AI Engineer, Embodied Intelligence** — Beijing, China (2025 – present). I work at a robotics company focused on the *embodied brain*. My main responsibility is the embodied navigation system framework — the harness that binds perception, memory, planning, and control into a stack a real robot can run — with Vision-Language Navigation (VLN) and agentic navigation as my research directions.
+- **AI Engineer, Embodied Intelligence** — Beijing, China (2025 – present). I work at a robotics company focused on *embodied navigation*. My main responsibility is the embodied navigation system framework — the harness that binds perception, memory, planning, and control into a stack a real robot can run — with Vision-Language Navigation (VLN) and agentic navigation as my research directions.
 - **Research Assistant** — [IPH – Institut für Integrierte Produktion Hannover](https://www.iph-hannover.de/de/). Deploying robots in real industrial environments — navigation, 3D reconstruction, semantic mapping — where the gap between a working demo and a system that runs reliably on a factory floor turned out to be enormous.
 - **Research Associate** — [Institut für Kartographie und Geoinformatik (IKG)](https://www.ikg.uni-hannover.de/en/), LUH. Nearly two years on spatial intelligence, developing multimodal large language models for point clouds — teaching them to read urban LiDAR as it actually comes: sparse, noisy, colorless.
 

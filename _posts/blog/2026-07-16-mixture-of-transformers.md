@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "Mixture-of-Transformers (MoT) 架构详解：多模态基础模型的模态解耦与稀疏化演进"
-date:   2026-07-16
+title: "Mixture-of-Transformers (MoT) 架构详解"
+date:   2026-09-23
 tags: [LLM Training, Multi-Modal, MoT, MoE, Sparse Transformer, Deep Learning, NVIDIA Cosmos]
 categories: blog
 comments: true

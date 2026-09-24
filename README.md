@@ -68,7 +68,7 @@ GitHub 定时任务可能延迟，公开仓库连续 60 天无活动时可能被
 | | [强化学习综述](https://tingdeliu.github.io/Reinforcement-Learning-Survey/) | 从理论基础到具身智能场景的算法全景 |
 | | [深度学习综述](https://tingdeliu.github.io/Deep-Learning-Survey/) | 网络结构、优化方法与训练技巧的系统梳理 |
 | | [机器学习综述](https://tingdeliu.github.io/Machine-Learning-Survey/) | 经典模型与统计学习基础 |
-| **工程实践** | [现代 Python 工程实践指南](https://tingdeliu.github.io/Python-Engineering-Survey/) | 环境与依赖边界、src 布局与 pyproject、uv 锁文件的真实保证范围、质量与 CI 流水线，以及 CUDA 依赖分层、ROS 2 与虚拟环境的兼容边界、实验可复现的四个层次 |
+| **工程实践** | [Python 工程实践指南](https://tingdeliu.github.io/Python-Engineering-Survey/) | 环境与依赖边界、src 布局与 pyproject、uv 锁文件的真实保证范围、质量与 CI 流水线，以及 CUDA 依赖分层、ROS 2 与虚拟环境的兼容边界、实验可复现的四个层次 |
 
 ### 技术博客
 
