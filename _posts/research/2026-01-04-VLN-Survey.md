@@ -291,7 +291,7 @@ flowchart TB
 | 观测—动作交错生成 | 避免把整段视频压缩成一次静态判断 | [StreamVLN](/VLN-Papers/#streamvln)、[SparseVideoNav](/VLN-Papers-Extended/#sparsevideonav) |
 | 多任务共享策略 | 让指令跟随、目标搜索和探索共享空间能力 | [NavFoM](/VLN-Papers/#navfom)、[OneVLA](/VLN-Papers/#onevla-a-unified-framework-for-embodied-tasks) |
 | 可配置观测接口 | 推理时调整历史长度、相机权重和任务模式 | [Qwen-RobotNav](/VLN-Papers/#qwen-robotnav) |
-| 量化与边缘部署 | 降低大模型闭环推理延迟 | [LocalNav](/VLN-Papers/#localnav) |
+| 量化与边缘部署 | 降低大模型闭环推理延迟 | [LocalNav](/VLN-Papers-Extended/#localnav) |
 
 **本文选型建议**：数据规模充足、接口相对统一、强调端到端训练和部署简洁性。若任务涉及长程回溯、动态重规划或严格安全约束，通常仍需要外部记忆或控制模块。
 
@@ -327,7 +327,7 @@ flowchart LR
 |:---|:---|:---|:---|
 | 像素目标（可结合潜在特征） | 直观、便于视觉落地 | 深度歧义与可达性不确定 | [DualVLN](/VLN-Papers/#dualvln)、[Goal2Pixel](/VLN-Papers/#goal2pixel) |
 | 前沿或拓扑路点 | 适合全局探索与回溯 | 依赖地图质量 | [OmniNav](/VLN-Papers/#omninav)、[SEDualVLN](/VLN-Papers/#sedualvln) |
-| 共享潜在特征 | 信息密度高、可联合优化 | 可解释性和跨模型兼容性弱 | [Hydra-Nav](/VLN-Papers/#hydra-nav) |
+| 共享潜在特征 | 信息密度高、可联合优化 | 可解释性和跨模型兼容性弱 | [Hydra-Nav](/VLN-Papers-Extended/#hydra-nav) |
 | 指向或候选验证 | 可以结合在线强化学习 | 训练与推理系统更复杂 | [Robostral Navigate](/VLN-Papers/#robostral-navigate) |
 
 <a id="survey-memory"></a>
@@ -345,9 +345,9 @@ VLM 能识别“厨房”和“沙发”，却不天然知道它们在三维空�
 |:---|:---|:---|:---|
 | 拓扑图 | 长距离连通关系与回溯 | 节点语义粗、依赖路点质量 | DUET、ETPNav |
 | BEV / 语义地图 | 几何可达性与局部规划 | 位姿误差会持续累积 | [MapNav](/VLN-Papers/#mapnav)、[GA-VLN](/VLN-Papers/#ga-vln) |
-| 3D Gaussian 记忆 | 可渲染的连续三维语义 | 建图成本与动态更新复杂 | [3DGSNav](/VLN-Papers/#nav-3dgs)、[GSMem](/VLN-Papers-Extended/#gsmem) |
+| 3D Gaussian 记忆 | 可渲染的连续三维语义 | 建图成本与动态更新复杂 | [3DGSNav](/VLN-Papers-Extended/#nav-3dgs)、[GSMem](/VLN-Papers-Extended/#gsmem) |
 | 分层场景图 | 房间—对象—路径的多尺度推理 | 图构建和关系更新依赖感知质量 | [HSGM](/VLN-Papers/#hsgm) |
-| 经验与图先验记忆 | 利用历史访问结果调整探索与决策 | 过时或错误经验可能放大偏差 | [EvoMemNav](/VLN-Papers/#evomemnav)（目标导航与多模态目标设定） |
+| 经验与图先验记忆 | 利用历史访问结果调整探索与决策 | 过时或错误经验可能放大偏差 | [EvoMemNav](/VLN-Papers-Extended/#evomemnav)（目标导航与多模态目标设定） |
 
 **计算缓存与任务记忆需要区分。** [VLN-Cache](https://arxiv.org/abs/2603.07080) 通过跨帧复用 token 计算降低推理成本，并处理视角移动与任务阶段变化造成的缓存失效；它不等同于保存成功/失败经验的检索库。评估前者应观察加速与精度损失，评估后者应观察长程决策、回溯和恢复收益。
 
@@ -363,7 +363,7 @@ Agent 路线关注的核心是**谁维护任务状态、谁选择下一项能力
 |:---|:---|:---|:---|
 | VLM 调用感知与规划技能 | [AgentVLN](https://arxiv.org/abs/2603.17670) 将高层语义推理与技能库解耦 | 可以使用拓扑记忆与局部控制 | 工具选择和纠错的收益，是否超出技能本身的收益 |
 | 上层规划器调用共享导航基模 | [Qwen-RobotNav](https://arxiv.org/abs/2606.18112v3) 提供任务模式、token 预算和相机权重等可配置接口 | 共享策略承担具体导航，上层选择模式与观测配置 | 动态配置是否优于固定配置，调用代价是否可接受 |
-| 用访问反馈更新空间经验 | [EvoMemNav](/VLN-Papers/#evomemnav) 提供相邻目标导航任务中的设计参考 | 显式记忆参与探索与后续选择 | 经验有效期、错误写入、跨回合信息是否符合评测协议 |
+| 用访问反馈更新空间经验 | [EvoMemNav](/VLN-Papers-Extended/#evomemnav) 提供相邻目标导航任务中的设计参考 | 显式记忆参与探索与后续选择 | 经验有效期、错误写入、跨回合信息是否符合评测协议 |
 
 <a id="351-通用导航-agent-的五层结构"></a>
 
@@ -445,7 +445,7 @@ flowchart LR
 | 视觉想象辅助策略 | 生成候选未来视觉，为现有策略提供额外证据 | [VLN-Imagine](/VLN-Papers/#vln-imagine)、Navigation World Models |
 | 语言规划 + 预测 | 让指令分解约束短期与长期预测 | NavForesee、[WorldVLN](/VLN-Papers-Extended/#worldvln) |
 | 视觉—动作联合生成 | 同步生成未来状态与动作，减少两阶段漂移 | [AstraNav-World](/VLN-Papers/#astranav-world) |
-| 世界动作模型 | 在共享潜在序列中联合未来观测、价值和动作块 | [NavWAM](/VLN-Papers-Extended/#navwam)、[WAM-Nav](/VLN-Papers/#wam-nav) |
+| 世界动作模型 | 在共享潜在序列中联合未来观测、价值和动作块 | [NavWAM](/VLN-Papers-Extended/#navwam)、[WAM-Nav](/VLN-Papers-Extended/#wam-nav) |
 
 这一方向最容易被视觉效果误导。真正有意义的证据不是生成帧“看起来合理”，而是闭环 SR / SPL、碰撞率和真实机器人控制是否改善，以及预测误差能否被新观测及时纠正。
 
@@ -470,7 +470,7 @@ flowchart LR
 3. **闭环是否受益**：推理、记忆或想象模块是否真正改善导航，而不只是离线指标？
 4. **部署代价是否透明**：是否报告延迟、显存、控制频率和真实机器人测试？
 
-配套文章 [VLN 经典论文与性能排行榜](/VLN-Papers/) 按连续环境、离散全景和目标导航分别维护结果，适合用于进一步核对同设定性能。
+配套文章 [VLN 经典论文与性能排行榜](/VLN-Papers/) 按基准分表维护指令跟随结果（R2R-CE、RxR-CE、离散 R2R / REVERIE），并标出每一行是训练式还是免训练、是否只评测了验证集子集；目标导航（ObjectNav、HM3D-OVON、图像 / 点目标）的结果放在扩展篇的[目标导航性能排行榜](/VLN-Papers-Extended/#goal-nav-leaderboard)。两处都适合用于进一步核对同设定性能。
 
 
 <a id="survey-training"></a>

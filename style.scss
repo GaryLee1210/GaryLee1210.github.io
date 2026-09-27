@@ -841,8 +841,9 @@ nav {
   }
 }
 
-// Paper filter system
-.paper-filter-bar {
+// Paper filter system（排行榜筛选栏 .lb-filter-bar 共用同一套按钮样式）
+.paper-filter-bar,
+.lb-filter-bar {
   margin: 20px 0;
   padding: 12px 16px;
   background: $background-lighten-color;
@@ -960,6 +961,52 @@ nav {
   &.hidden {
     display: none;
   }
+}
+
+// 排行榜：筛选分组、非标准口径的灰色行与角标
+.lb-filter-bar {
+  .lb-group {
+    display: inline-block;
+    margin-right: 14px;
+    white-space: nowrap;
+  }
+
+  // 没有 JS 时筛选栏是空的，不占位置
+  &:empty {
+    display: none;
+  }
+}
+
+.lb-flag {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 0 5px;
+  font-size: 11px;
+  line-height: 16px;
+  color: $base-lighten-color;
+  background: $background-color;
+  border: 1px solid $divider-color;
+  border-radius: 3px;
+  white-space: nowrap;
+  vertical-align: 1px;
+}
+
+// 带 .lb-flag 的行灰显；:has 与 JS 加的类分成两条规则，不支持 :has 的浏览器不会连带丢掉后一条
+tr:has(.lb-flag) td {
+  opacity: .55;
+}
+
+tr.lb-nonstd td {
+  opacity: .55;
+}
+
+tr.lb-hidden {
+  display: none;
+}
+
+tr.lb-empty td {
+  color: $base-lighten-color;
+  text-align: center;
 }
 
 .paper-tags-row {
