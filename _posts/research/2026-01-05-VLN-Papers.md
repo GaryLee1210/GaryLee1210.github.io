@@ -139,7 +139,7 @@ excerpt: "本文系统梳理VLN领域的经典论文，涵盖DualVLN、StreamVLN
 
 # 前列模型技术方案分析
 
-## 前列模型技术方案组合统计与要素打勾矩阵
+## 要素打勾矩阵
 
 为了清晰揭示 **R2R-CE SR ≥ 60% 前列模型的技术 Recipe（解法组合）**，下表对排行榜 ① 中 SR ≥ 60% 的全部 24 个条目（22 个模型，Qwen-RobotNav 的全景 / 单目配置与 GPT-6-Astra 的 ultra / medium 推理强度各分两行）逐篇核对原文后打勾（✓）。
 
@@ -158,7 +158,7 @@ excerpt: "本文系统梳理VLN领域的经典论文，涵盖DualVLN、StreamVLN
 | 上下文压缩 | 显式的历史 Token 压缩、KV 复用或前缀共享（含训练期） |
 | 开源 | 代码或权重已公开 |
 
-| 排名 | 前列模型名称 | R2R-CE SR ↑ | 堆数据 (≥1M) | 堆相机 (多目/全景) | 快慢双系统 | Agentic | 像素 Grounding | 连续动作头 (回归/扩散/流匹配) | 强化学习 (GRPO/CISPO) | DAgger / 纠偏数据 | 上下文压缩 (KV/Token/前缀) | 开源代码 / 权重 |
+| 排名 | 模型 | R2R-CE SR ↑ | 堆数据 (≥1M) | 堆相机 (多目/全景) | 快慢双系统 | Agentic | 像素 Grounding | 连续动作头 (回归/扩散/流匹配) | 强化学习 (GRPO/CISPO) | DAgger / 纠偏数据 | 上下文压缩 (KV/Token/前缀) | 开源代码 / 权重 |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 1 | [**GPT-6-Astra**](#gpt-6-astra) (单目 · ultra) | **79.0%** | – | – | – | – | – | – | – | – | – | – |
 | 2 | [**Robostral Navigate**](#robostral-navigate) (单目) | **77.4%** | ✓ | – | ✓ | – | ✓ | ✓ | ✓ | – | ✓ | – |
@@ -188,7 +188,7 @@ excerpt: "本文系统梳理VLN领域的经典论文，涵盖DualVLN、StreamVLN
 
 注：VLN-Cache 是套在 DualVLN 上的免训练 Token 缓存层，其余要素随 DualVLN 继承；OmniNav 的 R2R / RxR 评测只走快系统（VLM + 航点回归头），慢系统的前沿探索只用于 OVON，故双系统记 –；Qwen-RobotNav 与上层规划 Agent 的协作只用于 EQA 等长程任务，R2R-CE 成绩来自模型本体；Dual-Anchoring 与 SEDualVLN 的系统 1 均以 StreamVLN 为骨干，继承其滑动窗口 KV 与体素剪枝；HarnessVLN 是表中唯一在全量 val-unseen 上评测的免训练方法（另一个免训练条目 GPT-6-Astra 只跑了 R2R-CE-100），其像素 Grounding 指 `ground_target` 工具把子目标落到图像区域后再查深度。ABot-N1 的 30M 预训练样本与 DAgger rollout、Image2Nav 的离散动作输出与在线 DAgger，均依据各自 arXiv 原文补充。GPT-6-Astra 两行是同一闭源模型在 ultra / medium 两档推理强度下的 R2R-CE-100 成绩（100 条子集、每档单次运行），不做任何导航微调；它的 `observe()` / `step()` 只是原始观测与原语动作接口，不调用建图、感知或规划工具，故 Agentic 记 –；训练数据未披露，堆数据、强化学习等列也记 –。
 
-## 前列模型解法组合（Recipe）统计研判
+## 统计研判
 
 以 68% 为界把 24 个条目分成两档，比较各要素的采纳率：
 
