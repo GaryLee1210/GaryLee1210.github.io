@@ -87,10 +87,12 @@ GitHub 定时任务可能延迟，公开仓库连续 60 天无活动时可能被
 
 | 期号 | 覆盖区间 |
 | --- | --- |
-| [2026-09-12](https://tingdeliu.github.io/vln-weekly-2026-09-12/) | 2026-09-02 ~ 2026-09-10 |
-| [2026-09-05](https://tingdeliu.github.io/vln-weekly-2026-09-05/) | 2026-08-26 ~ 2026-09-03 |
-| [2026-08-30](https://tingdeliu.github.io/vln-weekly-2026-08-30/) | 2026-08-20 ~ 2026-08-29 |
-| [2026-08-22](https://tingdeliu.github.io/vln-weekly-2026-08-22/) | 2026-08-13 ~ 2026-08-20 |
+| [第 6 期](https://tingdeliu.github.io/vln-weekly-2026-09-27/) | 2026-09-16 ~ 2026-09-24 |
+| [第 5 期](https://tingdeliu.github.io/vln-weekly-2026-09-19/) | 2026-09-09 ~ 2026-09-17 |
+| [第 4 期](https://tingdeliu.github.io/vln-weekly-2026-09-12/) | 2026-09-02 ~ 2026-09-10 |
+| [第 3 期](https://tingdeliu.github.io/vln-weekly-2026-09-05/) | 2026-08-26 ~ 2026-09-03 |
+| [第 2 期](https://tingdeliu.github.io/vln-weekly-2026-08-30/) | 2026-08-20 ~ 2026-08-29 |
+| [第 1 期](https://tingdeliu.github.io/vln-weekly-2026-08-22/) | 2026-08-13 ~ 2026-08-20 |
 
 后续新增周报同样发布在 [Blog 页](https://tingdeliu.github.io/blog/) 的「具身导航周报」分区。
 
@@ -130,8 +132,8 @@ GitHub 定时任务可能延迟，公开仓库连续 60 天无活动时可能被
 
 文章使用 Jekyll 内置的 `posts` 集合，永久链接为 `/:title/`。`categories` 取 `research` / `blog` / `weekly` 三值，是聚合页分区的唯一依据，`_posts/` 下的子目录仅用于维护源文件。
 
-- Research 页按「具身导航（VLN）／具身智能与大模型／机器学习基础／机器人系统与传统导航」四组展示，未归组的新文章自动落入「其他」
-- Blog 页分为「技术随笔」与「具身导航周报」两个分区
+- Research 页以卡片网格按「具身导航（VLN）／具身智能／大模型与 Agent／机器学习基础／机器人系统与传统导航／工程实践」六组展示，顶部有分组跳转栏，未归组的新文章自动落入「其他」
+- Blog 页先列「具身导航周报」（按发布顺序自动编期号），再列「技术随笔」
 
 ## 技术实现
 
@@ -140,7 +142,7 @@ GitHub 定时任务可能延迟，公开仓库连续 60 天无活动时可能被
 - **Jekyll 插件**：`jekyll-sitemap`、`jekyll-feed`、`jekyll-paginate`、`jekyll-seo-tag`
 - **阅读体验**：章节目录抽屉（随滚动高亮当前小节）、顶部阅读进度条、代码块一键复制、标题锚点复制、配图点击放大、宽表格横向滚动、返回顶部
 - **论文检索**：VLN 与 Embodied Agent 论文精读内置交互式标签筛选栏，支持按多维技术特征实时过滤（VLN 篇支持跨篇联动）
-- **图片资源**：论文与概念位图统一转为无损 WebP 交付（888 / 1003），兼顾清晰度与加载速度；算法演示动画保留 GIF，矢量示意图保留 SVG，均不作有损转换
+- **图片资源**：论文与概念位图统一转为无损 WebP 交付（915 / 964），兼顾清晰度与加载速度；算法演示动画保留 GIF，矢量示意图保留 SVG，均不作有损转换
 - **内容反馈**：文章末尾一键提交 Issue（报告错误 / 推荐论文 / 修改建议），并回显相关 Issue 状态
 - **部署**：推送 `main` 分支后由 GitHub Actions 构建并发布到 GitHub Pages
 
