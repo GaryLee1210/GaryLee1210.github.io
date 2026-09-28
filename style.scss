@@ -1004,6 +1004,11 @@ tr.lb-hidden {
   display: none;
 }
 
+// 同一表内不同基准之间的分隔线（JS 按「基准」列换组时加类）
+tr.lb-group-start td {
+  border-top: 2px solid $oc-gray-5;
+}
+
 tr.lb-empty td {
   color: $base-lighten-color;
   text-align: center;
@@ -1423,8 +1428,17 @@ tr.lb-empty td {
   .toc-level-3 {
     > a {
       padding: 5px 8px 5px 48px;
-      color: $base-lightener-color;
+      color: $base-lighten-color;
       font-size: 12.5px;
+
+      &:hover,
+      &:focus-visible {
+        color: $base-color;
+      }
+
+      &.is-active {
+        color: $link-color;
+      }
     }
   }
 }

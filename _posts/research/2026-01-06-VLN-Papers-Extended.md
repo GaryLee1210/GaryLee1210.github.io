@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "VLN 论文精读（扩展篇）"
-date:   2026-09-27
+date:   2026-09-28
 tags: [VLN, VLA, Robotics, Computer Vision, Deep Learning]
 categories: research
 comments: true
@@ -16,24 +16,26 @@ excerpt: "VLN 论文精读的扩展篇：目标导航（ObjectNav、HM3D-OVON、
 
 # 目标导航性能排行榜 {#goal-nav-leaderboard}
 
-> ⚠️ **不同基准不可直接混比**：目标导航只给目标（物体类别、目标图像或坐标），不给路线描述，与主篇的指令跟随 VLN 是两类任务，指令跟随的排行榜见主篇 [性能排行榜](/VLN-Papers/)。本篇按目标形式分表：④ 封闭类别 ObjectNav、⑤ 开放词汇 HM3D-OVON、⑥ 图像目标与点目标、⑦ 其他基准。表内再按基准分组，各组的场景、类别与成功判定不同（HM3D v1 与 v2 也不同），SR 只在组内比较；ObjectNav 类基准不定义 NE / OSR。
+> ⚠️ **不同基准不可直接混比**：目标导航只给目标（物体类别、目标图像或坐标），不给路线描述，与主篇的指令跟随 VLN 是两类任务，指令跟随的排行榜见主篇 [性能排行榜](/VLN-Papers/)。本篇按目标形式分表，编号接主篇指令跟随的 ①–③：④ 封闭类别物体目标、⑤ 开放词汇物体目标、⑥ 图像目标、⑦ 点目标、⑧ 多模态目标与自建基准。表内再按基准分组，组间以粗线分隔，各组的场景、类别与成功判定不同（HM3D v1 与 v2 也不同），SR 只在组内比较；ObjectNav 类基准不定义 NE / OSR。
 >
 > **读表**：「范式」列中，**训练**指在导航数据上训练或微调过模型；**免训练**指不训练任何导航模型，由现成的大模型、检测分割模型与规则 / 规划模块组合而成（调用现成的点目标低层控制器不影响归类）。灰色行是非标准口径（如只评测了验证集子集），不参与加粗；加粗为同一基准内非灰色行的最优值，只有一行的基准不加粗。筛选栏可按范式、输入配置、是否开源筛选，也可以隐藏灰色行。
 
 <div id="lb-filter-bar" class="lb-filter-bar"></div>
 
-## ④ ObjectNav（HM3D · MP3D · Gibson）
+## ④ 封闭类别物体目标 · ObjectNav（HM3D · MP3D · Gibson）
 
 封闭类别物体导航：给出物体类别，在未见过的场景中找到任一实例并在其附近停下
 
 | 模型 | 年份 | 基准 | 范式 | 基模 | SR ↑ | SPL ↑ | 开源 |
 |:-----|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
-| [VLingNav (单目)](#vlingnav) | 2026 | HM3D-v2 | 训练 | LLaVA-Video-7B | **83.0** | 40.5 | 否 |
+| [Hydra-Nav (单目)](#hydra-nav) | 2026 | HM3D-v2 | 训练 | Qwen2.5-VL-7B | **84.8** | 41.1 | 否 |
+| [AECNav (单目)](#aecnav) | 2026 | HM3D-v2 | 免训练 | DeepSeek-V4-Flash | 84.7 | **45.3** | 否 |
+| [VLingNav (单目)](#vlingnav) | 2026 | HM3D-v2 | 训练 | LLaVA-Video-7B | 83.0 | 40.5 | 否 |
 | [SysNav (单目)](#sysnav) | 2026 | HM3D-v2 | 免训练 | Gemini-2.5-Flash | 80.8 | 37.2 | [是](https://github.com/zwandering/SysNav) |
 | [LightNav-0 (单目)](/VLN-Papers/#lightnav-0) | 2026 | HM3D-v2 | 训练 | Qwen3-VL-4B | 77.2 | 41.5 | [是](https://github.com/lightorigins/LightNav-0) |
 | [HarnessVLN (单目)](/VLN-Papers/#harnessvln) | 2026 | HM3D-v2 | 免训练 | GPT-5.6-luna | 76.0 | 37.9 | 否 |
 | [Qwen-RobotNav (单目)](/VLN-Papers/#qwen-robotnav) | 2026 | HM3D-v2 | 训练 | Qwen3-VL-4B | 75.6 | 30.6 | 否 |
-| [3DGSNav (单目)](#nav-3dgs) | 2026 | HM3D-v2 | 免训练 | Gemini 3 Pro + GLM-4.5V | 75.0 | **44.2** | 否 |
+| [3DGSNav (单目)](#nav-3dgs) | 2026 | HM3D-v2 | 免训练 | Gemini 3 Pro + GLM-4.5V | 75.0 | 44.2 | 否 |
 | [Qwen-RobotNav (单目)](/VLN-Papers/#qwen-robotnav) | 2026 | HM3D-v2 | 训练 | Qwen3-VL-8B | 71.2 | 33.0 | 否 |
 | [EvoMemNav (单目)](#evomemnav) | 2026 | HM3D-v2 | 免训练 | Qwen-8B | 63.8 | 39.4 | 否 |
 | [3DGSNav (单目)](#nav-3dgs) | 2026 | HM3D-v1 | 免训练 | Gemini 3 Pro + GLM-4.5V | **80.0** | **51.8** | 否 |
@@ -41,44 +43,45 @@ excerpt: "VLN 论文精读的扩展篇：目标导航（ObjectNav、HM3D-OVON、
 | [SysNav (单目)](#sysnav) | 2026 | HM3D-v1 | 免训练 | Gemini-2.5-Flash | 63.7 | 30.5 | [是](https://github.com/zwandering/SysNav) |
 | [EvoMemNav (单目)](#evomemnav) | 2026 | HM3D-v1 | 免训练 | Qwen-8B | 59.2 | 33.6 | 否 |
 | [VLFM (单目)](/VLN-Papers/#vlfm) | 2023 | HM3D-v1 | 免训练 | – | 52.5 | 30.4 | [是](https://github.com/rai-opensource/vlfm) |
-| [Hydra-Nav (单目)](#hydra-nav) | 2026 | HM3D（未注明版本） | 训练 | Qwen2.5-VL-7B | 84.8 | 41.1 | 否 |
 | [PanoNav (全景)](/VLN-Papers/#panonav) <span class="lb-flag">200 条子集</span> | 2025 | HM3D（未注明版本） | 免训练 | Qwen2.5-VL + DeepSeek-V3 | 43.5 | 23.7 | 否 |
 | [Hydra-Nav (单目)](#hydra-nav) | 2026 | MP3D | 训练 | Qwen2.5-VL-7B | **64.0** | **29.6** | 否 |
 | [VLingNav (单目)](#vlingnav) | 2026 | MP3D | 训练 | LLaVA-Video-7B | 58.9 | 26.5 | 否 |
 | [Qwen-RobotNav (单目)](/VLN-Papers/#qwen-robotnav) | 2026 | MP3D | 训练 | Qwen3-VL-4B | 52.2 | 16.0 | 否 |
+| [AECNav (单目)](#aecnav) | 2026 | MP3D | 免训练 | DeepSeek-V4-Flash | 51.3 | 25.9 | 否 |
 | [SysNav (单目)](#sysnav) | 2026 | MP3D | 免训练 | Gemini-2.5-Flash | 50.7 | 18.1 | [是](https://github.com/zwandering/SysNav) |
 | [Qwen-RobotNav (单目)](/VLN-Papers/#qwen-robotnav) | 2026 | MP3D | 训练 | Qwen3-VL-8B | 48.8 | 17.7 | 否 |
 | [3DGSNav (单目)](#nav-3dgs) | 2026 | MP3D | 免训练 | Gemini 3 Pro + GLM-4.5V | 43.6 | 21.3 | 否 |
 | [VLFM (单目)](/VLN-Papers/#vlfm) | 2023 | MP3D | 免训练 | – | 36.4 | 17.5 | [是](https://github.com/rai-opensource/vlfm) |
 | [VLFM (单目)](/VLN-Papers/#vlfm) | 2023 | Gibson | 免训练 | – | 84.0 | 52.2 | [是](https://github.com/rai-opensource/vlfm) |
 
-注：HM3D-v1 为 Habitat 2022 挑战赛的 val（2000 条 / 20 场景 / 6 类），HM3D-v2 为 2023 挑战赛的 val（1000 条 / 36 场景 / 6 类），两者场景与标注不同。VLFM 原文只写 HM3D，但给出的 2000 条 / 20 场景 / 6 类与 v1 一致；Hydra-Nav 与 PanoNav 原文未写明版本，单列一组。PanoNav 只从 HM3D val 随机抽取 200 条评测，列为灰色。Hydra-Nav 取原文 Table 2 的 IRFT（Stage 3）结果。Qwen-RobotNav 取 arXiv v3，4B / 8B 两个尺寸分列；LightNav-0 取 arXiv v2 数字（v1 的 HM3D-v2 为 79.5 / 43.7）。
+注：HM3D-v1 为 Habitat 2022 挑战赛的 val（2000 条 / 20 场景 / 6 类），HM3D-v2 为 2023 挑战赛的 val（1000 条 / 36 场景 / 6 类），两者场景与标注不同。VLFM 原文只写 HM3D，但给出的 2000 条 / 20 场景 / 6 类与 v1 一致；Hydra-Nav 原文也未写版本，但其 Table 2 的基线 WMNav 取 72.2，与 WMNav 原文的 HM3D-v2 成绩一致，据此归入 v2；PanoNav 原文未写明版本，单列一组。PanoNav 只从 HM3D val 随机抽取 200 条评测，列为灰色。Hydra-Nav 取原文 Table 2 的 IRFT（Stage 3）结果。Qwen-RobotNav 取 arXiv v3，4B / 8B 两个尺寸分列；LightNav-0 取 arXiv v2 数字（v1 的 HM3D-v2 为 79.5 / 43.7）。
 
-## ⑤ HM3D-OVON
+## ⑤ 开放词汇物体目标 · HM3D-OVON
 
-开放词汇物体导航；除注明外均为 val-unseen
+开放词汇物体导航；除注明外均为 val-unseen，标 † 的行原文未写明划分
 
 | 模型 | 年份 | 范式 | 基模 | SR ↑ | SPL ↑ | 开源 |
 |:-----|:----:|:----:|:----:|:----:|:----:|:----:|
 | [Hydra-Nav (单目)](#hydra-nav) | 2026 | 训练 | Qwen2.5-VL-7B | **66.3** | **37.4** | 否 |
 | [HarnessVLN (单目)](/VLN-Papers/#harnessvln) | 2026 | 免训练 | GPT-5.6-luna | 59.3 | 36.6 | 否 |
 | [OmniNav (多目)](/VLN-Papers/#omninav) | 2026 | 训练 | Qwen2.5-VL-3B | 59.2 | 33.2 | [是](https://github.com/amap-cvlab/OmniNav) |
-| [SysNav (单目)](#sysnav) | 2026 | 免训练 | Gemini-2.5-Flash | 54.9 | 26.1 | [是](https://github.com/zwandering/SysNav) |
+| [AECNav (单目)](#aecnav) | 2026 | 免训练 | DeepSeek-V4-Flash | 57.3 | 30.5 | 否 |
+| [SysNav (单目)](#sysnav)<sup>†</sup> | 2026 | 免训练 | Gemini-2.5-Flash | 54.9 | 26.1 | [是](https://github.com/zwandering/SysNav) |
 | [Qwen-RobotNav (单目)](/VLN-Papers/#qwen-robotnav) | 2026 | 训练 | Qwen3-VL-4B | 53.1 | 20.9 | 否 |
 | [Qwen-RobotNav (单目)](/VLN-Papers/#qwen-robotnav) | 2026 | 训练 | Qwen3-VL-8B | 51.2 | 24.0 | 否 |
 | [VLingNav (单目)](#vlingnav) | 2026 | 训练 | LLaVA-Video-7B | 50.1 | 24.6 | 否 |
 | [LightNav-0 (单目)](/VLN-Papers/#lightnav-0) | 2026 | 训练 | Qwen3-VL-4B | 47.0 | 24.2 | [是](https://github.com/lightorigins/LightNav-0) |
-| [AstraNav-World (多目)](/VLN-Papers/#astranav-world) | 2025 | 训练 | Qwen2.5-VL-3B | 45.7 | 28.7 | [是](https://github.com/amap-cvlab/AstraNav-World) |
+| [AstraNav-World (多目)](/VLN-Papers/#astranav-world)<sup>†</sup> | 2025 | 训练 | Qwen2.5-VL-3B | 45.7 | 28.7 | [是](https://github.com/amap-cvlab/AstraNav-World) |
 | [NavFoM (多目)](/VLN-Papers/#navfom) | 2025 | 训练 | Qwen2-7B | 45.2 | 31.9 | 否 |
-| [JanusVLN (单目)](/VLN-Papers/#janusvln) | 2026 | 训练 | Janus-Pro-7B | 44.9 | 31.7 | [是](https://github.com/MIV-XJTU/JanusVLN) |
+| [JanusVLN (单目)](/VLN-Papers/#janusvln)<sup>†</sup> | 2026 | 训练 | Janus-Pro-7B | 44.9 | 31.7 | [是](https://github.com/MIV-XJTU/JanusVLN) |
 | [LocalNav-Claude (单目)](#localnav) | 2026 | 免训练 | Claude Sonnet 4.6 | 39.7 | 19.7 | 否 |
 | [LocalNav-Qwen (单目)](#localnav) | 2026 | 训练 | Qwen3.5-4B | 34.5 | 17.2 | 否 |
 
-注：SysNav、AstraNav-World 与 JanusVLN 原文只给出一列 HM3D-OVON 结果，未写明划分；NavFoM 为四视角设定（单视角为 43.6 / 31.3）；OmniNav 为启用慢思考系统的 OmniNav*。LocalNav-Claude 是直接用 Claude Sonnet 4.6 做决策的免训练版本，LocalNav-Qwen 是用 Claude 轨迹做 SFT 蒸馏的 Qwen3.5-4B。
+注：† SysNav、AstraNav-World 与 JanusVLN 原文只给出一列 HM3D-OVON 结果，未写明划分；NavFoM 为四视角设定（单视角为 43.6 / 31.3）；OmniNav 为启用慢思考系统的 OmniNav*。LocalNav-Claude 是直接用 Claude Sonnet 4.6 做决策的免训练版本，LocalNav-Qwen 是用 Claude 轨迹做 SFT 蒸馏的 Qwen3.5-4B。
 
-## ⑥ 图像目标 · 点目标
+## ⑥ 图像目标 · HM3D-IIN / Image-Goal
 
-HM3D-IIN 为实例图像导航（给出目标物体的照片，找到同一个实例）；Image-Goal / Point-Goal 分别以目标图像、相对坐标给出目标
+以一张图像给出目标：HM3D-IIN 为实例图像导航（给出目标物体的照片，找到同一个实例），Image-Goal 给出在目标位置拍摄的图像
 
 | 模型 | 年份 | 基准 | 范式 | 基模 | SR ↑ | SPL ↑ | 开源 |
 |:-----|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
@@ -86,26 +89,35 @@ HM3D-IIN 为实例图像导航（给出目标物体的照片，找到同一个�
 | [VLingNav (单目)](#vlingnav) | 2026 | HM3D-IIN | 训练 | LLaVA-Video-7B | 60.8 | 37.4 | 否 |
 | [WAM-Nav (单目)](#wam-nav) | 2026 | Clutter/Intern (Image-Goal) | 训练 | – | **50.2** | **48.2** | 否 |
 | [NavDP (单目)](#navdp) | 2025 | Clutter/Intern (Image-Goal) | 训练 | – | 43.4 | 41.4 | [是](https://github.com/InternRobotics/NavDP) |
+
+注：Clutter/Intern 为 ClutterScenes（Easy / Hard）与 InternScenes（Home / Commercial）四组场景的平均；WAM-Nav 与 NavDP 均为端到端扩散 / 世界模型策略，高频输出轨迹。NavDP 的行取自 WAM-Nav 原文（arXiv v2）Table 3 的基线复现，NavDP 原文未报告该基准。
+
+## ⑦ 点目标 · Point-Goal
+
+以相对起点的坐标给出目标，不涉及语义识别，主要考察避障与局部路径规划
+
+| 模型 | 年份 | 基准 | 范式 | 基模 | SR ↑ | SPL ↑ | 开源 |
+|:-----|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
 | [WAM-Nav (单目)](#wam-nav) | 2026 | Clutter/Intern (Point-Goal) | 训练 | – | **80.4** | **78.0** | 否 |
 | [NavDP (单目)](#navdp) | 2025 | Clutter/Intern (Point-Goal) | 训练 | – | 77.8 | 74.8 | [是](https://github.com/InternRobotics/NavDP) |
-| [X-NavDP (单目)](/VLN-Papers/#x-navdp) | 2026 | IsaacLab 40-Scenes (Point-Goal) | 训练 | – | 84.28 | 77.19 | [是](https://github.com/InternRobotics/NavDP) |
-| [ABot-N1 (三相机)](/VLN-Papers/#abot-n1) | 2026 | ABotN-PointBench (Indoor) | 训练 | Qwen-3.5-4B + 2B | 95.4 | 93.7 | 否 |
-| [ABot-N1 (三相机)](/VLN-Papers/#abot-n1) | 2026 | ABotN-PointBench (Outdoor) | 训练 | Qwen-3.5-4B + 2B | 92.9 | 91.4 | 否 |
 
-注：Clutter/Intern 为 ClutterScenes（Easy / Hard）与 InternScenes（Home / Commercial）四组场景的平均；WAM-Nav 与 NavDP 均为端到端扩散 / 世界模型策略，高频输出轨迹。NavDP 两行取自 WAM-Nav 原文（arXiv v2）Table 3 的基线复现，NavDP 原文未报告该基准。ABotN-PointBench 室内用零碰撞成功率（SR<1col），室外用三次碰撞内成功率（SR<3col），两者判定不同。IsaacLab 40-Scenes 与 ABotN-PointBench 目前各只有一篇论文报告。
+注：Clutter/Intern 的场景构成与 NavDP 行的来源同表 ⑥。只有一篇论文报告的点目标基准（IsaacLab 40-Scenes、ABotN-PointBench）列在表 ⑧。
 
-## ⑦ 其他基准
+## ⑧ 多模态目标与自建基准
 
-多模态长程目标（GOAT-Bench）与各论文自建的目标导航基准
+多模态长程目标（GOAT-Bench），以及目前只有一篇论文报告的自建基准
 
 | 模型 | 年份 | 基准 | 范式 | 基模 | SR ↑ | SPL ↑ | 开源 |
 |:-----|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
 | [GSMem (单目)](#gsmem) | 2025 | GOAT-Bench | 免训练 | GPT-4o | **67.2** | **46.9** | 否 |
 | [EvoMemNav (单目)](#evomemnav) | 2026 | GOAT-Bench | 免训练 | Qwen-8B | 59.6 | 38.9 | 否 |
+| [X-NavDP (单目)](/VLN-Papers/#x-navdp) | 2026 | IsaacLab 40-Scenes (Point-Goal) | 训练 | – | 84.28 | 77.19 | [是](https://github.com/InternRobotics/NavDP) |
+| [ABot-N1 (三相机)](/VLN-Papers/#abot-n1) | 2026 | ABotN-PointBench (Indoor) | 训练 | Qwen-3.5-4B + 2B | 95.4 | 93.7 | 否 |
+| [ABot-N1 (三相机)](/VLN-Papers/#abot-n1) | 2026 | ABotN-PointBench (Outdoor) | 训练 | Qwen-3.5-4B + 2B | 92.9 | 91.4 | 否 |
 | [ABot-N1 (三相机)](/VLN-Papers/#abot-n1) | 2026 | Short-Horizon OVON | 训练 | Qwen-3.5-4B + 2B | 84.9 | 51.8 | 否 |
 | [ABot-N1 (三相机)](/VLN-Papers/#abot-n1) | 2026 | ABotN-POIBench | 训练 | Qwen-3.5-4B + 2B | 77.3 | 72.6 | 否 |
 
-注：GOAT-Bench 为 val-unseen，一个 episode 内依次给出类别、文字描述或图像形式的多个目标。Short-Horizon OVON 与 ABotN-POIBench 为 ABot-N1 的自建设定，POIBench 以到达入口 2 m 内为成功。
+注：GOAT-Bench 为 val-unseen，一个 episode 内依次给出类别、文字描述或图像形式的多个目标。IsaacLab 40-Scenes 为 X-NavDP 的点目标评测；ABotN-PointBench、Short-Horizon OVON 与 ABotN-POIBench 为 ABot-N1 的自建设定，PointBench 室内用零碰撞成功率（SR<1col），室外用三次碰撞内成功率（SR<3col），两者判定不同；POIBench 以到达入口 2 m 内为成功。自建基准各只有一行，不加粗，也不宜与其他表的数字比较。
 
 # 具身导航论文扩展
 
@@ -4746,6 +4758,196 @@ $$R_{tot} = R_{done} + R_{nav} + R_{exp} + R_{brev}$$
 
 
 
+## 36. AECNav (2026) {#aecnav}
+———把"找物体"改写成"攒证据"：一次编码、按需分割、对数几率累积信念
+
+📄 **Paper**: [arXiv:2608.10817](https://arxiv.org/abs/2608.10817) · [Project Page](https://basaermi.github.io/aecnav-website/)
+
+### 精华
+
+- 目标确认不该是"单帧分数过阈值就停"，而应是"多视角证据的累加"：借用占据栅格的 log-odds 加法更新，让一致的观测能把置信度推高到任何单帧都达不到的水平。
+- 负证据和正证据同样重要：相似干扰物（confuser）得分更高、以及"该看到却没看到"（miss），都应主动扣减信念，而不只是"不加分"。
+- 一个共享骨干（C-RADIOv4）同时服务场景打分、patch 定位与实例分割，既消除多模型语义不一致，又省去重复编码；昂贵的分割头再用几乎免费的 patch 相似度做门控。
+- 前沿选择要同时考虑"方向对不对 + 沿途能看到多少新区域 + 走过去要多远"；信息增益若没有路程代价约束，会把机器人引向空旷大区域白白消耗步数。
+- 训练-free 管线在精度上反超训练方法的同时，单 episode 耗时比 VLFM 还快 2.2 倍，说明"少做无用功"本身就是精度来源。
+
+---
+
+### 1. 研究背景/问题
+
+零样本开放词汇物体导航（ZSON）要求机器人在陌生环境中找到任意语言描述的物体。现有基于价值地图的方法存在三个瓶颈：前沿选择与目标确认使用互不相干的多套视觉模型（CLIP/BLIP-2 + GroundingDINO/MobileSAM），造成重复编码与高延迟；目标确认靠单帧阈值或"平均化"融合，难以区分真目标与外观相似的干扰物；前沿选择只看语义相关度，忽略到达代价与可获得的新信息量，在语义线索弱时容易在远处低收益前沿之间来回摆动。
+
+---
+
+### 2. 主要方法/创新点
+
+<div align="center">
+  <img src="/images/vln/AECNav-overview.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1416/750" />
+<figcaption>AECNav 概览：左侧为导航器需回答的三个问题（高效感知、弱线索下的有效探索、干扰物下的准确识别）；右上为 HM3D-v2 上成功率–单 episode 耗时的权衡；右下为去掉任一模块带来的成功率下降</figcaption>
+</div>
+
+<div align="center">
+  <img src="/images/vln/AECNav-framework.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1419/819" />
+<figcaption>AECNav 框架：证据门控感知用共享 C-RADIOv4 编码器打分并仅在可能看到目标时触发 SAM3；证据整合把检测反投影成 3D 簇，并用目标/干扰物/缺失三类证据更新 log-odds 信念；主动证据获取综合语义相关度、信息增益与路径代价选择前沿，直到某个簇被确认</figcaption>
+</div>
+
+**① 整体框架概述**
+
+AECNav 把 ZSON 重新表述为"证据驱动的感知→决策"问题，由三个模块闭环构成：**证据门控感知**（Evidence-Gated Perception）负责用一次前向提取所有语义线索，并决定要不要跑昂贵的分割；**证据整合**（Evidence Consolidation）把分割结果变成 3D 候选簇，并为每个簇维护一个"它是不是目标"的累积信念；**主动证据获取**（Active Evidence Acquisition）在信念不足以停下时，挑选"最值得去看一眼"的前沿。底层运动交给 VLFM 同款预训练 PointNav 策略。
+
+下面是读者版的数据流（一次决策循环）：
+
+```mermaid
+graph TD
+    A["RGB-D 观测 + 目标文本"] --> B["C-RADIOv4 单次前向: summary token + patch tokens"]
+    B --> C["场景相似度写入价值地图"]
+    B --> D{"最大 patch 相似度 > 门控阈值?"}
+    D -- "否 (约 62% 的步)" --> G["跳过分割"]
+    D -- "是" --> E["SAM3 同时分割目标与干扰类别"]
+    E --> F["反投影成 3D 簇, 按 log-odds 更新信念"]
+    G --> H{"某簇信念稳定超过停止阈值且足够近?"}
+    F --> H
+    H -- "是" --> I["STOP"]
+    H -- "否" --> J["按 语义+信息增益-路程代价 选前沿"]
+    C --> J
+    J --> K["PointNav 执行动作, 获得新观测"]
+    K --> A
+```
+
+**② 逐模块讲解**
+
+**模块 1：证据门控感知**
+
+- **输入**：当前 RGB 图像 $I_t$、目标类别名 $g$。
+- **处理**：C-RADIOv4 编码器 $E$ 一次前向输出 summary token $z_t^{\text{sum}}$（整幅图的全局语义）与 $N$ 个 patch token $z_t^{\text{patch}}$（每个局部区域的语义）。目标名只用 SigLIP2 文本塔编码一次得到 $e_g$ 并缓存整个 episode。
+  - 场景相关度：summary token 经 SigLIP2 adaptor $f$ 对齐到文本空间，$\sigma_t^{\text{scene}} = \cos(f(z_t^{\text{sum}}), e_g)$，再按深度和位姿投影到俯视价值地图 $V_t$，作为"哪个方向可能有目标"的持久先验。
+  - 局部目标指示：同一个 adaptor 作用到每个 patch 上，取最大值 $\sigma_t^{\text{patch}} = \max_i \cos(f(z_{t,i}^{\text{patch}}), e_g)$——直觉上就是"画面里最像目标的那一小块有多像"。
+  - 门控：只有 $\sigma_t^{\text{patch}} > \tau_{\text{gate}}$（取 0.08）时，才把**已算好的**特征送进 SAM3 mask decoder 做实例分割，否则整步跳过分割。
+- **输出**：价值地图更新；以及（可能有的）带目标分与干扰分的实例分割结果。
+- **设计动机**：旧方法用 BLIP-2 打场景分、YOLO/GroundingDINO 做检测、MobileSAM 做分割，三套编码语义不一致且重复计算。共享骨干让所有阶段"看同一份表征"；而门控判断复用已算好的 patch 相似度，几乎零成本，却能跳过 60% 以上的 SAM3 调用。
+
+**模块 2：证据整合（核心卡点）**
+
+- **输入**：SAM3 输出的实例 mask、深度、位姿；每个实例带目标分 $s_g$ 与最高干扰分 $s_{\text{conf}}$（干扰类别由 LLM 离线为每个目标生成至多 3 个，如 couch 的干扰物为 chair / daybed / chaise lounge，并跨 episode 缓存）。低于 $\tau_{\text{det}}=0.4$ 的检测直接丢弃。
+- **处理**：实例反投影成 3D 点云，若与最近观测到的某簇距离小于 0.75 m 就融合进去，否则新建簇。每个簇 $C_k$ 维护一个标量**对数几率信念**——可以理解为"支持它是目标的证据分"，0 表示中立，正数偏向是目标，负数偏向不是：
+
+$$
+l(C_k) = \log \frac{P(C_k = g)}{1 - P(C_k = g)}
+$$
+
+每次观测按加法更新并截断在 $[-4, 4]$ 内：
+
+$$
+l(C_k) \leftarrow l(C_k) + \Delta l^{\text{sem}}(C_k) + \Delta l^{\text{miss}}(C_k)
+$$
+
+  - **语义项**（对被检测命中的簇）：比较目标分与干扰分，谁明显占优就朝谁的方向推，差距在中性边界 $\delta=0.10$ 内则不动：
+
+$$
+\Delta l^{\text{sem}}(C_k) =
+\begin{cases}
++\alpha_{\text{sem}} \, \rho_k \, \text{logit}(\tilde s_g), & s_g \ge s_{\text{conf}} + \delta \\
+-\alpha_{\text{sem}} \, \rho_k \, \text{logit}(\tilde s_{\text{conf}}), & s_{\text{conf}} \ge s_g + \delta \\
+0, & \text{otherwise}
+\end{cases}
+$$
+
+  其中 $\tilde s_g, \tilde s_{\text{conf}}$ 是重标定后的分数（保证过了 $\tau_{\text{det}}$ 的检测 logit 非负），$\rho_k \in [0,1]$ 是新实例与簇的空间重叠度，$\alpha_{\text{sem}}=0.7$。
+
+  - **缺失项**（对信念为正、且落在视野内却没被检测到的簇）："该看见却没看见"本身就是反证：
+
+$$
+\Delta l^{\text{miss}}(C_k) = -\alpha_{\text{miss}} \, v_k \, \text{logit}(1 - s_{\text{miss}})
+$$
+
+  $v_k$ 是簇的 3D 点落在当前视锥内的比例，$s_{\text{miss}}=0.2083$ 是由统计估计的单帧漏检率，$\alpha_{\text{miss}}=0.3$。视野外的簇不受影响。
+- **输出**：每个簇的累积信念。当某簇信念超过 $\tau_{\text{stop}}=1.0$，机器人朝它走并持续更新；只有在连续 5 帧中至少 2 帧超过阈值、且距离簇 0.5 m 以内时才真正 STOP。
+- **设计动机**：ApexNav 也做时序融合，但它是**平均**——置信度永远不会超过最强那一帧，而且模糊视角和决定性视角权重相同。log-odds 的**加法**让一致观测复利累积；干扰项和缺失项则让错误假设被主动"撤销"。
+
+> **举个例子**（取 $\rho_k = 1$，假设重标定后分数即为下文数值）：
+> - **真目标**：连续 3 帧看到同一把沙发，每帧 $\tilde s_g = 0.8$，$\text{logit}(0.8) = \ln 4 \approx 1.39$，每帧加 $0.7 \times 1.39 \approx 0.97$。3 帧后信念 $\approx 2.91$，稳稳超过 $\tau_{\text{stop}} = 1.0$。若用平均法，置信度始终停在 0.8，"看得再多也不会更确定"。
+> - **干扰物**：找 chair 时看到沙发，目标分 0.47、干扰分 0.86（Fig. 4 真机数据），干扰分高出 $\delta$ 以上，若 $\tilde s_{\text{conf}} = 0.8$ 则该簇扣 0.97，直接变成负信念，机器人不会被它吸走。
+> - **误检撤回**：某帧把远处杂物误检成垃圾桶，信念升到 +0.97。走近后它完整落在视野内（$v_k = 1$）却连续没被检测到，每帧扣 $0.3 \times \text{logit}(0.79) \approx 0.3 \times 1.34 \approx 0.40$；仅 1 帧后信念就降到 0.57、跌破停止阈值，机器人被"释放"回去继续探索；3 帧后变为 −0.23。
+
+**模块 3：主动证据获取**
+
+- **输入**：价值地图 $V_t$、占据栅格（1000×1000，0.05 m/格）、当前前沿集合。
+- **处理**：对每个前沿 $f$ 计算复合效用（三项先在当前前沿集合内做 min-max 归一化，使尺度可比）：
+
+$$
+U_t(f; g) = \tilde S_t(f; g) + \lambda_{\text{info}} \, \tilde G_t(f) - \lambda_{\text{dist}} \, \tilde C_t(f)
+$$
+
+  - $S_t$：与 VLFM 相同，聚合前沿附近的价值地图值——"这个方向像不像有目标"。
+  - $G_t$：在占据栅格上用 BFS 求到前沿的最短可通行路径 $\pi_t(f)$，沿路径每 0.75 m 采样一个视点（朝向沿路径切线，终点朝向附近未知区域），在 79° 水平视场内每 5° 射一条光线、最远 5 m，碰到已知障碍即停；所有光线扫过的**未知格子**并集就是信息增益 $G_t(f) = \lvert U_t \cap \text{Vis}(\pi_t(f)) \rvert$。关键在于它统计的是"**一路上**能看到多少新东西"，而不只是终点。
+  - $C_t$：路径长度 $\lvert \pi_t(f) \rvert$。
+- **输出**：效用最高的前沿，交给 PointNav 执行。
+- **设计动机**：纯语义排序只说明"往哪边可能有"，不管"去那里能新看到多少、要走多远"。弱语义线索时，这正是来回摆动、步数浪费的根源。
+
+| 维度 | 传统做法（VLFM / ApexNav 等） | AECNav |
+|---|---|---|
+| 视觉编码 | 场景打分、检测、分割各用一套模型 | 一个 C-RADIOv4 前向，多个 adaptor 头共享 |
+| 分割调用 | 每步都跑 | patch 相似度门控，跳过约 62.5% |
+| 目标确认 | 单帧阈值，或多帧平均 | 3D 簇级 log-odds 累加，含干扰物与漏检负证据 |
+| 前沿选择 | 语义价值（ApexNav 弱线索时退回几何） | 语义 + 沿途信息增益 − 路径代价 |
+
+**③ 端到端数据流**
+
+一步决策的完整路径为：RGB-D 进入 C-RADIOv4 → summary token 更新价值地图、patch 相似度决定是否触发 SAM3 → 若触发，SAM3 以"目标 + LLM 生成的干扰类别"为提示分割 → 实例反投影并入 3D 簇、更新 log-odds 信念（视野内未命中的正信念簇扣 miss 分）→ 若某簇满足"稳定 + 足够近"则 STOP，若只是超阈值则朝它导航，否则按复合效用选前沿 → PointNav 输出 MOVE_FORWARD（0.25 m）/ TURN（30°）等离散动作 → 新观测回到开头。
+
+**④ 训练目标**
+
+完全 training-free：没有任何损失函数或微调，所有组件（C-RADIOv4 + SigLIP2/SAM3 adaptor、DeepSeek-V4-Flash 生成的干扰类别、预训练 PointNav）均直接复用，只有少量阈值与权重超参。
+
+**⑤ 推理流程**
+
+默认超参：$\tau_{\text{gate}}=0.08$，$\tau_{\text{det}}=0.4$，信念范围 $[-4,4]$，$(\alpha_{\text{sem}}, \alpha_{\text{miss}})=(0.7, 0.3)$，$\lambda_{\text{info}}=\lambda_{\text{dist}}=1.0$，C-RADIOv4（SO400M）输入 672×672。LLM 只在离线阶段为每个目标类别生成一次干扰类别，推理时没有在线 LLM 调用，这是它比 SG-Nav / InstructNav 快一到两个数量级的原因之一。
+
+---
+
+### 3. 核心结果/发现
+
+**主结果**（全部为 training-free，与训练方法同表比较）：
+
+| 基准 | AECNav SR / SPL | 此前最佳 | 提升 |
+|---|---|---|---|
+| HM3D-v2 | 84.7 / 45.3 | TrajRAG 78.1 / 40.2 | SR +6.6，SPL +5.1 |
+| MP3D | 51.3 / 25.9 | WMNav 45.4 / 17.2 | SR +5.9，SPL +8.7 |
+| HM3D-OVON | 57.3 / 30.5 | MSGNav 48.3 / 27.0 | SR +9.0 |
+
+开放词汇最难的 HM3D-OVON 上提升最大，与"类别越多、相似干扰物越多，log-odds 抗干扰越有用"的设计相吻合。
+
+**效率**（HM3D-v2 前 100 个 episode）：AECNav 平均 108.63 步、24.39 s/episode；VLFM 53.36 s，ApexNav 177.97 s，SG-Nav 超过 1400 s。步数比第二名 ASCENT 少 33%，耗时比 VLFM 快 2.2 倍。
+
+**感知管线分析**：把 BLIP-2 + YOLOv7 + MobileSAM 换成 C-RADIO，SR 从 75.9 升到 84.7、延迟从 0.402 降到 0.248 s/step；再加门控（$\tau_{\text{gate}}=0.08$）跳过 62.5% 的 SAM3 调用，延迟降到 0.178 s/step 且精度不掉，整体比多模型基线快 2.3 倍。
+
+**消融**：
+- 去掉证据整合（检测到就直接走过去）掉得最多：SR −12.8。
+- 仅保留目标分的 log-odds 累积就已达 81.9 SR（比无累积高 10 个点）——**累积本身是主要收益来源**；干扰项再 +1.8，缺失项再 +1.3，两者修复的是互不重叠的错误类型，合计到 84.7。
+- 去掉主动证据获取：SR −2.9，SPL −3.5。
+
+<div align="center">
+  <img src="/images/vln/AECNav-exploration-weights.webp" width="80%" loading="lazy" decoding="async" style="aspect-ratio:700/601" />
+<figcaption>信息增益权重与路径代价权重的扫描：单独加入路径代价项即显著提升；单独加入信息增益几乎无效（81.9 vs 81.8），必须与代价项搭配；任一权重过大都会伤害性能</figcaption>
+</div>
+
+一个反直觉的发现：**信息增益单独使用几乎没用**。没有代价约束时，它总偏爱视野开阔的大区域，把机器人派去长途远行，既耗步数又偏离语义有希望的区域；只有与路径代价配对，它才成为有效的"性价比"信号。
+
+**真机**：Unitree Go2 + RealSense D455，4 个室内场景、8 个开放词汇目标（含"饮水机""咖啡机"等标准词表外类别，椅子实验刻意放了沙发和长凳作干扰），40 次中成功 38 次（95%），单次决策 197.4 ms（约 5 Hz）。
+
+<div align="center">
+  <img src="/images/vln/AECNav-real-world.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1418/783" />
+<figcaption>Unitree Go2 真机实验：上排找椅子时，干扰分连续两次压过目标分，两张沙发被拒绝；下排找垃圾桶时，远处误检在走近后因漏检证据被撤回，机器人继续探索并找到真目标</figcaption>
+</div>
+
+---
+
+### 4. 局限性
+
+干扰类别依赖 LLM 离线生成的固定小集合（至多 3 个），若真实干扰物不在列表中，负证据就无法生效；方法大量依赖手调阈值与权重（门控阈值、漏检率先验、停止窗口等）。真机实验规模较小（40 次），两次失败分别来自前视相机从未看到的角落和大空旷区域的步数耗尽，说明探索策略在这两类场景仍有盲区。
+
+---
+
 # 参考资料
 
 ## 论文引用
@@ -4785,6 +4987,7 @@ $$R_{tot} = R_{done} + R_{nav} + R_{exp} + R_{brev}$$
 33. **WAM-Nav** (2026). 非对称隐空间「世界-动作」联合建模，用一个 DiT 统一三类视觉导航. arXiv: [2606.04907](https://arxiv.org/abs/2606.04907)
 34. **EvoMemNav** (2026). 零样本具身导航中基于轻量化图先验与多视图反思的高效自进化细粒度拓扑记忆框架. arXiv: [2606.03509v1](https://arxiv.org/abs/2606.03509v1) · Code（待发布）: [caicaiya123/EvoMemNav](https://github.com/caicaiya123/EvoMemNav)
 35. **LocalNav** (2026). 基于知识蒸馏与具身强化学习的端侧轻量化三维场景图目标导航框架. arXiv: [2606.27871](https://arxiv.org/abs/2606.27871)
+36. **AECNav** (2026). 把"找物体"改写成"攒证据"：一次编码、按需分割、对数几率累积信念. arXiv: [2608.10817](https://arxiv.org/abs/2608.10817)
 
 
 <script>
@@ -4825,6 +5028,7 @@ $$R_{tot} = R_{done} + R_{nav} + R_{exp} + R_{brev}$$
         { m: 'WAM-Nav',               t: ['世界模型', '扩散模型', '零样本', '实机部署'] },
         { m: 'EvoMemNav',             t: ['Agentic', '拓扑图', '零样本'] },
         { m: 'LocalNav',              t: ['拓扑图', '强化学习', '实机部署', '加速优化'] },
+    { m: 'AECNav',                t: ['零样本', 'Agentic', '实机部署', '加速优化'] },
   ];
 
   // 另一篇文章的论文清单。两篇的 .paper-section 各自只在本页存在，

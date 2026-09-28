@@ -140,6 +140,13 @@
         if (r.visible) shown++;
       });
       t.empty.style.display = shown ? 'none' : '';
+      // 可见行里基准换组处画粗线，筛选隐藏行后分隔线随之移到新的组首行
+      var prev = null;
+      t.rows.forEach(function (r) {
+        var start = r.visible && prev !== null && r.group !== prev;
+        r.tr.classList.toggle('lb-group-start', start);
+        if (r.visible) prev = r.group;
+      });
       shownAll += shown;
       totalAll += t.rows.length;
       rebold(t.rows);
