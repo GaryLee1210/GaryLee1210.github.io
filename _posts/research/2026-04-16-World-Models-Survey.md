@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "世界模型综述"
-date:  2026-09-23
+date:  2026-09-28
 tags: [VLA, World Models, Robotics, Embodied AI, Survey]
 categories: research
 comments: true
@@ -216,7 +216,7 @@ flowchart TD
 
 在现代视频扩散基础模型爆发之前，世界模型在有模型强化学习（Model-Based Reinforcement Learning, MBRL）领域经历了数代关键演化，奠定了整个领域的数学理论与算法基石。
 
-### World Models (2018)
+## 3.1 World Models (2018)
 
 David Ha 与 Jürgen Schmidhuber 提出的 **World Models** [[3]](#ref-3) 首次在深度学习框架下完整实现了认知科学中的 **V-M-C 三位一体架构**：
 
@@ -243,7 +243,7 @@ David Ha 与 Jürgen Schmidhuber 提出的 **World Models** [[3]](#ref-3) 首次
 
 ---
 
-### Dreamer 系列 (2020–2025)
+## 3.2 Dreamer 系列 (2020–2025)
 
 Danijar Hafner 等人开创的 **Dreamer 系列** [[4]](#ref-4)（DreamerV1 $\to$ V2 $\to$ V3；V3 于 2023 年以 *Mastering Diverse Domains through World Models* 为题发布于 arXiv，2025 年以 *Mastering diverse control tasks through world models* 为题正式发表于 *Nature*）将有模型 RL 推向了通用化。
 
@@ -264,7 +264,7 @@ Dreamer 解决了连续世界模型长期存在的表示坍缩与数值不稳定
 
 ---
 
-### TD-MPC2 (2024)
+## 3.3 TD-MPC2 (2024)
 
 以往的世界模型（如 World Models、Dreamer）大多依赖逐像素的图像重建损失，大量网络算力被浪费在与下游控制无关的背景视觉细节上。Nicklas Hansen 等人提出的 **TD-MPC 系列** [[5]](#ref-5) 实现了关键的技术转向：
 
@@ -279,7 +279,7 @@ Dreamer 解决了连续世界模型长期存在的表示坍缩与数值不稳定
 
 ---
 
-### 从经典到大模型时代
+## 3.4 从经典到大模型时代
 
 下表总结了世界模型在过去数年间的核心技术范式演进：
 
