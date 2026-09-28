@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "VLN 经典论文"
-date:   2026-09-27
+date:   2026-09-28
 tags: [VLN, VLA, Robotics, Computer Vision, Deep Learning]
 categories: research
 comments: true
@@ -7340,6 +7340,7 @@ BudVLN 并不对所有样本一视同仁，而是采用一种自适应策略进�
     { n: '33. WAM-Nav (2026)', a: 'wam-nav', t: ['世界模型', '扩散模型', '零样本', '实机部署'] },
     { n: '34. EvoMemNav (2026)', a: 'evomemnav', t: ['Agentic', '拓扑图', '零样本'] },
     { n: '35. LocalNav (2026)', a: 'localnav', t: ['拓扑图', '强化学习', '实机部署', '加速优化'] },
+    { n: '36. AECNav (2026)', a: 'aecnav', t: ['零样本', 'Agentic', '实机部署', '加速优化'] },
   ];
 
   var ALL_TAGS = ['双系统', '端到端', 'Agentic', 'CoT', '扩散模型', '拓扑图', 'SLAM', '高斯表示',
