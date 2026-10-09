@@ -10,6 +10,9 @@ _site/
 .sass-cache/
 .jekyll-cache/
 .jekyll-metadata
+_mirror/build/
+_mirror/__pycache__/
+_mirror/tests/__pycache__/
 
 # 系统文件
 .DS_Store

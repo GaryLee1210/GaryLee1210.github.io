@@ -2,64 +2,138 @@ name: Sync upstream research notes
 
 on:
   schedule:
-    # Daily at 09:17 China Standard Time (UTC+8).
+    # Requested daily time: 09:17 Beijing. GitHub may queue scheduled runs.
     - cron: '17 1 * * *'
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read
 
 concurrency:
-  group: sync-upstream
+  group: research-notes-publication
   cancel-in-progress: false
 
 jobs:
-  sync:
+  validate:
     if: github.repository == 'GaryLee1210/GaryLee1210.github.io'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
     permissions:
       contents: write
+      pages: write
     outputs:
-      changed: ${{ steps.merge.outputs.changed }}
-      sha: ${{ steps.merge.outputs.sha }}
+      upstream: ${{ steps.source.outputs.sha }}
     steps:
-      - name: Merge upstream without overwriting local changes
-        id: merge
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPOSITORY: ${{ github.repository }}
+      - name: Checkout latest mirror configuration
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Test snapshot and publication safeguards
+        run: python3 -m unittest discover -s _mirror/tests -v
+
+      - name: Fetch complete upstream snapshot with retries
+        id: source
         shell: bash
         run: |
           set -euo pipefail
-          # GitHub's fork merge API performs a normal merge. Conflicts fail
-          # this step; no force push, branch reset, or automatic conflict choice.
-          result=$(gh api --method POST "repos/$REPOSITORY/merge-upstream" -f branch=main)
-          merge_type=$(jq -r '.merge_type' <<< "$result")
-          case "$merge_type" in
-            none) changed=false ;;
-            merge|fast-forward) changed=true ;;
-            *) echo "Unexpected merge result: $merge_type" >&2; exit 1 ;;
-          esac
-          sha=$(gh api "repos/$REPOSITORY/git/ref/heads/main" --jq '.object.sha')
-          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+          for attempt in 1 2 3; do
+            if git fetch --no-tags --depth=1 https://github.com/TingdeLiu/tingdeliu.github.io.git main; then
+              break
+            fi
+            if [ "$attempt" = 3 ]; then exit 1; fi
+            sleep $((attempt * 10))
+          done
+          sha=$(git rev-parse FETCH_HEAD)
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
-          {
-            echo '### Upstream sync'
-            echo "Source: TingdeLiu/tingdeliu.github.io (main)"
-            echo "Result: $merge_type"
-            echo "Current commit: $sha"
-          } >> "$GITHUB_STEP_SUMMARY"
+          python3 _mirror/mirror.py snapshot --ref "$sha"
+          python3 _mirror/mirror.py prepare
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v6
+
+      - name: Setup Ruby and cached dependencies
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: _mirror/build
+        env:
+          BUNDLE_RETRY: '3'
+
+      - name: Build candidate without changing the published site
+        working-directory: _mirror/build
+        run: bundle exec jekyll build --config _config.yml,_mirror.yml --strict_front_matter
+        env:
+          JEKYLL_ENV: production
+
+      - name: Apply attribution and validate publication
+        run: python3 _mirror/mirror.py finalize
+
+      - name: Upload validated site
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _mirror/build/_site
+
+      - name: Save only the validated snapshot without force pushing
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m 'Sync validated upstream snapshot [skip ci]'
+            for attempt in 1 2 3; do
+              if git push origin HEAD:main; then break; fi
+              if [ "$attempt" = 3 ]; then exit 1; fi
+              sleep $((attempt * 10))
+            done
+          fi
+          echo '### Validated snapshot' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Upstream: ${{ steps.source.outputs.sha }}' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Personal configuration and overrides retained; no Git merge or force push.' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Explain a blocked candidate
+        if: failure()
+        run: |
+          echo '### Candidate was not deployed' >> "$GITHUB_STEP_SUMMARY"
+          echo 'The previous Pages deployment remains available. Fix the reported build/configuration/network error and rerun; failures are not hidden.' >> "$GITHUB_STEP_SUMMARY"
 
   deploy:
-    needs: sync
-    # Explicitly call deployment: GITHUB_TOKEN merges do not trigger push workflows.
-    # A manual run also republishes the site when it is already up to date.
-    if: needs.sync.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
-    uses: ./.github/workflows/deploy.yml
-    with:
-      ref: ${{ needs.sync.outputs.sha }}
+    needs: validate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
     permissions:
       contents: read
       pages: write
       id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy validated artifact
+        id: deployment
+        uses: actions/deploy-pages@v5
+
+      - name: Verify the live upstream revision
+        env:
+          EXPECTED_REVISION: ${{ needs.validate.outputs.upstream }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 12); do
+            actual=$(curl --fail --silent --show-error --max-time 20 \
+              "https://garylee1210.github.io/mirror-status.json?run=$GITHUB_RUN_ID&attempt=$attempt" \
+              | jq -r '.upstream_revision' || true)
+            if [ "$actual" = "$EXPECTED_REVISION" ]; then
+              echo "Live website verified at $actual" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo '::error::Pages deployed, but the live revision could not yet be verified.'
+          exit 1
