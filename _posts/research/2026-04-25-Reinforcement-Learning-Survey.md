@@ -1,7 +1,9 @@
 ---
 layout: post
+lang: zh-CN
+translation_id: reinforcement-learning-survey
 title: "强化学习综述"
-date: 2026-07-27
+date: 2026-10-04
 tags: [Reinforcement Learning, RL, Embodied AI, Robotics, World Models, Diffusion Policy, PPO, SAC, TD3, DDPG, Actor-Critic, MDP]
 categories: research
 comments: true
@@ -25,12 +27,14 @@ excerpt: "2026年深度总结：系统梳理强化学习与具身智能算法体
 | **上限** | 人类标注水平 | 可超越人类（如 AlphaGo） |
 | **核心挑战** | 泛化性 | 探索-利用权衡、信用分配 |
 
-<div align="center">
-  <img src="/images/vla/embodied-rl-overview.jpg" width="80%" alt="具身强化学习交互与决策闭环全景" />
-  <figcaption>图 1.1：具身强化学习（Embodied RL）状态感知、闭环策略决策与物理环境交互全景示意图</figcaption>
-</div>
+<figure class="survey-intro-figure">
+  <img src="/images/vla/reinforcement-learning-survey-intro.webp" width="1672" height="941" alt="强化学习的交互闭环：智能体选择动作，环境返回观测与奖励，交互经验用于策略更新。" loading="lazy" decoding="async" />
+  <figcaption>图：智能体通过动作影响环境，接收新的观测与奖励，并利用交互经验改进策略；优化目标通常考虑长期回报，部署时不一定继续更新参数。</figcaption>
+</figure>
 
-本文将系统梳理具身智能中的核心 RL 算法，从数学基础到前沿方法，希望为读者构建完整的知识体系。
+本文按“理论基础 → 无模型控制 → 世界模型 → 扩散策略 → 稀疏奖励与后训练 → 仿真评测”的顺序展开。读者可以先阅读第 2–7 节建立算法主线，再根据任务类型跳转到第 10–13 节；第 14 节提供代表性论文的统一拆解，便于进一步深入。
+
+<!-- more -->
 
 ---
 
@@ -56,11 +60,11 @@ $$
 R(s, a) = \mathbb{E}[r_{t+1} \mid s_t = s, a_t = a]
 $$
 
-**马尔可夫性质**保证了"当前状态已包含所有历史信息"，即 $p(s_{t+1}|s_t, a_t) = p(s_{t+1}|s_0, a_0, \ldots, s_t, a_t)$。
+**马尔可夫性质**保证了"当前状态已包含所有历史信息"，即 $p(s_{t+1}\mid s_t, a_t) = p(s_{t+1}\mid s_0, a_0, \ldots, s_t, a_t)$。
 
 ## 2.2 策略、价值函数与 Bellman 方程
 
-**策略（Policy）** $\pi(a|s)$ 是给定状态 $s$ 时，选择动作 $a$ 的概率分布。RL 的目标是找到最优策略 $\pi^*$，最大化期望累积奖励（回报）。
+**策略（Policy）** $\pi(a\mid s)$ 是给定状态 $s$ 时，选择动作 $a$ 的概率分布。RL 的目标是找到最优策略 $\pi^*$，最大化期望累积奖励（回报）。
 
 **折扣回报**定义为：
 
@@ -104,8 +108,8 @@ graph TD
     C --> G[演员-评论员<br/>SAC, A2C, DDPG]
 ```
 
-- **有模型 RL**：智能体学习环境的状态转移模型 $P(s'|s,a)$，再利用该模型进行规划，**样本效率高**但依赖模型精度。
-- **免模型 RL**：直接与真实环境交互学习策略，不显式建模环境，**更通用**但需要大量样本。
+- **有模型 RL**：智能体学习环境的状态转移模型 $$P(s'\mid s,a)$$，再利用该模型进行规划，通常具有更高的样本效率，但依赖模型精度。
+- **免模型 RL**：直接与环境交互学习策略，不显式建模环境，通常更易迁移到复杂任务，但需要更多交互数据。
 
 ---
 
@@ -215,7 +219,7 @@ $$
 
 # 6. PPO：具身控制的基石算法 🛡️
 
-**近端策略优化（Proximal Policy Optimization, PPO）** 是目前 OpenAI 默认的 RL 算法，也是 Isaac Lab 等具身仿真平台最常用的算法。其设计目标是在保持策略更新稳定性的同时，提升采样效率。
+**近端策略优化（Proximal Policy Optimization, PPO）** 是工程实践中广泛采用的策略优化算法，也是 Isaac Lab 等具身仿真平台的常用基线。其设计目标是在保持策略更新稳定性的同时，提高样本利用率与训练稳定性。
 
 ## 6.1 从同策略到异策略：重要性采样
 
@@ -233,7 +237,7 @@ $$
 J^{\theta'}(\theta) = \mathbb{E}_{(s_t, a_t) \sim \pi_{\theta'}}\left[\frac{p_\theta(a_t|s_t)}{p_{\theta'}(a_t|s_t)} A^{\theta'}(s_t, a_t)\right]
 $$
 
-其中 $$\frac{p_\theta(a_t|s_t)}{p_{\theta'}(a_t|s_t)}$$ 是**重要性权重（Importance Weight）**，修正了两个分布间的差异。
+其中 $$\frac{p_\theta(a_t\mid s_t)}{p_{\theta'}(a_t\mid s_t)}$$ 是**重要性权重（Importance Weight）**，修正了两个分布间的差异。
 
 > **关键约束**：若 $\pi_\theta$ 与 $$\pi_{\theta'}$$ 差距过大，重要性权重方差爆炸，估计失准。这正是 PPO 要解决的问题。
 
@@ -268,7 +272,7 @@ $$
 J_{\mathrm{PPO2}}^{\theta^k}(\theta) \approx \sum_{(s_t, a_t)} \min\left(r_t(\theta) A^{\theta^k}(s_t, a_t),\; \mathrm{clip}(r_t(\theta),\, 1-\varepsilon,\, 1+\varepsilon) A^{\theta^k}(s_t, a_t)\right)
 $$
 
-其中 $$r_t(\theta) = \frac{p_\theta(a_t|s_t)}{p_{\theta^k}(a_t|s_t)}$$ 是概率比率，$\varepsilon$ 通常取 0.1 或 0.2。
+其中 $$r_t(\theta) = \frac{p_\theta(a_t\mid s_t)}{p_{\theta^k}(a_t\mid s_t)}$$ 是概率比率，$\varepsilon$ 通常取 0.1 或 0.2。
 
 **裁剪机制直觉**：
 
@@ -367,7 +371,7 @@ $$
 \pi^* = \arg\max_\pi \mathbb{E}\left[\sum_t \gamma^t \left(r_t + \alpha \mathcal{H}(\pi(\cdot|s_t))\right)\right]
 $$
 
-其中 $\mathcal{H}(\pi(\cdot|s_t)) = -\mathbb{E}[\log \pi(a|s_t)]$ 是策略熵，$\alpha > 0$ 是温度参数，控制探索程度。
+其中 $\mathcal{H}(\pi(\cdot\mid s_t)) = -\mathbb{E}[\log \pi(a\mid s_t)]$ 是策略熵，$\alpha > 0$ 是温度参数，控制探索程度。
 
 **熵最大化的好处**：
 - **鼓励探索**：策略分布更均匀，避免过早收敛到局部最优。
@@ -469,7 +473,7 @@ sequenceDiagram
 
 ## 8.2 DreamerV3：潜空间的"梦境修炼"
 
-**DreamerV3** 是目前最先进的世界模型之一，在具身 RL 中实现了显著的样本效率提升。
+**DreamerV3** 是世界模型强化学习的代表性方法之一，在多种控制任务上展示了较高的样本效率与跨任务鲁棒性。
 
 **核心机制**：
 
@@ -497,7 +501,7 @@ sequenceDiagram
     Agent->>RealWorld: 部署最优策略
 ```
 
-3. **无量纲化奖励（Symlog）**：使用 $\mathrm{symlog}(x) = \mathrm{sign}(x) \cdot \ln(|x|+1)$ 处理奖励，支持跨任务迁移而无需任务特定超参。
+3. **无量纲化奖励（Symlog）**：使用 $\mathrm{symlog}(x) = \mathrm{sign}(x) \cdot \ln(\lvert x\rvert+1)$ 处理奖励，支持跨任务迁移而无需任务特定超参。
 
 **DreamerV3 的成就**：
 - 首个单一超参设置，无需任何调参，在 Atari、DMC、Crafter、Minecraft 等 7 个领域同时达到 SOTA。
@@ -626,11 +630,11 @@ graph LR
 
 ---
 
-# 11. 2026 尖端：逻辑推理与残差学习 ⚡
+# 11. 2026 前沿方向：逻辑推理与残差学习 ⚡
 
 ## 11.1 RLVR：可验证奖励的强化学习
 
-**RLVR（Reinforcement Learning from Verifiable Rewards）** 的核心思想：将**可形式化验证的物理常识**作为奖励信号，而非依赖稀疏的任务成功奖励。
+**RLVR（Reinforcement Learning from Verifiable Rewards）** 可将**可形式化验证的物理约束**纳入奖励设计，用于补充稀疏的任务成功信号。对于具身任务，这一方向仍需要结合真实动力学、传感器噪声与安全约束验证其有效性。
 
 **什么是"可验证奖励"？**
 
@@ -898,7 +902,7 @@ $$
 
 ### 精华
 1. **连续动作突破**：首次成功将 DQN 的深度表示与 Experience Replay / Target Network 机制无缝拓展至**高维连续动作空间**。
-2. **确定性策略梯度（DPG）落地**：Actor 直接输出确定性动作向量 $\mu(s|\theta^\mu)$，消除了在高维连续动作空间中求积分采样的高方差问题。
+2. **确定性策略梯度（DPG）落地**：Actor 直接输出确定性动作向量 $\mu(s\mid\theta^\mu)$，消除了在高维连续动作空间中求积分采样的高方差问题。
 3. **软更新目标网络（Polyak Averaging）**：提出 $\theta' \leftarrow \tau \theta + (1-\tau)\theta'$（$\tau \ll 1$）微量平滑更新目标网络，大幅改善连续控制中的训练稳定性。
 4. **探索噪声注入**：通过在确定性动作上叠加 Ornstein-Uhlenbeck (OU) 过程时序相关噪声，实现连续物理系统中的平滑探索。
 5. **具身机械控制里程碑**：在 MuJoCo 连续物理仿真（机械臂搬运、双足行走、车辆驾驶）中展现出强劲的端到端力矩控制能力。
@@ -924,7 +928,7 @@ graph TD
     Actor --> Noise["+ 探索噪声 (OU / 高斯)"] --> ActReal["执行动作 a_t"]
     S --> Critic["Critic 价值网络 Q(s, a|θ^Q)<br/>评估状态-动作对价值"]
     ActReal --> Critic
-    Critic -->|∇_a Q(s, a)| Grad["链式法则计算策略梯度"]
+    Critic -->|"∇_a Q(s, a)"| Grad["链式法则计算策略梯度"]
     Grad --> Actor
 ```
 
@@ -1010,9 +1014,9 @@ $$
 L^{\mathrm{CLIP}}(\theta) = \hat{\mathbb{E}}_t \left[ \min\left( r_t(\theta)\hat{A}_t,\; \mathrm{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{A}_t \right) \right]
 $$
 
-其中 $r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{\mathrm{old}}}(a_t|s_t)}$。裁剪逻辑如下：
-- 当优势 $\hat{A}_t > 0$（动作好于平均）：目标随 $r_t$ 增加，但当 $r_t > 1+\epsilon$ 时被截断，防止策略因单个好样本过分贪婪；
-- 当优势 $\hat{A}_t < 0$（动作差于平均）：目标随 $r_t$ 减小，但当 $r_t < 1-\epsilon$ 时被截断，防止梯度过激修正。
+其中 $r_t(\theta) = \frac{\pi_\theta(a_t\mid s_t)}{\pi_{\theta_{\mathrm{old}}}(a_t\mid s_t)}$。裁剪逻辑如下：
+- 当优势 $$\hat{A}_t > 0$$（动作好于平均）：目标随 $r_t$ 增加，但当 $r_t > 1+\epsilon$ 时被截断，防止策略因单个好样本过分贪婪；
+- 当优势 $$\hat{A}_t < 0$$（动作差于平均）：目标随 $r_t$ 减小，但当 $r_t < 1-\epsilon$ 时被截断，防止梯度过激修正。
 
 #### ② 联合目标与 GAE（广义优势估计）
 在实际具身控制工程中，通常联合优化策略损失、Critic 价值损失与策略熵正则化项：
@@ -1044,7 +1048,7 @@ $$
 💻 **Code**: [rail-berkeley / softlearning](https://github.com/rail-berkeley/softlearning)
 
 ### 精华
-1. **最大熵强化学习（Maximum Entropy RL）**：将策略熵 $\mathcal{H}(\pi(\cdot|s))$ 显式引入优化目标，促使智能体在最大化累积回报的同时尽可能采取多样的动作分布。
+1. **最大熵强化学习（Maximum Entropy RL）**：将策略熵 $\mathcal{H}(\pi(\cdot\mid s))$ 显式引入优化目标，促使智能体在最大化累积回报的同时尽可能采取多样的动作分布。
 2. **极佳的探索能力与鲁棒性**：面对多峰分布奖励与物理扰动，最大熵策略能够保留所有具有相近价值的动作分支，避免过早收敛于局部次优极值点。
 3. **异策略高样本效率**：结合 Replay Buffer、双 Q 网络（Double Q-Learning）与软策略迭代，样本利用率较 PPO 提升数倍至数十倍。
 4. **自动温度调节（Auto-tuning Temperature）**：后续版本引入拉格朗日乘子自适应调节温度系数 $\alpha$，完全免去人工手动调节熵权重的繁琐调试。
@@ -1232,7 +1236,7 @@ graph LR
 ```
 
 #### ① V 模型：空间压缩（Vision）
-- 训练 VAE 编码器 $q_\phi(z_t|o_t)$ 与解码器 $p_\psi(o_t|z_t)$，将 $64 \times 64 \times 3$ 图像压缩为 32 维高斯潜向量 $z_t$。
+- 训练 VAE 编码器 $q_\phi(z_t\mid o_t)$ 与解码器 $p_\psi(o_t\mid z_t)$，将 $64 \times 64 \times 3$ 图像压缩为 32 维高斯潜向量 $z_t$。
 
 #### ② M 模型：时间预测（Memory）
 - 采用带有混合高斯输出层（Mixture Density Network）的 RNN 建模环境转移：
@@ -1270,7 +1274,7 @@ $$
 
 ### 精华
 1. **首个跨领域无调参通用世界模型**：在完全固定的超参数设置下，同一套算法通吃 7 大异构领域（Atari、DMC 连续控制、Crafter 2D 生存、Minecraft 3D 沙盒、BSuite、Memory 任务等）。
-2. **Symlog 变换与无量纲化**：提出对称对数变换 $\mathrm{symlog}(x) = \mathrm{sign}(x)\ln(|x|+1)$ 处理输入特征、价值网络及损失函数，彻底解决了跨任务数量级跨度极大的奖励梯度缩放难题。
+2. **Symlog 变换与无量纲化**：提出对称对数变换 $\mathrm{symlog}(x) = \mathrm{sign}(x)\ln(\lvert x\rvert+1)$ 处理输入特征、价值网络及损失函数，彻底解决了跨任务数量级跨度极大的奖励梯度缩放难题。
 3. **离散潜变量 RSSM（循环状态空间模型）**：将世界模型的随机潜状态表示为离散的 Categorical 向量组，有效阻止信息坍缩并增强对非线性突变动力学的表达能力。
 4. **Minecraft 零样本挖钻石奇迹**：在没有任何人类专家演示数据、完全依靠稀疏奖励与潜空间世界模型探索的前提下，首次从零学会采集木材、制作工作台、挖掘铁矿直到合成钻石（需 14 步深度依赖链）。
 5. **具身智能通用模拟底座**：展现了世界模型作为通用具身基础规划器（Generalist Embodied Planner）的巨大潜力。
@@ -1439,7 +1443,7 @@ $$
 \mathcal{L}_{\mathrm{Diffusion}}(\theta) = \mathbb{E}_{k, A^0, \epsilon, O_t}\left[ \left\lVert \epsilon - \epsilon_\theta(A^k, k, O_t) \right\rVert^2 \right]
 $$
 
-其中 $A^k = \sqrt{\bar{\alpha}_k} A^0 + \sqrt{1 - \bar{\alpha}_k} \epsilon$。
+其中 $$A^k = \sqrt{\bar{\alpha}_k} A^0 + \sqrt{1 - \bar{\alpha}_k} \epsilon$$。
 
 #### ② 滚动时域控制（Receding Horizon Planning）
 每次预测未来 $T_p$ 步动作，但在实际执行时仅向底层控制器发送前 $T_a$ 步（$T_a < T_p$），并在下一控制循环中重新基于最新观测闭环去噪，兼顾长程前瞻与实时扰动纠偏。
@@ -1468,7 +1472,7 @@ $$
 
 ### 精华
 1. **打通扩散策略与在线 RL**：首次提出将多步扩散去噪过程视作一个多步马尔可夫决策过程（MDP），在去噪链内部直接施加 PPO-Clip 约束，实现了扩散策略从专家模仿到在线强化学习的端到端跃迁。
-2. **解决概率密度求导难题**：规避了以往穿透扩散去噪长链导致的梯度爆炸或消失问题，将反向去噪的每一步高斯转移直接显式化计算对数概率 $\log p_\theta(x_{k-1}|x_k)$。
+2. **解决概率密度求导难题**：规避了以往穿透扩散去噪长链导致的梯度爆炸或消失问题，将反向去噪的每一步高斯转移直接显式化计算对数概率 $\log p_\theta(x_{k-1}\mid x_k)$。
 3. **保留多峰性的同时持续进化**：相比传统 RL 算法微调后策略迅速坍缩为单峰，DPPO 能够完美保持扩散模型固有的多峰探索能力，并在高难度奖励下探索出超越演示的更优解。
 4. **广泛适用于离线预训练到在线微调**：支持先利用专家数据进行 BC 预训练初始化，再通过在线交互进行 RL 对齐。
 5. **标杆性算法**：为后续基于 Flow Matching / Diffusion 的具身具象基础策略（如 π0、GRPO 扩散等）提供了坚实的理论与算法参考。
@@ -1478,7 +1482,7 @@ $$
 ### 1. 研究背景/问题
 
 Diffusion Policy 在模仿学习上效果惊艳，但完全依赖人类演示数据。当演示数据质量参差不齐或机器人遭遇未曾见过的复杂环境时，需要通过**强化学习在线交互试错**来进一步提升上限。然而，将传统 RL 应用于扩散策略存在理论死结：
-- 扩散模型的动作生成是一个多步随机微分/差分方程，无法直接输出显式的单步动作对数概率 $\log \pi(a|s)$；
+- 扩散模型的动作生成是一个多步随机微分/差分方程，无法直接输出显式的单步动作对数概率 $\log \pi(a\mid s)$；
 - 如果直接将最终输出 $a_0$ 视为黑盒并用标准策略梯度更新，穿透 $K$ 步的反向传播求导会引发严重的数值不稳定。
 
 ---

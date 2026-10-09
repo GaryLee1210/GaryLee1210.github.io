@@ -2,9 +2,10 @@
 layout: default
 ---
 
+{% include locale.html %}
 <article class="page">
 
-  <h1>{{ page.title }}{% if page.path == 'home/index.html' %} · 原作者项目{% endif %}</h1>
+  {% include page-heading.html %}
 
   <div class="entry">
     {{ content }}

@@ -1,7 +1,9 @@
 ---
 layout: post
-title: "具身Agent Harness 综述"
-date: 2026-09-28
+lang: zh-CN
+translation_id: embodied-agent-harness-survey
+title: "Embodied Agent 综述"
+date: 2026-09-29
 permalink: /Embodied-Agent-Harness-Survey/
 tags: [Embodied-AI, Agent, Harness-Engineering, System-Architecture, Distributed-Systems, ZeroMQ, ROS2, Python]
 categories: research
@@ -17,9 +19,14 @@ excerpt: "从空间记忆、技能契约、执行评估与运行时监控出发�
 
 > **阅读范围与证据边界**：论文机制以链接的原文为依据；分层方式、消息字段、状态机和代码示例属于本文的工程归纳，不是统一行业标准。文中的频率与时间预算若标为示例，仅用于说明设计方法，不能直接视为硬件性能或安全参数。
 >
-> 配套阅读：[《Embodied Agent 经典论文》](/Embodied-Agent-Papers/) 聚焦论文细节，[《Harness Engineering》](/Harness-Engineering/) 讨论通用 Agent 工程。本文侧重二者在机器人系统中的连接方式。
+> 配套阅读：[《Embodied Agent 论文精读》](/Embodied-Agent-Papers/) 聚焦论文细节，[《Harness Engineering》](/Harness-Engineering/) 讨论通用 Agent 工程。本文侧重二者在机器人系统中的连接方式。
 
 # 1. 引言：从模型能力到系统闭环
+
+<figure class="survey-intro-figure">
+  <img src="/images/agent/embodied-agent-survey-intro.webp" width="1672" height="941" alt="具身 Agent 双层闭环：上层规划、技能调用与结果评估通过接口契约和下层感知、控制、执行协作，回执与观测用于结果判断，本地保护在机器人侧独立生效。" loading="lazy" decoding="async" />
+  <figcaption>图 1｜以“去厨房拿杯子”为例，上层组织规划、技能调用与结果评估，下层在本地闭合感知、控制与执行。两层通过接口契约交换指令、回执与观测证据；本地保护独立生效，任务成功仍需依据观测确认。</figcaption>
+</figure>
 
 ## 1.1 三个需要分别处理的问题
 
@@ -72,7 +79,7 @@ flowchart TB
 
 [Thea §4.1](https://arxiv.org/html/2608.11246v1#S4.SS1) 将持久场景图作为上下文，提供对象引用、位置及关系查询。[HoloAgent-0 §4.3](https://arxiv.org/html/2606.23565v1#S4.SS3) 沿用 FSR-VLN 的楼层—房间—视角—物体层级作为记忆索引，支持由粗到细的目标定位与视觉验证。这些设计说明了结构化记忆的用途，但不意味着可以完全取消原始视觉观测。
 
-场景图可写作 $\mathcal{G}_t=(\mathcal{V}_t,\mathcal{E}_t)$：节点描述对象，边描述空间关系。工程上还应为记录附加以下信息：
+场景图可写作 $$\mathcal{G}_t=(\mathcal{V}_t,\mathcal{E}_t)$$：节点描述对象，边描述空间关系。工程上还应为记录附加以下信息：
 
 | 字段 | 用途 | 缺失时的典型问题 |
 | :--- | :--- | :--- |

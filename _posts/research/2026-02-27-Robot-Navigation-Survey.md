@@ -1,7 +1,9 @@
 ﻿---
 layout: post
+lang: zh-CN
+translation_id: robot-navigation-survey
 title: "传统机器人导航算法综述"
-date: 2026-09-16
+date: 2026-10-04
 tags: [Robotics, Navigation, SLAM,  Localization, Mapping, Path Planning, Path Tracking, Perception]
 categories: research
 comments: true
@@ -16,10 +18,10 @@ excerpt: "系统梳理传统机器人导航算法栈：从感知、定位与建�
 ## 1.1 为什么需要自主导航？
 
 想象一个仓库机器人——它需要在货架之间穿梭，精准取货，同时避开突然出现的叉车和行人。或者一辆无人驾驶汽车，需要在复杂交通中安全行驶数百公里。这些场景的背后，都依赖一套精心设计的**自主导航系统（Autonomous Navigation System）**。
-<div align="center">
-  <img src="/images/robotics_navigation/Nav.jpg" width="65%" />
-  <figcaption>图：机器人自主导航</figcaption>
-</div>
+<figure class="survey-intro-figure">
+  <img src="/images/robotics_navigation/robot-navigation-survey-intro.webp" width="1672" height="941" alt="传统机器人导航通过感知与定位、地图与规划、局部控制与执行实现目标移动，并持续接收传感器反馈。" loading="lazy" decoding="async" />
+  <figcaption>图：传统导航围绕目标位置，组合感知定位、地图规划与局部控制，并通过传感器反馈修正运动；实际系统可采用不同模块划分与地图形式。</figcaption>
+</figure>
 自主导航解决的核心问题，可以简单概括为三个问题：
 
 1. **我在哪？**（Localization，定位）
@@ -127,7 +129,7 @@ flowchart LR
 RGB-D 相机（如 Intel RealSense D435、Microsoft Kinect）通过**结构光**或**飞行时间（ToF）**原理，同时获取彩色图像和每个像素的深度值。主要局限在于：室外强光会干扰结构光，且探测距离有限（通常 0.3–6m）。
 
 <div align="center">
-  <img src="/images/robotics_navigation/Depth_Camera.gif" width="70%" />
+  <video src="/images/robotics_navigation/Depth_Camera.mp4" autoplay loop muted playsinline width="70%"></video>
   <figcaption>图：深度相机采集深度图可视化</figcaption>
 </div>
 
@@ -173,7 +175,7 @@ RGB-D 相机（如 Intel RealSense D435、Microsoft Kinect）通过**结构光**
 
 <div align="center">
   <img src="/images/robotics_navigation/Rectangle_Fitting_Detection.webp" width="55%" style="margin:4px"/>
-  <img src="/images/robotics_navigation/point_cloud_rectangle_fitting.gif" width="38%" style="margin:4px"/>
+  <video src="/images/robotics_navigation/point_cloud_rectangle_fitting.mp4" autoplay loop muted playsinline width="38%" style="margin:4px"></video>
   <figcaption>图：点云矩形拟合——聚类点云（左）拟合为最小外接矩形（右动图）</figcaption>
 </div>
 
@@ -197,7 +199,7 @@ RGB-D 相机（如 Intel RealSense D435、Microsoft Kinect）通过**结构光**
 **基于 UKF 的外参估计**：利用**无迹卡尔曼滤波（UKF）** 对外参进行在线估计。与标定板离线标定相比，这种方法可以在机器人运动过程中动态估计并修正外参，适合传感器安装位置可能微小变化的场景。
 
 <div align="center">
-  <img src="/images/robotics_navigation/sensor_auto_calibration.gif" width="75%" />
+  <video src="/images/robotics_navigation/sensor_auto_calibration.mp4" autoplay loop muted playsinline width="75%"></video>
   <figcaption>图：传感器在线自动标定过程——机器人运动中动态估计并修正传感器间外参</figcaption>
 </div>
 
@@ -281,7 +283,7 @@ $$\hat{\mathbf{x}}_{t|t-1} = f(\mathbf{x}_{t-1}, \mathbf{u}_t)$$
 
 $$\mathbf{x}_t = \hat{\mathbf{x}}_{t|t-1} + \mathbf{K}_t (\mathbf{z}_t - h(\hat{\mathbf{x}}_{t|t-1}))$$
 
-其中 $\mathbf{K}_t$ 是**卡尔曼增益**，决定了相信预测还是相信观测。
+其中 $$\mathbf{K}_t$$ 是**卡尔曼增益**，决定了相信预测还是相信观测。
 
 **卡尔曼增益 K 的直觉理解**：想象你朋友告诉你"你现在在图书馆门口"，但你的步数估计说你在图书馆里面。你该信谁？K 的大小决定了这个权衡：
 
@@ -300,7 +302,7 @@ $$\mathbf{K}_t = \mathbf{P}_{t|t-1} \mathbf{H}^T (\mathbf{H} \mathbf{P}_{t|t-1} 
 **适用场景**：已知地图、已知初始位置、低非线性系统。计算效率高，适合实时运行。
 
 <div align="center">
-  <img src="/images/robotics_navigation/extended_kalman_filter_localization.gif" width="75%" />
+  <video src="/images/robotics_navigation/extended_kalman_filter_localization.mp4" autoplay loop muted playsinline width="75%"></video>
   <figcaption>图：EKF 定位仿真——机器人（蓝色）沿轨迹运动，绿色椭圆为不确定性估计，红色为 EKF 定位结果</figcaption>
 </div>
 
@@ -314,7 +316,7 @@ $$\mathbf{K}_t = \mathbf{P}_{t|t-1} \mathbf{H}^T (\mathbf{H} \mathbf{P}_{t|t-1} 
 ❌ 计算量比 EKF 略大（约为 EKF 的 2–3 倍）
 
 <div align="center">
-  <img src="/images/robotics_navigation/ekf_vs_ukf_comparison.gif" width="80%" />
+  <video src="/images/robotics_navigation/ekf_vs_ukf_comparison.mp4" autoplay loop muted playsinline width="80%"></video>
   <figcaption>图：EKF vs UKF 对比仿真——高非线性场景下 UKF（右）的位姿估计收敛更准确</figcaption>
 </div>
 
@@ -323,7 +325,7 @@ $$\mathbf{K}_t = \mathbf{P}_{t|t-1} \mathbf{H}^T (\mathbf{H} \mathbf{P}_{t|t-1} 
 **直觉理解**：用成千上万个"粒子"（每个粒子代表一个可能的位姿假设）来表示机器人位置的概率分布。每个粒子都根据运动模型移动（加入随机噪声），然后根据传感器观测给每个粒子打分（权重），越接近真实观测的粒子权重越高。最后通过**重采样（Resampling）**淘汰权重低的粒子，复制权重高的粒子。
 
 <div align="center">
-  <img src="/images/robotics_navigation/particle_filter_localization.gif" width="75%" />
+  <video src="/images/robotics_navigation/particle_filter_localization.mp4" autoplay loop muted playsinline width="75%"></video>
   <figcaption>图：粒子滤波定位仿真——初始粒子均匀分布（全局定位），随运动和观测逐步收敛到真实位置</figcaption>
 </div>
 
@@ -409,7 +411,7 @@ flowchart TD
 | **ICP** | 精细配准，短距离匹配 | ❌ | 中–高 | — | `pcl_ros` |
 
 <div align="center">
-  <img src="/images/robotics_navigation/ekf_ukf_pf_comparison.gif" width="85%" />
+  <video src="/images/robotics_navigation/ekf_ukf_pf_comparison.mp4" autoplay loop muted playsinline width="85%"></video>
   <figcaption>图：EKF / UKF / 粒子滤波三种定位方法对比仿真——同场景下精度与收敛速度对比</figcaption>
 </div>
 
@@ -428,7 +430,7 @@ flowchart TD
 将环境空间划分为等大小的方格（通常 5–20 cm/格），每格存储一个概率值，表示该格是否被占据（有障碍 = 1，可通行 = 0，未探索 = 0.5）。这是室内机器人导航中最常用的地图格式，ROS `map_server` 直接支持。
 
 <div align="center">
-  <img src="/images/robotics_navigation/binary_grid_map_construction.gif" width="60%" style="margin:4px"/>
+  <video src="/images/robotics_navigation/binary_grid_map_construction.mp4" autoplay loop muted playsinline width="60%" style="margin:4px"></video>
   <figcaption>图：二值占据栅格地图构建过程</figcaption>
 </div>
 
@@ -442,7 +444,7 @@ flowchart TD
 在占据栅格基础上，对障碍物周围区域**膨胀（Inflation）**出一层代价层：离障碍物越近，代价越高。这样路径规划时机器人会自动保持与障碍物的安全距离，无需额外碰撞检查。ROS Navigation Stack 的 `costmap_2d` 支持多层代价地图（静态层 + 障碍物层 + 膨胀层）。
 
 <div align="center">
-  <img src="/images/robotics_navigation/cost_grid_map_construction.gif" width="55%" style="margin:4px"/>
+  <video src="/images/robotics_navigation/cost_grid_map_construction.mp4" autoplay loop muted playsinline width="55%" style="margin:4px"></video>
   <figcaption>图：代价地图构建</figcaption>
 </div>
 
@@ -470,7 +472,7 @@ flowchart TD
 </div>
 
 <div align="center">
-  <img src="/images/robotics_navigation/ndt_map_construction.gif" width="65%" />
+  <video src="/images/robotics_navigation/ndt_map_construction.mp4" autoplay loop muted playsinline width="65%"></video>
   <figcaption>图：NDT地图构建</figcaption>
 </div>
 
@@ -1239,8 +1241,8 @@ SLAM 假设环境是静态的，但现实中行人、车辆、移动家具会产
 ❌ 时间复杂度 $O(V \log V + E)$，$V$ 为节点数，$E$ 为边数
 
 <div align="center">
-  <img src="/images/robotics_navigation/dijkstra_search.gif" width="46%" style="margin:4px"/>
-  <img src="/images/robotics_navigation/dijkstra_navigate.gif" width="46%" style="margin:4px"/>
+  <video src="/images/robotics_navigation/dijkstra_search.mp4" autoplay loop muted playsinline width="46%" style="margin:4px"></video>
+  <video src="/images/robotics_navigation/dijkstra_navigate.mp4" autoplay loop muted playsinline width="46%" style="margin:4px"></video>
   <figcaption>图：Dijkstra 搜索过程（左）与导航结果（右）——扩展节点呈同心圆扩散，无方向性</figcaption>
 </div>
 
@@ -1274,8 +1276,8 @@ $$f(n) = g(n) + h(n)$$
 </div>
 
 <div align="center">
-  <img src="/images/robotics_navigation/astar_search.gif" width="46%" style="margin:4px"/>
-  <img src="/images/robotics_navigation/astar_navigate.gif" width="46%" style="margin:4px"/>
+  <video src="/images/robotics_navigation/astar_search.mp4" autoplay loop muted playsinline width="46%" style="margin:4px"></video>
+  <video src="/images/robotics_navigation/astar_navigate.mp4" autoplay loop muted playsinline width="46%" style="margin:4px"></video>
   <figcaption>图：A* 搜索过程（左）与导航结果（右）——有方向性，扩展节点集中在目标方向</figcaption>
 </div>
 
@@ -1284,8 +1286,8 @@ $$f(n) = g(n) + h(n)$$
 同时从起点和终点双向搜索，当两个搜索波前相遇时停止。平均搜索节点数约为单向 A* 的一半，适合起终点相距较远的情况。
 
 <div align="center">
-  <img src="/images/robotics_navigation/astar_bidirectional_search.gif" width="46%" style="margin:4px"/>
-  <img src="/images/robotics_navigation/astar_bidirectional_navigate.gif" width="46%" style="margin:4px"/>
+  <video src="/images/robotics_navigation/astar_bidirectional_search.mp4" autoplay loop muted playsinline width="46%" style="margin:4px"></video>
+  <video src="/images/robotics_navigation/astar_bidirectional_navigate.mp4" autoplay loop muted playsinline width="46%" style="margin:4px"></video>
   <figcaption>图：双向 A* 搜索（左，两端同时扩展）与导航结果（右）</figcaption>
 </div>
 
@@ -1301,8 +1303,8 @@ $$f(n) = g(n) + h(n)$$
 ❌ 需要结合 Reeds-Shepp 曲线等后处理平滑
 
 <div align="center">
-  <img src="/images/robotics_navigation/astar_hybrid_search.gif" width="46%" style="margin:4px"/>
-  <img src="/images/robotics_navigation/astar_hybrid_navigate.gif" width="46%" style="margin:4px"/>
+  <video src="/images/robotics_navigation/astar_hybrid_search.mp4" autoplay loop muted playsinline width="46%" style="margin:4px"></video>
+  <video src="/images/robotics_navigation/astar_hybrid_navigate.mp4" autoplay loop muted playsinline width="46%" style="margin:4px"></video>
   <figcaption>图：Hybrid A* 搜索（左）与导航结果（右）——生成考虑车辆运动学约束的平滑可行路径</figcaption>
 </div>
 
@@ -1446,8 +1448,8 @@ FM² 由 Garrido 等人（2006）在 FMM 基础上提出，核心思想是**两�
 ❌ 最终路径需要额外平滑处理（常用 B-Spline 或 Shortcut 平滑）
 
 <div align="center">
-  <img src="/images/robotics_navigation/rrt_search.gif" width="46%" style="margin:4px"/>
-  <img src="/images/robotics_navigation/rrt_navigate.gif" width="46%" style="margin:4px"/>
+  <video src="/images/robotics_navigation/rrt_search.mp4" autoplay loop muted playsinline width="46%" style="margin:4px"></video>
+  <video src="/images/robotics_navigation/rrt_navigate.mp4" autoplay loop muted playsinline width="46%" style="margin:4px"></video>
   <figcaption>图：RRT 随机树扩展过程（左）与规划路径（右）——路径曲折，非最优</figcaption>
 </div>
 
@@ -1455,11 +1457,11 @@ FM² 由 Garrido 等人（2006）在 FMM 基础上提出，核心思想是**两�
 
 RRT 的改进版，在标准 RRT 基础上增加了两个关键步骤：**近邻选父（Choose Parent）** 和 **重连（Rewiring）**。
 
-**Choose Parent**：不再直接用最近邻作为父节点，而是在半径 $r$ 的近邻集合 $\mathcal{X}_{near}$ 中，选择**到起点代价最低**的节点作为父节点：
+**Choose Parent**：不再直接用最近邻作为父节点，而是在半径 $r$ 的近邻集合 $$\mathcal{X}_{near}$$ 中，选择**到起点代价最低**的节点作为父节点：
 
 $$x_{parent} = \arg\min_{x \in \mathcal{X}_{near}} \left[ \text{cost}(x) + d(x, x_{new}) \right]$$
 
-**Rewiring**：将 $x_{new}$ 加入树后，检查 $\mathcal{X}_{near}$ 中的每个节点 $x_{near}$：若经过 $x_{new}$ 能降低 $x_{near}$ 的路径代价，则断开 $x_{near}$ 的旧父边，改由 $x_{new}$ 作为父节点。
+**Rewiring**：将 $x_{new}$ 加入树后，检查 $$\mathcal{X}_{near}$$ 中的每个节点 $x_{near}$：若经过 $x_{new}$ 能降低 $x_{near}$ 的路径代价，则断开 $x_{near}$ 的旧父边，改由 $x_{new}$ 作为父节点。
 
 搜索半径 $r$ 随采样点数 $n$ 缩小：$r(n) = \gamma \left(\frac{\log n}{n}\right)^{1/d}$（$d$ 为空间维度），保证渐近最优的同时控制计算量。
 
@@ -1469,25 +1471,25 @@ $$x_{parent} = \arg\min_{x \in \mathcal{X}_{near}} \left[ \text{cost}(x) + d(x, 
 ❌ 收敛速度慢，实时规划时可能采样时间不够
 
 <div align="center">
-  <img src="/images/robotics_navigation/rrt_star_search.gif" width="46%" style="margin:4px"/>
-  <img src="/images/robotics_navigation/rrt_star_navigate.gif" width="46%" style="margin:4px"/>
+  <video src="/images/robotics_navigation/rrt_star_search.mp4" autoplay loop muted playsinline width="46%" style="margin:4px"></video>
+  <video src="/images/robotics_navigation/rrt_star_navigate.mp4" autoplay loop muted playsinline width="46%" style="margin:4px"></video>
   <figcaption>图：RRT* 搜索过程（左，重连后路径持续优化）与规划路径（右）——比 RRT 更平滑</figcaption>
 </div>
 
 ### 双向 RRT*（Bidirectional RRT*）
 
-从起点 $x_{start}$ 和终点 $x_{goal}$ 各生长一棵 RRT* 树（$\mathcal{T}_a$、$\mathcal{T}_b$），每次迭代交替扩展两棵树：
+从起点 $x_{start}$ 和终点 $x_{goal}$ 各生长一棵 RRT* 树（$$\mathcal{T}_a$$、$$\mathcal{T}_b$$），每次迭代交替扩展两棵树：
 
-1. 对 $\mathcal{T}_a$ 执行一步 RRT* 扩展，得到新节点 $x_{new}$
-2. 尝试将 $x_{new}$ 连接到 $\mathcal{T}_b$ 中距其最近且路径无碰撞的节点 $x_{b,near}$
+1. 对 $$\mathcal{T}_a$$ 执行一步 RRT* 扩展，得到新节点 $x_{new}$
+2. 尝试将 $x_{new}$ 连接到 $$\mathcal{T}_b$$ 中距其最近且路径无碰撞的节点 $x_{b,near}$
 3. 若连接成功，合并两条子路径得到候选完整路径；保留代价最小的完整路径
-4. 两棵树角色互换（$\mathcal{T}_a \leftrightarrow \mathcal{T}_b$），继续迭代优化
+4. 两棵树角色互换（$$\mathcal{T}_a \leftrightarrow \mathcal{T}_b$$），继续迭代优化
 
 **优势来源**：两棵树"对向生长"，有效避免了单向树在宽阔空间中的盲目扩散，搜索体积从 $O(r^d)$ 降为 $O(2 \cdot (r/2)^d)$，收敛速度比单向 RRT* 快约一个数量级。
 
 <div align="center">
-  <img src="/images/robotics_navigation/rrt_star_bidirectional_search.gif" width="46%" style="margin:4px"/>
-  <img src="/images/robotics_navigation/rrt_star_bidirectional_navigate.gif" width="46%" style="margin:4px"/>
+  <video src="/images/robotics_navigation/rrt_star_bidirectional_search.mp4" autoplay loop muted playsinline width="46%" style="margin:4px"></video>
+  <video src="/images/robotics_navigation/rrt_star_bidirectional_navigate.mp4" autoplay loop muted playsinline width="46%" style="margin:4px"></video>
   <figcaption>图：双向 RRT* 搜索（左，红蓝两棵树相遇）与规划路径（右）</figcaption>
 </div>
 
@@ -1502,8 +1504,8 @@ $$b = \frac{1}{2}\sqrt{c_{best}^2 - \|x_{goal} - x_{start}\|^2}$$
 采样时将标准圆内的均匀随机点 $x_{ball} \sim \mathcal{U}(\mathcal{B}^d)$ 通过仿射变换映射到椭圆坐标系：$x_{rand} = C \cdot L \cdot x_{ball} + x_{center}$，其中 $C$ 是旋转矩阵（使椭圆主轴对准 $x_{start} \to x_{goal}$ 方向），$L = \text{diag}(a, b, \ldots, b)$。
 
 <div align="center">
-  <img src="/images/robotics_navigation/informed_rrt_star_search.gif" width="46%" style="margin:4px"/>
-  <img src="/images/robotics_navigation/informed_rrt_star_navigate.gif" width="46%" style="margin:4px"/>
+  <video src="/images/robotics_navigation/informed_rrt_star_search.mp4" autoplay loop muted playsinline width="46%" style="margin:4px"></video>
+  <video src="/images/robotics_navigation/informed_rrt_star_navigate.mp4" autoplay loop muted playsinline width="46%" style="margin:4px"></video>
   <figcaption>图：Informed RRT* 搜索（左，椭圆采样区域随路径改善而收缩）与规划路径（右）</figcaption>
 </div>
 
@@ -1518,7 +1520,7 @@ $$b = \frac{1}{2}\sqrt{c_{best}^2 - \|x_{goal} - x_{start}\|^2}$$
 **动态窗口的构造**：速度空间 $(v, \omega)$ 需同时满足三个约束，取交集：
 
 - **速度限制**：$v \in [v_{min}, v_{max}]$，$\omega \in [\omega_{min}, \omega_{max}]$
-- **动态窗口**（加速度限制）：$v \in [v_c - \dot{v}_{max} \cdot \Delta t,\ v_c + \dot{v}_{max} \cdot \Delta t]$，$\omega$ 类似
+- **动态窗口**（加速度限制）：$$v \in [v_c - \dot{v}_{max} \cdot \Delta t,\ v_c + \dot{v}_{max} \cdot \Delta t]$$，$\omega$ 类似
 - **可达性约束**：轨迹上距离最近障碍物的距离 $> 0$（且机器人能在到达障碍物前制动）
 
 **评分函数**：
@@ -1548,7 +1550,7 @@ $$G(v, \omega) = \sigma\bigl(\alpha \cdot \text{heading}(v,\omega) + \beta \cdot
 
 **思路**：将路径视为一段"橡皮筋"，加入时间维度后变成"时间弹性带"。TEB 将局部规划问题建模为一个**稀疏非线性最小二乘优化**：
 
-**状态表示**：路径由一系列带时间戳的位姿序列表示 $\mathcal{B} = \{x_i, \Delta T_i\}_{i=1}^{n}$，其中 $x_i = (p_x, p_y, \theta)$，$\Delta T_i$ 是相邻路点间的时间间隔。
+**状态表示**：路径由一系列带时间戳的位姿序列表示 $$\mathcal{B} = \{x_i, \Delta T_i\}_{i=1}^{n}$$，其中 $x_i = (p_x, p_y, \theta)$，$\Delta T_i$ 是相邻路点间的时间间隔。
 
 **优化目标**（多约束加权求和）：
 
@@ -1603,7 +1605,7 @@ $$U_{rep}(q) = \begin{cases} \dfrac{1}{2} k_{rep} \left(\dfrac{1}{d(q,O)} - \dfr
 ❌ 靠近目标时引力趋近零，若仍有斥力，机器人可能无法到达终点
 
 <div align="center">
-  <img src="/images/robotics_navigation/potential_field_demo.gif" width="65%" />
+  <video src="/images/robotics_navigation/potential_field_demo.mp4" autoplay loop muted playsinline width="65%"></video>
   <figcaption>图：势场法避障演示——机器人沿引力/斥力合力运动，遭遇局部极小值时可能停滞</figcaption>
 </div>
 
@@ -1612,7 +1614,7 @@ $$U_{rep}(q) = \begin{cases} \dfrac{1}{2} k_{rep} \left(\dfrac{1}{d(q,O)} - \dfr
 **模型预测路径积分（Model Predictive Path Integral）思路**：属于**模型预测控制（MPC）** 的随机变体。在当前时刻，向前采样**大量随机控制序列**（通过 GPU 并行采样），用运动模型仿真每条轨迹的未来状态，根据轨迹代价计算**信息论加权平均**作为当前控制输出，然后滑动时间窗口重复。
 
 <div align="center">
-  <img src="/images/robotics_navigation/mppi_path_tracking.gif" width="75%" />
+  <video src="/images/robotics_navigation/mppi_path_tracking.mp4" autoplay loop muted playsinline width="75%"></video>
   <figcaption>图：MPPI 路径跟踪仿真——GPU 并行采样大量轨迹（半透明线），加权平均得到最优控制</figcaption>
 </div>
 
@@ -1631,7 +1633,7 @@ $$U_{rep}(q) = \begin{cases} \dfrac{1}{2} k_{rep} \left(\dfrac{1}{d(q,O)} - \dfr
 
 ✅ 无需求解最优控制问题（只需前向仿真，无梯度）
 ✅ 天然支持非线性系统和非凸代价函数（如碰撞的阶跃代价）
-✅ GPU 并行采样（$K$ 可达 $10^3$–$10^4$），可处理复杂障碍物分布
+✅ GPU 并行采样（$K$ 可达 $10^3 \text{–} 10^4$），可处理复杂障碍物分布
 ❌ 需要相对精确的运动模型（仿真误差积累会导致轨迹偏差）
 ❌ 计算量较大，通常需要 GPU 才能达到实时控制频率（$\geq 10$ Hz）
 
@@ -1944,14 +1946,14 @@ $L_d$ 是 Pure Pursuit 唯一需要调的关键参数，对性能影响极大：
 | **太大**（> 3m @ 1m/s）| 走"大弯"切角，直道效果好但转弯误差大 | 高速直道 |
 
 **速度自适应调参**（Adaptive Pure Pursuit）：使用 $L_d = k \cdot v$，其中典型 $k$ 值为：
-- 室内机器人（最高 1 m/s）：$k \approx 1.5$–$2.0$
-- 仓储 AGV（最高 2 m/s）：$k \approx 1.0$–$1.5$
-- 自动驾驶（最高 30 km/h）：$k \approx 0.5$–$1.0$
+- 室内机器人（最高 1 m/s）：$k \approx 1.5 \text{–} 2.0$
+- 仓储 AGV（最高 2 m/s）：$k \approx 1.0 \text{–} 1.5$
+- 自动驾驶（最高 30 km/h）：$k \approx 0.5 \text{–} 1.0$
 
 另一实践技巧：设置 $L_d$ 的**最小值**（如 0.3 m），避免低速时预瞄距离趋近于零导致震荡。
 
 <div align="center">
-  <img src="/images/robotics_navigation/pure_pursuit_path_tracking.gif" width="75%" />
+  <video src="/images/robotics_navigation/pure_pursuit_path_tracking.mp4" autoplay loop muted playsinline width="75%"></video>
   <figcaption>图：Pure Pursuit 路径跟踪仿真——车辆目视前方预瞄点，平滑跟踪参考路径</figcaption>
 </div>
 
@@ -1964,7 +1966,7 @@ $$L_d = k \cdot v$$
 其中 $k$ 是比例系数，$v$ 是当前速度。速度快时预瞄远（稳定），速度慢时预瞄近（精确）。这解决了固定预瞄距离在不同速度下表现差异大的问题。
 
 <div align="center">
-  <img src="/images/robotics_navigation/adaptive_pure_pursuit_path_tracking.gif" width="75%" />
+  <video src="/images/robotics_navigation/adaptive_pure_pursuit_path_tracking.mp4" autoplay loop muted playsinline width="75%"></video>
   <figcaption>图：自适应 Pure Pursuit 路径跟踪——预瞄距离随速度动态调整，各速度段均表现稳定</figcaption>
 </div>
 
@@ -1973,7 +1975,7 @@ $$L_d = k \cdot v$$
 后轮反馈控制（Rear Wheel Feedback）以车辆**后轴中点**为跟踪参考点（而非前轴或重心），直接消除后轮在参考路径上的横向误差和航向误差。后轮反馈控制（Rear Wheel Feedback）相比 Pure Pursuit 有更严格的数学收敛保证。
 
 <div align="center">
-  <img src="/images/robotics_navigation/rear_wheel_feedback_tracking.gif" width="75%" />
+  <video src="/images/robotics_navigation/rear_wheel_feedback_tracking.mp4" autoplay loop muted playsinline width="75%"></video>
   <figcaption>图：后轮反馈控制路径跟踪仿真——以后轴为参考点，横向误差收敛更快</figcaption>
 </div>
 
@@ -1997,7 +1999,7 @@ $$\delta = \psi_e + \arctan\left(\frac{k \cdot e}{v}\right)$$
 ❌ 不显式考虑路径曲率
 
 <div align="center">
-  <img src="/images/robotics_navigation/stanley_path_tracking.gif" width="75%" />
+  <video src="/images/robotics_navigation/stanley_path_tracking.mp4" autoplay loop muted playsinline width="75%"></video>
   <figcaption>图：Stanley 控制器路径跟踪仿真——同时修正航向误差和横向偏差，转弯处精度更高</figcaption>
 </div>
 
@@ -2007,7 +2009,7 @@ $$\delta = \psi_e + \arctan\left(\frac{k \cdot e}{v}\right)$$
 
 $$J = \sum_{t=0}^{\infty} \left( \mathbf{e}_t^T \mathbf{Q} \mathbf{e}_t + u_t^T \mathbf{R} u_t \right)$$
 
-其中 $\mathbf{e}_t$ 是跟踪误差（横向偏差 + 航向误差），$u_t$ 是控制输入（转向角），$\mathbf{Q}$ 和 $\mathbf{R}$ 是权重矩阵（调参关键：$\mathbf{Q}$ 大表示"更重视减小误差"，$\mathbf{R}$ 大表示"更重视平稳控制"）。
+其中 $$\mathbf{e}_t$$ 是跟踪误差（横向偏差 + 航向误差），$u_t$ 是控制输入（转向角），$\mathbf{Q}$ 和 $\mathbf{R}$ 是权重矩阵（调参关键：$\mathbf{Q}$ 大表示"更重视减小误差"，$\mathbf{R}$ 大表示"更重视平稳控制"）。
 
 ✅ 理论上最优，精度高
 ✅ 系统响应平滑
@@ -2015,7 +2017,7 @@ $$J = \sum_{t=0}^{\infty} \left( \mathbf{e}_t^T \mathbf{Q} \mathbf{e}_t + u_t^T 
 ❌ $\mathbf{Q}$、$\mathbf{R}$ 矩阵调参需要经验
 
 <div align="center">
-  <img src="/images/robotics_navigation/lqr_path_tracking.gif" width="75%" />
+  <video src="/images/robotics_navigation/lqr_path_tracking.mp4" autoplay loop muted playsinline width="75%"></video>
   <figcaption>图：LQR 路径跟踪仿真——最优控制律使得跟踪误差最小化，响应平滑稳定</figcaption>
 </div>
 
@@ -2139,7 +2141,7 @@ y_{k+1} &= y_k + v_k \sin\theta_k \cdot \Delta t \\
 ### 对规划算法的影响
 
 - **Hybrid A\***：以 $(x, y, \theta)$ 为状态，用阿克曼运动方程展开节点，生成曲率连续路径，直接可跟踪。
-- **TEB**：需开启阿克曼模式，约束 $|\delta| \le \delta_{\max}$ 和 $\dot{\delta}$ 上限，轨迹最小曲率半径有限。
+- **TEB**：需开启阿克曼模式，约束 $\lvert\delta\rvert \le \delta_{\max}$ 和 $\dot{\delta}$ 上限，轨迹最小曲率半径有限。
 - **Pure Pursuit / Stanley**：输出前轮转角 $\delta$，是为阿克曼车辆专门推导的跟踪控制律。
 - **MPC**：以自行车模型为预测模型，约束 $\delta$ 和 $\dot{\delta}$，适合高速精确跟踪。
 
@@ -2280,7 +2282,7 @@ flowchart LR
     FIS -->|ΔKp, ΔKi, ΔKd| ADD["参数更新\nKp = Kp₀+ΔKp\nKi = Ki₀+ΔKi\nKd = Kd₀+ΔKd"]
     ADD --> PID["PID 控制律\nu(t)"]
     PID --> Plant["被控对象"]
-    Plant -->|y(t)| FB(( ))
+    Plant -->|"y(t)"| FB(( ))
     FB --> E
     FB --> DE
 ```

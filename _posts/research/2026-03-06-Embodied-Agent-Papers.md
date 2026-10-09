@@ -1,20 +1,37 @@
 ---
 layout: post
-title: "Embodied Agent 经典论文"
-date:   2026-09-14
+lang: zh-CN
+translation_id: embodied-agent-papers
+title: "Embodied Agent 论文精读"
+date:   2026-10-04
 tags: [Agent, Embodied AI, Robotics, VLA, Deep Learning]
 categories: research
 comments: true
 author: Tingde Liu
 toc: true
-excerpt: "本文系统梳理具身智能体（Embodied Agent）领域的经典与前沿论文，涵盖具身闭环运行时（AgentOS / Harness）、标准化类型化技能抽象（Typed Skills）、物理编排与双后端（Pigey）、场景图与退出码评估（Thea）、自演化物理治理（Zetta）以及真机跨本体协同。"
+excerpt: "本文按系统运行时、物理编排、场景图评估、自演化治理、语义动作接口、动作分块、AgentOS 与巡检系统治理八条路线，精读 Embodied Agent 领域的代表性论文。"
 ---
 
-> 本文是 [AI Agent 综述](/AI-Agent-Survey/) 与底层系统架构指南 [具身 Agent Harness 架构综述](/Embodied-Agent-Harness-Survey/) 的配套具身论文精读，系统收录 Embodied Agent（具身智能体）领域的代表性工作与前沿突破。
+> 本文是 [AI Agent 综述](/AI-Agent-Survey/) 与底层系统架构指南 [Embodied Agent 综述](/Embodied-Agent-Harness-Survey/) 的配套具身论文精读，系统收录 Embodied Agent（具身智能体）领域的代表性工作与前沿突破。
+
+# 具身智能体论文精读
+
+本文关注一个共同问题：机器人如何把感知、规划、执行、验证和恢复组织成可持续运行的闭环。八篇论文分别从运行时、编排器、评估器、演化机制、动作接口、训练目标、通用 AgentOS 和巡检系统治理切入，实验覆盖仿真环境、文本交互环境与真实机器人。
+
+| 论文 | 主要切入点 | 代表性验证 |
+|---|---|---|
+| [HoloAgent-0](#holoagent-0) | AgentOS、类型化技能与分层空间记忆 | HM3D、ScanNet、真实异构机器人 |
+| [Pigey](#pigey) | 推理期物理编排、TAMP/VLA 双后端与双重校验 | LIBERO-PRO、DROID 真机 |
+| [Thea](#thea) | 场景图上下文与评估器退出码 | L1–L3 长程真机任务、跨本体部署 |
+| [Zetta](#zetta) | 高频裁判、恢复动作库与离线自演化 | LIBERO-Pro、并发采样基础设施 |
+| [Show-Harness](#show-harness) | 语义动作单元与本体解释器 | Franka、AgileX、仿真与真机泛化 |
+| [SPACE](#space) | 技能引导的自适应动作分块与强化学习 | ALFWorld、ScienceWorld |
+| [ABot-AgentOS](#abot-agentos) | 双 LLM、Agent Harness 与终身多模态记忆 | EmbodiedWorldBench、记忆基准 |
+| [Harness Robotic OS](#harness-robotic-os) | 巡检运行时、分层记忆与自进化治理 | 真实小区导航与巡检；认知运行时尚待受控验证 |
+
+下方筛选栏支持多标签组合；同时选中多个标签时，页面只保留同时满足这些标签的论文。
 
 <div id="paper-filter-bar" class="paper-filter-bar"></div>
-
-# 具身智能体经典论文
 
 ## 1. HoloAgent-0 (2026) {#holoagent-0}
 ———统一具身智能体闭环操作系统：解耦异构物理技能，以分层3D多模态空间记忆为物理锚点
@@ -28,7 +45,7 @@ excerpt: "本文系统梳理具身智能体（Embodied Agent）领域的经典�
 - **闭环具身运行时架构**：提出面向实体机器人的 Embodied AgentOS 操作系统，将任务规划从单次开环文本生成重构为“观测-检索-行动-监控”的持续闭环，有效填补物理世界的执行不确定性。
 - **标准化类型化技能抽象（Typed Skills）**：制定了包含结构化参数、前置条件与运行时心跳状态流的动作规范，将 VLA 抓取、全身运控与主动导航统一封装，屏蔽了异构本体控制器的底层差异。
 - **分层多模态场景图（HMSG）**：构建由楼层（Floor）、房间（Room）、视角（View）与物体（Object）组成的四层拓扑结构，巧妙引入“视角层”充当几何坐标与外观推理的桥梁，支撑快慢混合的高效空间检索。
-- **开放词表 3D 动态语义建图**：融合多相机神经深度估计与多尺度 SigLIP 特征，结合 3D 实例反投影投影关联算法，在环境发生物理变动时实现局部的轻量级增量刷新。
+- **开放词表 3D 动态语义建图**：融合多相机神经深度估计与多尺度 SigLIP 特征，结合 3D 实例反投影关联算法，在环境发生物理变动时实现局部的轻量级增量刷新。
 - **真机异构全栈部署验证**：在 Unitree G1 人形、R1 人形与双臂移动底盘上完成部署，在 ScanNet 语义建图与 HM3D/真机长程导航基准上全面刷新行业指标。
 
 ---
@@ -50,7 +67,7 @@ HoloAgent-0 将长程具身任务组织为一个自闭环的系统工程，整�
 - **监控与验证层（Monitoring & Verification Layer）**：实时监测技能执行的心跳、置信度与错误模态，向用户提供多模态交互反馈，并在出现不可恢复故障时唤醒 AgentOS 进行动态重规划。
 
 <div align="center">
-  <img src="/images/agent/HoloAgent-0-framework-overview.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/agent/HoloAgent-0-framework-overview.webp" width="100%" loading="lazy" decoding="async" alt="HoloAgent-0 闭环端到端运行时架构概览" />
 <figcaption>HoloAgent-0 闭环端到端运行时架构概览</figcaption>
 </div>
 
@@ -83,7 +100,7 @@ HoloAgent-0 将长程具身任务组织为一个自闭环的系统工程，整�
 - **跨机协同能力（Cross-Embodiment Coordination）**：多台异构机器人通过共享的 3D 空间记忆底座与统一步长状态流进行分工，例如轮式移动底盘先行巡检建图并标记目标位置，人形机器人随后精准执行桌面复杂操作。
 
 <div align="center">
-  <img src="/images/agent/HoloAgent-0-closed-loop-execution.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/agent/HoloAgent-0-closed-loop-execution.webp" width="100%" loading="lazy" decoding="async" alt="HoloAgent-0 在多样化机器人平台上的真实闭环执行案例（运控、寻物、多机协同、长程折衣）" />
 <figcaption>HoloAgent-0 在多样化机器人平台上的真实闭环执行案例（运控、寻物、多机协同、长程折衣）</figcaption>
 </div>
 
@@ -94,7 +111,7 @@ HoloAgent-0 将长程具身任务组织为一个自闭环的系统工程，整�
 - **开放词表语义投影**：在线建图模块将 2D 基础模型的通用语义无缝提升至 3D 点云与体素网格中。
 
 <div align="center">
-  <img src="/images/agent/HoloAgent-0-semantic-mapping.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/agent/HoloAgent-0-semantic-mapping.webp" width="100%" loading="lazy" decoding="async" alt="HoloAgent-0 开放词表 3D 语义建图与动态场景自适应框架" />
 <figcaption>HoloAgent-0 开放词表 3D 语义建图与动态场景自适应框架</figcaption>
 </div>
 
@@ -118,8 +135,8 @@ $$d = \sum_{i=0}^2 w_i \odot d_i$$
 > 4. **跨视角 3D 实例关联**：当机器人位移后采集新帧时，系统将已维护的 3D 实例点云 $V_{t-1}$ 通过外参矩阵反向投影回当前相机平面，获得投影预测掩码 $\tilde m_j$。系统计算 $\tilde m_j$ 与当前新分割掩码 $m_k$ 的交并比 $\operatorname{IoU}(m_k, \tilde m_j)$。若交并比大于 0.5，则认定为同一物体并复用唯一实例 ID；若无重叠，则开辟新的 3D 独立实例。
 
 <div align="center">
-  <img src="/images/agent/HoloAgent-0-instance-association.webp" width="100%" loading="lazy" decoding="async" />
-<figcaption>跨时间帧 3D 实例反投影投影匹配与持续 ID 追踪机制</figcaption>
+  <img src="/images/agent/HoloAgent-0-instance-association.webp" width="100%" loading="lazy" decoding="async" alt="跨时间帧 3D 实例反投影匹配与持续 ID 追踪机制" />
+<figcaption>跨时间帧 3D 实例反投影匹配与持续 ID 追踪机制</figcaption>
 </div>
 
 #### ④ 分层多模态场景图（HMSG）与快慢混合检索机制
@@ -155,7 +172,7 @@ graph TD
 ```
 
 <div align="center">
-  <img src="/images/agent/HoloAgent-0-hmsg-structure.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/agent/HoloAgent-0-hmsg-structure.webp" width="100%" loading="lazy" decoding="async" alt="分层多模态场景图（HMSG）四层结构（楼层-房间-视角-物体）及层级与拓扑边关联" />
 <figcaption>分层多模态场景图（HMSG）四层结构（楼层-房间-视角-物体）及层级与拓扑边关联</figcaption>
 </div>
 
@@ -164,12 +181,12 @@ graph TD
 #### ⑤ HoloNavi 目标导航流水线
 
 基于 HMSG，HoloNavi 导航系统将任务串联为三个环环相扣的执行回路：
-1. **分层物体导航（Hierarchical Object Navigation）**：利用语义解析匹配楼层、房间与物体候选，借助分层 CLIP 相似度以毫秒级速度剪枝无关搜索空间；
+1. **分层物体导航（Hierarchical Object Navigation）**：利用语义解析匹配楼层、房间与物体候选，借助分层 CLIP 相似度快速剪枝无关搜索空间；
 2. **在线双重验证环（Online Verification Loop）**：当机器人到达候选视点后，实时摄像头画面交由开词检测器与 VLM 双重核验。若初步判定失败，机器人自动原地多角度旋转采集环视视角进行二次重检，确认目标真实坐标后导航至操作安全距；
 3. **前沿主动探索环（Frontier Exploration Loop）**：若 HMSG 初始检索落空或在线验证再次失败，系统立即切换至前沿探索模式。根据候选前沿点的信息增益预期、任务语义相关度、可通行性与动力学约束进行综合打分，引导机器人探索未知区域，并在行进中持续执行增量建图与目标嗅探。
 
 <div align="center">
-  <img src="/images/agent/HoloAgent-0-holonavi-pipeline.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/agent/HoloAgent-0-holonavi-pipeline.webp" width="100%" loading="lazy" decoding="async" alt="HoloNavi 物体目标导航全流程：分层语义匹配、在线多重视角验证与前沿增量探索" />
 <figcaption>HoloNavi 物体目标导航全流程：分层语义匹配、在线多重视角验证与前沿增量探索</figcaption>
 </div>
 
@@ -183,7 +200,7 @@ graph TD
 在执行更新时，记忆层首先利用当前观测在既有几何地图中进行鲁棒重定位，局部清除产生冲突的过期点云与体素，并将新特征融合入局部几何。语义层更新受影响的 3D 实例边界框，HMSG 则**仅对受影响的局部子图进行原位拓扑更新**（重新计算该物体所属房间和可视视角），无需承担重建整张全局场景图的高额开销。
 
 <div align="center">
-  <img src="/images/agent/HoloAgent-0-dynamic-memory-update.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/agent/HoloAgent-0-dynamic-memory-update.webp" width="100%" loading="lazy" decoding="async" alt="动态环境下的局部场景记忆自适应刷新对比（桌面物体移动后局部地图与场景图子图的原位更新）" />
 <figcaption>动态环境下的局部场景记忆自适应刷新对比（桌面物体移动后局部地图与场景图子图的原位更新）</figcaption>
 </div>
 
@@ -239,7 +256,7 @@ graph TD
 Pigey 的核心思路是**控制与编排解耦**：底层仅保留两个冻结的运动执行器（TAMP 规划器与 $\pi_{0.5}$ VLA），上层由前沿 VLM（如 Claude/GPT 等多模态前沿大模型）构成闭环决策大脑，运行“感知（Perceive）→ 推理（Reason）→ 行动（Act）→ 校验（Verify）”的物理执行循环。
 
 <div align="center">
-  <img src="/images/vla/Pigey-architecture.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Pigey-architecture.webp" width="100%" loading="lazy" decoding="async" alt="Pigey 闭环物理 Agent 系统架构：前沿 VLM 作为编排器统筹感知、推理、执行与双重校验，向下路由至冻结的 TAMP 与 VLA 运动后端" />
 <figcaption>Pigey 闭环物理 Agent 系统架构：前沿 VLM 作为编排器统筹感知、推理、执行与双重校验，向下路由至冻结的 TAMP 与 VLA 运动后端</figcaption>
 </div>
 
@@ -254,7 +271,7 @@ Pigey 作为一个封闭循环的具身智能 Agent，在接收到全局长指�
 - **保守双重校验与双向升降级引擎**：传感器信号与视觉判定互为兜底，驱动重试、清障与策略切换。
 
 <div align="center">
-  <img src="/images/vla/Pigey-overview.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Pigey-overview.webp" width="100%" loading="lazy" decoding="async" alt="Pigey 在真实机器狗/机械臂场景中展现的物理推理能力：演绎推理、安全常识、障碍排除、长时程场景记忆与空间几何堆叠" />
 <figcaption>Pigey 在真实机器狗/机械臂场景中展现的物理推理能力：演绎推理、安全常识、障碍排除、长时程场景记忆与空间几何堆叠</figcaption>
 </div>
 
@@ -331,7 +348,7 @@ graph TD
 LIBERO-PRO 是业内针对复杂长时程桌面操作的高难度扰动测试基准，引入了物体位置调换（Obj. swap）、目标属性变换（Goal swap）以及空间几何扰动（Spatial swap/task）等 6 种严苛扰动套件。
 
 <div align="center">
-  <img src="/images/vla/Pigey-libero-pro.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Pigey-libero-pro.webp" width="100%" loading="lazy" decoding="async" alt="LIBERO-PRO 六大扰动套件下的成功率对比：保持底层冻结权重完全不变，仅改变推理编排机制" />
 <figcaption>LIBERO-PRO 六大扰动套件下的成功率对比：保持底层冻结权重完全不变，仅改变推理编排机制</figcaption>
 </div>
 
@@ -343,12 +360,12 @@ LIBERO-PRO 是业内针对复杂长时程桌面操作的高难度扰动测试基
 在真机实验中，研究团队设置了 8 大核心能力维度的 30 项严苛长时程任务，包括常识推理、条件逻辑、空间推理、清障安全推理、错误主动恢复及长时程记忆恢复等。
 
 <div align="center">
-  <img src="/images/vla/Pigey-droid-results.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Pigey-droid-results.webp" width="100%" loading="lazy" decoding="async" alt="真实机械臂 DROID 上的 8 类能力探针成功率（%）：底层均运行相同的 π0.5-DROID 权重" />
 <figcaption>真实机械臂 DROID 上的 8 类能力探针成功率（%）：底层均运行相同的 π0.5-DROID 权重</figcaption>
 </div>
 
 <div align="center">
-  <img src="/images/vla/Pigey-qualitative-rollout.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Pigey-qualitative-rollout.webp" width="100%" loading="lazy" decoding="async" alt="真机长时程执行与单帧推理链展示：在素食挑选任务中识别非素食并依次放入碗中" />
 <figcaption>真机长时程执行与单帧推理链展示：在素食挑选任务中识别非素食并依次放入碗中</figcaption>
 </div>
 
@@ -398,7 +415,7 @@ LIBERO-PRO 是业内针对复杂长时程桌面操作的高难度扰动测试基
 Thea 构建了一个将前沿决策模型（Model）与多样化机器人本体（Body）解耦编排的具身闭环 Harness，通过结构化上下文演进、标准化工具接口与独立后置评估器闭合了具身控制回路。
 
 <div align="center">
-  <img src="/images/vla/Thea-overview.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Thea-overview.webp" width="100%" loading="lazy" decoding="async" alt="Thea 具身 Harness 系统全景：将模型（Model）与本体（Body）完全解耦，通过可调用的工具（Tool）、场景图上下文（Scene graph）与独立评估器（Evaluator）建立感知-行动-校验闭环，并在三种迥异本体上验证" />
 <figcaption>Thea 具身 Harness 系统全景：将模型（Model）与本体（Body）完全解耦，通过可调用的工具（Tool）、场景图上下文（Scene graph）与独立评估器（Evaluator）建立感知-行动-校验闭环，并在三种迥异本体上验证</figcaption>
 </div>
 
@@ -411,7 +428,7 @@ Thea 构建了一个将前沿决策模型（Model）与多样化机器人本体�
 4. **退出码评估器（Evaluation as Exit Codes）**：在每次动作结束后由系统结构化触发的独立视觉评估器，返回三态执行裁决（Success / Failure / In-progress）及失败归因。
 
 <div align="center">
-  <img src="/images/vla/Thea-scenegraph.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Thea-scenegraph.webp" width="100%" loading="lazy" decoding="async" alt="SceneGraph as Context：将传感器连续多模态观测与评估器确认的动作结果融合为统一符号场景图，生成精简简报（Brief）按轮次刷新注入上下文，支持按需深度查询" />
 <figcaption>SceneGraph as Context：将传感器连续多模态观测与评估器确认的动作结果融合为统一符号场景图，生成精简简报（Brief）按轮次刷新注入上下文，支持按需深度查询</figcaption>
 </div>
 
@@ -429,7 +446,7 @@ Thea 构建了一个将前沿决策模型（Model）与多样化机器人本体�
   - **输出**：将裁决与失败归因打包为退出码响应注入对话历史，供决策模型进行针对性重试或方案切换。
 
 <div align="center">
-  <img src="/images/vla/Thea-evaluator-exit-codes.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Thea-evaluator-exit-codes.webp" width="100%" loading="lazy" decoding="async" alt="Evaluation as Exit Codes 触发时序：模型调用 Tool 执行策略，执行结束后由 Harness 后置钩子主动触发独立 Evaluator，产出带失败原因的三态判决反馈给模型" />
 <figcaption>Evaluation as Exit Codes 触发时序：模型调用 Tool 执行策略，执行结束后由 Harness 后置钩子主动触发独立 Evaluator，产出带失败原因的三态判决反馈给模型</figcaption>
 </div>
 
@@ -475,7 +492,7 @@ graph TD
 Thea 在多样化硬件平台（Unitree G1 人形机器人、Astribot S1 柔性人形机器人、AgileX Cobot Magic 轮式双臂协作机器人）上开展了全面的真实物理实验验证。
 
 <div align="center">
-  <img src="/images/vla/Thea-task-complexity-scaling.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Thea-task-complexity-scaling.webp" width="100%" loading="lazy" decoding="async" alt="跨越不同难度等级（L1 基础操作、L2 空间组合、L3 长时程长距离多阶段交互）的任务成功率对比：随着任务步数拉长，基线模型断崖式下跌，而 Thea 保持卓越的鲁棒性" />
 <figcaption>跨越不同难度等级（L1 基础操作、L2 空间组合、L3 长时程长距离多阶段交互）的任务成功率对比：随着任务步数拉长，基线模型断崖式下跌，而 Thea 保持卓越的鲁棒性</figcaption>
 </div>
 
@@ -487,7 +504,7 @@ Thea 在多样化硬件平台（Unitree G1 人形机器人、Astribot S1 柔性�
 - **L3 终极层（跨房间长距离导航 + 抽屉拉开检索 + 目标物体抓取与送递）**：单体模型（如 $\pi_{0.5}$、LingBot）因累积误差暴跌至 **40%**，SayCan 因缺乏细粒度几何与闭环校验仅为 53%，而 Thea 凭借闭环重试与场景图记忆维持了 **87%** 的成功率。
 
 <div align="center">
-  <img src="/images/vla/Thea-emergent-capabilities.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Thea-emergent-capabilities.webp" width="100%" loading="lazy" decoding="async" alt="Thea 驱动下涌现的多样化物理智能行为：(a) 跨房间自主取电并递送充电宝；(b) 目标未见时主动拉开抽屉分层检索；(c) 根据评估器反馈的失败原因微调位姿二次抓取；(d) 目标饮料缺货时主动发起人机对话协商替代品；(e) 单套 Harness 跨三种完全不同的机器人本体无缝迁移" />
 <figcaption>Thea 驱动下涌现的多样化物理智能行为：(a) 跨房间自主取电并递送充电宝；(b) 目标未见时主动拉开抽屉分层检索；(c) 根据评估器反馈的失败原因微调位姿二次抓取；(d) 目标饮料缺货时主动发起人机对话协商替代品；(e) 单套 Harness 跨三种完全不同的机器人本体无缝迁移</figcaption>
 </div>
 
@@ -542,7 +559,7 @@ Thea 在多样化硬件平台（Unitree G1 人形机器人、Astribot S1 柔性�
 Zetta 提出了一个**在线高频治理与离线自主演化**相咬合的双环物理智能系统，配合硬件解耦的高通量并发基建 Z-Infra，实现了物理策略的自我繁衍与鲁棒进化。
 
 <div align="center">
-  <img src="/images/vla/Zetta-overview.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Zetta-overview.webp" width="100%" loading="lazy" decoding="async" alt="Zetta 自演化具身 Harness 全景：高频运行时裁判主导在线动作纠错回路，离线演化 Agent 聚类失败轨迹并蒸馏可复用技能，配合解耦基建 Z-Infra 驱动吞吐倍增与“顿悟时刻”" />
 <figcaption>Zetta 自演化具身 Harness 全景：高频运行时裁判主导在线动作纠错回路，离线演化 Agent 聚类失败轨迹并蒸馏可复用技能，配合解耦基建 Z-Infra 驱动吞吐倍增与“顿悟时刻”</figcaption>
 </div>
 
@@ -551,14 +568,14 @@ Zetta 提出了一个**在线高频治理与离线自主演化**相咬合的双�
 Zetta 将系统清晰划分为两大不可变实体与一个核心演化载体：
 - **两项不可变实体**：底层动作策略 $\pi$（冻结的 VLA/WAM 参数，$\nabla_\theta = 0$）与高层编排 Agent $A_{orch}$（多模态决策算子，判定逻辑恒定）；
 - **核心演化载体 Harness（$H = \{C, R, T\}$）**：
-  - **运行时裁判（Runtime Critics, $C$）**：运行频率高于低层动作策略的高频监控函数，持续扫描实时轨迹片段并生成带故障证据与状态建议的提议 $P_t = \langle e_t, \hat{\sigma}_t \rangle$；
+  - **运行时裁判（Runtime Critics, $C$）**：运行频率高于低层动作策略的高频监控函数，持续扫描实时轨迹片段并生成带故障证据与状态建议的提议 $$P_t = \langle e_t, \hat{\sigma}_t \rangle$$；
   - **恢复动作库（Recovery Playbook, $R$）**：针对特定故障因果机制的参数化微动作集合；
   - **异构工具集（Heterogeneous Toolset, $T$）**：运动规划器、6-DoF 抓取生成器（GraspGen）与放置稳定器。
 
 系统的运作分为**在线并行 Rollout** 与**离线 Reflection & Evolve 演化周期**：
 
 <div align="center">
-  <img src="/images/vla/Zetta-evolution-framework.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Zetta-evolution-framework.webp" width="100%" loading="lazy" decoding="async" alt="Zetta 演化框架三阶段流程：在线并发采集成功与失败轨迹，离线通过失效画像聚类（Phase I）、分层因果诊断与修复（Phase II）以及跨任务泛化合并（Phase III）更新 Harness" />
 <figcaption>Zetta 演化框架三阶段流程：在线并发采集成功与失败轨迹，离线通过失效画像聚类（Phase I）、分层因果诊断与修复（Phase II）以及跨任务泛化合并（Phase III）更新 Harness</figcaption>
 </div>
 
@@ -579,7 +596,7 @@ Zetta 将系统清晰划分为两大不可变实体与一个核心演化载体�
   - **处理**：将验证通过的特定种子补丁提升为带抽象参数的通用裁判与恢复逻辑，进行跨用例无冲突合并，打包生成版本化的 $H_{merged}$ 并热重载至在线环境。
 
 <div align="center">
-  <img src="/images/vla/Zetta-critic-recovery-sequence.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Zetta-critic-recovery-sequence.webp" width="100%" loading="lazy" decoding="async" alt="单次 Rollout 中的裁判-恢复级联干预实录：在搬运中检测到物体脱落立即触发重新接近，检测到无效姿态调用 GraspGen 生成位姿，终末阶段调用平稳放置恢复" />
 <figcaption>单次 Rollout 中的裁判-恢复级联干预实录：在搬运中检测到物体脱落立即触发重新接近，检测到无效姿态调用 GraspGen 生成位姿，终末阶段调用平稳放置恢复</figcaption>
 </div>
 
@@ -640,7 +657,7 @@ graph TD
 Zetta 在国际通用具身操作基准 LIBERO-Pro 与 RoboCasa 厨房长时程基准上进行了系统评测，并与最新端到端基线和 Agent 系统展开了全面对比。
 
 <div align="center">
-  <img src="/images/vla/Zetta-aha-moments.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Zetta-aha-moments.webp" width="100%" loading="lazy" decoding="async" alt="LIBERO-Pro 上的物理智能“顿悟时刻”（Aha Moment）：初期治标修补使得性能长期处于平缓停滞，一旦定位根因并生成关键裁判-恢复机制，成功率呈台阶式暴增" />
 <figcaption>LIBERO-Pro 上的物理智能“顿悟时刻”（Aha Moment）：初期治标修补使得性能长期处于平缓停滞，一旦定位根因并生成关键裁判-恢复机制，成功率呈台阶式暴增</figcaption>
 </div>
 
@@ -651,7 +668,7 @@ Zetta 在国际通用具身操作基准 LIBERO-Pro 与 RoboCasa 厨房长时程�
 - **无止境的演化收益**：实验证明随着并发 Rollout 经验池的积累，自演化曲线持续上扬，完全打破了传统固定策略在数据瓶颈下的性能死锁。
 
 <div align="center">
-  <img src="/images/vla/Zetta-cross-task-scaling.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Zetta-cross-task-scaling.webp" width="100%" loading="lazy" decoding="async" alt="跨任务零样本技能迁移验证：在源任务（Goal-T8 红酒瓶操作）中沉淀的预抓取、抓取保持与重试技能栈，在未见目标任务（Goal-T2, T6, S3）上实现了免微调即插即用迁移" />
 <figcaption>跨任务零样本技能迁移验证：在源任务（Goal-T8 红酒瓶操作）中沉淀的预抓取、抓取保持与重试技能栈，在未见目标任务（Goal-T2, T6, S3）上实现了免微调即插即用迁移</figcaption>
 </div>
 
@@ -702,7 +719,7 @@ Zetta 在国际通用具身操作基准 LIBERO-Pro 与 RoboCasa 厨房长时程�
 ### 2. 主要方法/创新点
 
 <div align="center">
-  <img src="/images/vla/Show-Harness-overview.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Show-Harness-overview.webp" width="100%" loading="lazy" decoding="async" alt="Show-Harness 用一套语义动作接口把前沿 VLM 连到不同机器人本体上：模型只输出 MV_RIGHT 这类符号，动作解释器负责安全边界与步长，再翻译成各自本体的底层指令" />
 <figcaption>Show-Harness 用一套语义动作接口把前沿 VLM 连到不同机器人本体上：模型只输出 MV_RIGHT 这类符号，动作解释器负责安全边界与步长，再翻译成各自本体的底层指令</figcaption>
 </div>
 
@@ -748,7 +765,7 @@ $$s_{t+1} = \Pi_E\big(\mathbf x_t + \sigma_t R_E d_a,\ \exp(\theta_t [R_E r_a]_\
 #### ⑤ Embodied Harness：九个插件如何串成一步
 
 <div align="center">
-  <img src="/images/vla/Show-Harness-architecture.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Show-Harness-architecture.webp" width="100%" loading="lazy" decoding="async" alt="Show-Harness 架构：感知—推理—行动三段可配置插件围绕中央 VLM 组成闭环，粉色为推理流、绿色为动作流，虚线框为按需启用的可选插件" />
 <figcaption>Show-Harness 架构：感知—推理—行动三段可配置插件围绕中央 VLM 组成闭环，粉色为推理流、绿色为动作流，虚线框为按需启用的可选插件</figcaption>
 </div>
 
@@ -791,14 +808,14 @@ graph TD
 
 **FT 模式（微调开源小模型）**：同一套动作词表也可以拿来训练小模型。给定用同一动作空间采集的演示 $$\mathcal D$$，策略最小化目标单元的 token 级交叉熵：
 
-$$\min_{\theta}\ \mathcal L(\theta) = -\sum_{(\ell, o, h, a) \in \mathcal D} \log \pi_\theta\big(a \mid \Phi_{\mathcal P_\min}(\ell, o, h)\big)$$
+$$\min_{\theta}\ \mathcal L(\theta) = -\sum_{(\ell, o, h, a) \in \mathcal D} \log \pi_\theta\big(a \mid \Phi_{\mathcal P_{\min}}(\ell, o, h)\big)$$
 
-这里的 $$\mathcal P_\min$$ 是刻意削到最薄的上下文（只留指令、多视角观测和一小段动作历史），目的是做受控对比。关键在于：**语义动作是用 VLM 自己的原生词表预测出来的**，没有额外动作头、没有特殊 token，所以一个 rank-64 的 LoRA（冻住视觉编码器和多模态投影层，只更新约 3% 参数）就够，Qwen3.5-2B 在单张 H200 上训不到 2 小时，24GB 级显卡也能跑。
+这里的 $$\mathcal P_{\min}$$ 是刻意削到最薄的上下文（只留指令、多视角观测和一小段动作历史），目的是做受控对比。关键在于：**语义动作是用 VLM 自己的原生词表预测出来的**，没有额外动作头、没有特殊 token，所以一个 rank-64 的 LoRA（冻住视觉编码器和多模态投影层，只更新约 3% 参数）就够，Qwen3.5-2B 在单张 H200 上训不到 2 小时，24GB 级显卡也能跑。
 
 #### ⑦ GUMI：把动作词表变成一个网页
 
 <div align="center">
-  <img src="/images/vla/Show-Harness-GUMI-interface.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Show-Harness-GUMI-interface.webp" width="100%" loading="lazy" decoding="async" alt="GUMI 界面：每个语义动作单元对应一个带键位的按钮，人可以用键盘&quot;玩&quot;机器人，computer-use agent 也可以直接操作同一个网页，双臂各一组按键并支持动作排队与提交" />
 <figcaption>GUMI 界面：每个语义动作单元对应一个带键位的按钮，人可以用键盘"玩"机器人，computer-use agent 也可以直接操作同一个网页，双臂各一组按键并支持动作排队与提交</figcaption>
 </div>
 
@@ -823,7 +840,7 @@ $$\min_{\theta}\ \mathcal L(\theta) = -\sum_{(\ell, o, h, a) \in \mathcal D} \lo
 几个值得单独拎出来的点：优势在**没在微调数据里出现过**的泰迪熊和象棋子上同样成立（ZS 在象棋子任务上 10/10，π0.5 只有 1/10）；**sim-to-real** 一项里，只用仿真演示训练的 FT 拿到 13/20，而同样只喂仿真数据的 π0.5 和 GR00T 是 0/20；**跨本体**时 ZS 只需换一个解释器，FT 则在两臂数据上联合训练后直接各自评测。
 
 <div align="center">
-  <img src="/images/vla/Show-Harness-capability-analysis.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Show-Harness-capability-analysis.webp" width="100%" loading="lazy" decoding="async" alt="能力分析：上四格为物理适应性（精细控制、旋转外推、动作组合、工作空间偏移），下三格为多臂协同与语义适应性（推理密集任务、视频 in-context learning）" />
 <figcaption>能力分析：上四格为物理适应性（精细控制、旋转外推、动作组合、工作空间偏移），下三格为多臂协同与语义适应性（推理密集任务、视频 in-context learning）</figcaption>
 </div>
 
@@ -843,7 +860,7 @@ $$\min_{\theta}\ \mathcal L(\theta) = -\sum_{(\ell, o, h, a) \in \mathcal D} \lo
 - **视频 in-context learning**：要求按演示视频里的顺序收三个物体。没有演示时 ZS 只拿到 20%（顺序本来就没说清），给一段人类或机器人演示视频后两种来源都是 20/20；FT 在同一 planner 提取的任务提纲条件下两种来源均 90%。
 
 <div align="center">
-  <img src="/images/vla/Show-Harness-plugin-ablation.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Show-Harness-plugin-ablation.webp" width="100%" loading="lazy" decoding="async" alt="九个插件的消融（真机 Franka + Gemini-3.1 Pro 零样本）：默认插件走留一法，Visual Prompt 与 Situated Planning 则是在默认配置上叠加并在专门场景上评测，完整配置基线为 96%" />
 <figcaption>九个插件的消融（真机 Franka + Gemini-3.1 Pro 零样本）：默认插件走留一法，Visual Prompt 与 Situated Planning 则是在默认配置上叠加并在专门场景上评测，完整配置基线为 96%</figcaption>
 </div>
 
@@ -860,7 +877,7 @@ $$\min_{\theta}\ \mathcal L(\theta) = -\sum_{(\ell, o, h, a) \in \mathcal D} \lo
 - **Failure Recovery**：去掉掉到 72%，主要失败模式是没检测到的空抓，然后拎着空夹爪继续走完剩下的流程。
 
 <div align="center">
-  <img src="/images/vla/Show-Harness-action-space-ablation.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Show-Harness-action-space-ablation.webp" width="100%" loading="lazy" decoding="async" alt="动作空间表征的 2&#215;2 消融：横轴是有无明文约定，纵轴是语义名称还是任意符号；右侧是设定 (D) 下模型自己探出来的方向映射混淆矩阵，左右方向大面积镜像" />
 <figcaption>动作空间表征的 2×2 消融：横轴是有无明文约定，纵轴是语义名称还是任意符号；右侧是设定 (D) 下模型自己探出来的方向映射混淆矩阵，左右方向大面积镜像</figcaption>
 </div>
 
@@ -874,7 +891,7 @@ $$\min_{\theta}\ \mathcal L(\theta) = -\sum_{(\ell, o, h, a) \in \mathcal D} \lo
 读法是：**约定提供了绝大部分 grounding，语义名称只是一个有用的先验**。任意符号配上"这个符号会让末端往哪儿动"的明文说明（C）几乎追平默认配置；反过来只给语义名字不给约定（B）虽然还能用，但效率明显下降。而设定 (D) 里模型只能自己试探——吐一个未知符号、比较前后观测、猜它的效果——20 集里只成功 1 集，推断出的映射只有 23.3% 正确（随机是 16.7%），混淆矩阵上左右方向大面积互相镜像。**光靠视觉变化去反推动作语义是不靠谱的，把约定写进 prompt 才是关键。**
 
 <div align="center">
-  <img src="/images/vla/Show-Harness-backbone-thinking-effort.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Show-Harness-backbone-thinking-effort.webp" width="100%" loading="lazy" decoding="async" alt="左：不同前沿 VLM 与 thinking effort 在成功率—步数平面上的分布；右：象棋炮摆放任务上把能力拆成规划与细粒度对齐两段，瓶颈明显在后者" />
 <figcaption>左：不同前沿 VLM 与 thinking effort 在成功率—步数平面上的分布；右：象棋炮摆放任务上把能力拆成规划与细粒度对齐两段，瓶颈明显在后者</figcaption>
 </div>
 
@@ -883,7 +900,7 @@ $$\min_{\theta}\ \mathcal L(\theta) = -\sum_{(\ell, o, h, a) \in \mathcal D} \lo
 **微调骨干规模**：2B 就已经很强，更大的骨干主要在堆叠和插销这类精细任务上有增益；1B 级模型在目标附近会做过多局部微调，导致集长明显变长；但小模型在网球这种需要及时纠正移动物体的任务上反而能赢过大模型。总体 2B 是精度与响应速度之间的平衡点。
 
 <div align="center">
-  <img src="/images/vla/Show-Harness-qualitative-results.webp" width="100%" loading="lazy" decoding="async" />
+  <img src="/images/vla/Show-Harness-qualitative-results.webp" width="100%" loading="lazy" decoding="async" alt="真机定性结果：新物体、背景变化、光照变化、杂乱场景、空间推理（摆字母拼 &quot;SHOW&quot;）与双臂协同（开抽屉并放入杯子）都由同一套动作接口完成" />
 <figcaption>真机定性结果：新物体、背景变化、光照变化、杂乱场景、空间推理（摆字母拼 "SHOW"）与双臂协同（开抽屉并放入杯子）都由同一套动作接口完成</figcaption>
 </div>
 
@@ -919,7 +936,7 @@ ReAct 式智能体通常每轮只生成一个原子动作，执行后读取环�
 
 <div align="center">
   <img src="/images/agent/SPACE-multiaction-failure-modes.webp" width="80%" alt="多动作 GRPO 的单动作坍缩与过度承诺现象" loading="lazy" decoding="async" />
-  <figcaption>允许输出多个动作并不保证有效分块；不同骨干模型分别表现出单动作坍缩和过度承诺</figcaption>
+<figcaption>允许输出多个动作并不保证有效分块；不同骨干模型分别表现出单动作坍缩和过度承诺</figcaption>
 </div>
 
 ---
@@ -928,7 +945,7 @@ ReAct 式智能体通常每轮只生成一个原子动作，执行后读取环�
 
 <div align="center">
   <img src="/images/agent/SPACE-architecture.webp" width="100%" alt="SPACE 技能归纳、混合采样、联合训练与部署流程" loading="lazy" decoding="async" />
-  <figcaption>成功轨迹生成程序化技能，技能调用展开为原始动作块，与直接采样的动作块共同训练；测试时仅保留动作块策略</figcaption>
+<figcaption>成功轨迹生成程序化技能，技能调用展开为原始动作块，与直接采样的动作块共同训练；测试时仅保留动作块策略</figcaption>
 </div>
 
 SPACE（Skill-guided Policy with Adaptive Chunk Execution）由**两层程序化技能、混合轨迹采样与技能展开、块感知策略优化**组成。技能提供可复用的任务分解，展开过程把分解转换成训练样本，联合优化将这种结构吸收到直接输出动作块的策略中。
@@ -1047,7 +1064,7 @@ $$
 
 <div align="center">
   <img src="/images/agent/SPACE-training-dynamics.webp" width="100%" alt="SPACE 与多动作强化学习基线的训练曲线" loading="lazy" decoding="async" />
-  <figcaption>Qwen3-4B 的 ALFWorld Unseen 成功率曲线、两个骨干的每轮动作数，以及策略熵变化；SPACE 后期大致维持每轮 3–4 个动作</figcaption>
+<figcaption>Qwen3-4B 的 ALFWorld Unseen 成功率曲线、两个骨干的每轮动作数，以及策略熵变化；SPACE 后期大致维持每轮 3–4 个动作</figcaption>
 </div>
 
 **动作块行为**：Qwen3-4B 的 Multi-action GRPO 接近每轮一个动作，Llama-3.1-8B-Instruct 则趋向每轮约 5–6 个动作但成功率较低。SPACE 在这些实验中形成约 3–4 个动作的中间粒度，同时保持更高成功率；该范围是实验观察，不能当成通用最优块长度。
@@ -1064,7 +1081,7 @@ $$
 
 <div align="center">
   <img src="/images/agent/SPACE-rollout-efficiency.webp" width="80%" alt="训练采样决策总量与原始动作块采样比例的影响" loading="lazy" decoding="async" />
-  <figcaption>左图统计 ALFWorld 的训练采样 LLM 轮次，并非 token 数；右图比较 ScienceWorld 的原始动作块采样比例，0.75 的决策轮次最低，0.875 的成功率更高</figcaption>
+<figcaption>左图统计 ALFWorld 的训练采样 LLM 轮次，并非 token 数；右图比较 ScienceWorld 的原始动作块采样比例，0.75 的决策轮次最低，0.875 的成功率更高</figcaption>
 </div>
 
 **效率指标需要区分口径**：图 3(a) 中 SPACE 在第 40 个训练步达到 Multi-action GRPO 的最终性能，对应论文概述所称约 26.6% 的训练步数；图 4(a) 则统计另一个骨干设置中的**采样 LLM 轮次**，SPACE 达到 GRPO 性能需 43.60K 次，GRPO 全程为 564.54K 次，即约 7.72%（减少 92.28%）。SPACE 全程为 104.46K 次；这些数值不能直接当成总 token、GPU 时间或端到端训练成本。
@@ -1082,6 +1099,284 @@ $$
 
 ---
 
+## 7. ABot-AgentOS (2026) {#abot-agentos}
+———面向具身智能的通用机器人 Agent 操作系统与终身多模态记忆系统
+
+📄 **Paper**: [arXiv:2607.10350](https://arxiv.org/abs/2607.10350) · [Project Page](https://amap-cvlab.github.io/ABot-AgentOS)
+
+---
+
+### 精华
+
+1. **模块化分层解耦架构**：ABot-AgentOS 部署于底层机器人控制器与高层基础 VLM/VLA 模型之间，将高层语义推理、技能执行、多级验证与记忆检索解耦，解决了传统单一模型控制器缺乏显式终止信号与过程漂移的问题。
+2. ** Agent Harness 控制闭环**：提出包含全局 Main LLM 规划、 Skill Runner 上下文隔离局部执行以及 Verifier 运行期/技能期/结束期多阶段验证的“推理-执行-验证”闭环，显著降低长程任务中的虚假完成与盲目停滞。
+3. **通用多模态图记忆（Universal Multi-modal Graph Memory）**：将语音、图像观察、空间地点、时间关联与任务轨迹转化为强类型的多模态图节点与边，支持基于证据溯源的检索与局部子图抽取。
+4. **故障驱动终身自进化（Failure-Driven Lifelong Self-Evolution）**：构建基于 Trace 诊断的故障转 JSON DSL 资产机制，采用严格的后检查门控（Gating），在跨 Split 部署中实现零 ground-truth 泄露的累积式自我进化。
+5. **具身基准测试 EmbodiedWorldBench**：推出首个跨室内外复合场景的可执行评测基准，覆盖 16 个场景、4 个难度等级与 200+ 复合任务；并提供了基于文本沙盒与自进化奖励引擎的端到端学生策略蒸馏训练管线。
+
+---
+
+### 1. 研究背景/问题
+
+具身智能（Embodied AI）正在将人工智能从数字世界推向物理世界。近年来，视觉语言模型（VLM）与视觉语言动作（VLA）模型赋予了机器人出色的自然语言理解、视觉场景感知与动作预测能力。然而，在语义理解与可靠的物理执行之间仍存在关键鸿沟：
+1. **语义信念与环境事实脱节**：在复杂长程任务中，现有的端到端控制器或简单的 API 调用缺乏显式的中间状态验证与终止信号。机器人可能执行了导航指令但并未移动，或在局部不断碰撞却在语言层面上认为任务正正常推进。
+2. **缺少跨形态通用的 Agent 硬件抽象**：现有系统多与特定机器人形态或控制接口高度绑定，难以无缝扩展到人形机器人、四足狗等多样化硬件。
+3. **记忆难以持久与溯源自我改进**：缺少能够跨会话持久存储、源头可追溯且能从历史交互故障中自我改善的通用多模态记忆系统。
+
+为此，论文提出了 **ABot-AgentOS**，一个运行在底层控制器之上、解耦高层认知与物理动作的通用机器人 Agent 操作系统。
+
+---
+
+### 2. 主要方法/创新点
+
+ABot-AgentOS 由**边云协同双 LLM 核心**、**Agent Harness 调度闭环**、**通用多模态图记忆**以及**端到端蒸馏训练管线**四大模块协同构成。
+
+<div align="center">
+  <img src="/images/agent/ABot-AgentOS-system-architecture.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1328/871" />
+<figcaption>ABot-AgentOS 系统整体架构：多源多模态输入通过边云协同双 LLM 核心路由，Agent Harness 闭环调度技能与多级验证，结合通用多模态图记忆与底层控制器</figcaption>
+</div>
+
+#### ① 整体框架与边云协同双核心
+
+ABot-AgentOS 在架构设计上区分了边缘轻量模型与云端大模型（Dual-LLM Core）：
+- **边缘 Tiny LLM**：部署于机器人端侧，优先处理常规会话、简单工具调用与实时控制指令，降低响应延迟。
+- **云端 Large LLM**：当任务涉及长程复杂推理、多步规划或高难度图记忆检索时，由 learned routing 策略自动升级提升至云端大模型处理。
+
+#### ② Agent Harness 闭环控制
+
+Agent Harness 改变了传统单模型控制器的设计，将 Agent 调度划分为三个明确解耦的角色：
+
+<div align="center">
+  <img src="/images/agent/ABot-AgentOS-agent-harness.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1328/474" />
+<figcaption>Agent Harness 架构细节：Main LLM 负责全局场景感知规划，Skill Runner 隔离局部执行细节，Verifier 提供多阶段实时与终局验证</figcaption>
+</div>
+
+1. **Main LLM（语义规划器）**：接收用户指令与记忆上下文，根据当前场景生成可调整的高层计划与显式完成条件。Main LLM 不直接发出每一脚底层的微观动作，而是决定直接调用工具或将子任务委托给 Skill Runner。
+2. **Skill Runner（过程执行器）**：作为技能级 Subagent 运行在独立的局部上下文中。它处理局部反复移动、视角微调与碰撞恢复等复杂过程，仅向 Main LLM 返回压缩后的高层执行结果摘要，防止局部细节阻塞 Main LLM 的全局规划。
+3. **Verifier（多阶段验证器）**：
+   - **运行期验证（Runtime Verification）**：监控轨迹与技能状态，及时识别停滞、局部死循环与频繁碰撞。
+   - **技能期验证（Skill Verification）**：核查子任务是否真正达成语义目标，而非仅凭 Tool 返回成功。
+   - **结束期验证（Finish Verification）**：在 Main LLM 试图终止任务时，对比初始指令、最终视觉观察与环境事实，防止虚假完成。
+
+#### ③ 通用多模态图记忆与终身自进化
+
+<div align="center">
+  <img src="/images/agent/ABot-AgentOS-memory-architecture.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1328/983" />
+<figcaption>通用多模态记忆架构与离线故障驱动自进化循环：在线写入源头可溯的类型图，离线将失败 Trace 编译为可控 JSON DSL 进化资产</figcaption>
+</div>
+
+1. **多模态记忆图（Memory Graph）**：将在线交互中的实体、事件、地点、视觉帧、时间关联与归因链（Provenance）写入强类型的节点与边，取代原始视频流或纯文本日志的堆叠。
+2. **混合图检索器（Hybrid Graph Retriever）**：结合语义嵌入、词法匹配、元数据过滤与图边拓扑展开，抽取高质量局部证据子图。
+3. **故障驱动终身自进化（Failure-Driven Lifelong Self-Evolution）**：
+   - **Split 隔离协议**：在序列 split 部署中，第 $$t$$ 个 split 仅能使用历史已晋级的进化资产 $$A_{<t}$$。
+   - **Trace 诊断与资产编译**：在 split 完成后，系统对失败样本进行 Trace 诊断，生成 JSON DSL 格式的候选进化资产（覆盖记忆写入、证据选择、帧选取、时间归一化等阶段）。
+   - **严格门控校验（Gating）**：候选资产必须在目标验证集上提升分数且在回归集上不降低性能：
+     $$\text{Accept}(a) = \mathbb{I}[\Delta S_{\text{target}}(a) \ge \tau_{\text{gain}} \land \Delta S_{\text{reg}}(a) \ge -\tau_{\text{reg}}]$$
+     检验通过后方可晋级为 $$A_{\le t}$$ 供后续 split 使用，实现无标注泄露的累积增长。
+4. **边云协同隐私管理**：边缘保留私有记忆（人脸、个人物品等），仅将公共无敏感信息的环境记忆（路障、道路地标）上云分享，隐私分类准确率达 99% 以上。
+
+#### ④ EmbodiedWorldBench 与策略蒸馏训练管线
+
+<div align="center">
+  <img src="/images/agent/ABot-AgentOS-embodied-world-bench.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1324/898" />
+<figcaption>EmbodiedWorldBench 评测基准概览：涵盖室内外复合场景、NPC 交互与动态事件的 16 个可执行场景与 4 级难度设定</figcaption>
+</div>
+
+论文推出了 **EmbodiedWorldBench**，涵盖 16 个室内、室外及混合场景，设 4 个难度等级与 200+ 个涉及导航、NPC 交互、物品搜索与动态事件响应的复合任务。
+
+<div align="center">
+  <img src="/images/agent/ABot-AgentOS-training-pipeline.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1324/902" />
+<figcaption>学生策略端到端训练管线：通过文本沙盒构建环境、自进化奖励引擎生成偏好数据并使用 DPO/SFT 优化边缘部署模型</figcaption>
+</div>
+
+为了将云端大模型 Agent Harness 的能力下沉到端侧小模型，论文设计了端到端蒸馏管线：
+1. **可控文本沙盒构建**：使用 LLM 自动生成具有可执行状态与复杂逻辑的文本沙盒环境。
+2. **自进化奖励引擎**：基于结构化 Trace 生成自动评分与 DPO 偏好对。
+3. **SFT + DPO 策略优化**：在沙盒环境中训练部署轻量化 Student Policy。
+
+---
+
+### 3. 核心结果/发现
+
+1. **长程具身执行**：在 EmbodiedWorldBench 初始子集评估中，ABot-AgentOS 相较于单一控制器基线在任务成功率（Success Rate）与目标完成度（Goal Completion）上均取得显著提升，Verifier 机制减少了 35% 以上的早期误终止。
+2. **多模态记忆基准全面领先**：
+   - **LoCoMo**（长程会话记忆）：Static 版本达到 **87.5**，+Self-evo 提升至 **88.7**（接近人类上限 87.7）。
+   - **OpenEQA (EM-EQA)**：8 帧预算下 Static 达到 **59.9**，+Self-evo 提升至 **60.4**（超越 SnapMem 57.2 与 GaussExplorer 57.8）。
+   - **Mem-Gallery**：Static 达到 **88.6**，+Self-evo 提升至 **89.0**（在冲突检测 CD 97.5% 与拒绝回答 AR 100% 上表现突出）。
+   - **NExT-QA**：Validation Acc@All 达到 **76.5%**（+Self-evo 提升 4.1 点），大幅领先 VideoAgent 等经典视频 Agent。
+   - **EgoLifeQA**：单帧检索设置下取得 **66.2%** 平均准确率。
+3. **终身自进化的跨任务泛化**：自进化机制在所有 5 个记忆基准上均带来了稳定增量，且性能增益完全来源于对记忆流水线（如时间规范化、关系消歧）的通用改进，而非记忆内容的暴力堆叠。
+
+---
+
+### 4. 局限性
+
+1. **复杂真实物理世界的感知与控制噪声**：目前大规模验证多在可执行仿真或半物理沙盒中进行，面对真实世界的高噪深度感知、抓取失败与网络通信时延仍需更深度的硬件实机调优。
+2. **自动化蒸馏依赖文本沙盒**：小模型策略蒸馏目前主要依赖文本状态沙盒环境，未来需要引入多模态视觉观察与更复杂的物理仿真平台（如 Isaac Sim/Habitat）。
+3. **记忆自进化需要可信的反馈信号**：离线自进化机制依赖确定性的错误诊断或人类反馈，在开放无监督环境中如何安全界定“回答错误”仍是长远挑战。
+
+---
+
+## 8. Harness Robotic OS (2026) {#harness-robotic-os}
+———把四足巡检从「导航栈」升级为「具身智能体运行时」
+
+📄 **Paper**: [arXiv:2609.11225](https://arxiv.org/abs/2609.11225)
+
+---
+
+### 精华
+
+这篇的真问题不是「怎么导航得更准」，而是「怎么让一堆现成模块在同一份上下文里协同、留痕、可回滚」——把系统集成本身当成研究对象。最值得借鉴的是它立的那道硬边界：实时控制回路（SLAM / 规划 / 控制）与认知回路（智能体编排 / 记忆 / 反思）分属两层，智能体只能「编排技能」而不能直接下发运动指令，于是推理出错也烧不穿到电机。记忆按「保留期限」而不是按「数据类型」切成 working / episodic / semantic 三层，检索由任务意图、空间位置、场景语义共同条件化，避免把整段运维史塞进每次推理上下文。自进化被刻意做成「离线候选 → 安全门 → 版本灰度 → 可回滚」，而不是在线改模型，这是长期运行的机器人能被审计的前提。但要清醒：认知运行时（语音 / 记忆 / 自进化）在本文只有协议没有数字，真正跑出实测的仍是那套经典导航加 VLM 巡检的流水线。
+
+---
+
+### 1. 研究背景/问题
+
+住宅物业巡检要覆盖道路、消防通道、楼栋出入口、设备房、垃圾房等大范围公共空间，人工巡逻在频次、一致性和可追溯性上都受限于人力与个人经验。四足机器人能爬坡越坎、钻窄道，是合适的载体，但「会走」不等于「能巡检」——还需要持续定位、全局任务规划、反应式避障、场景级隐患理解、人机交互，以及与工单系统的对接。
+
+作者指出当前落地系统的通病是把这些能力做成一堆松耦合模块：传感器驱动、导航算法、视觉语言服务、操作界面、企业应用各自持有状态，靠点对点适配器互通，由此产生三个缺口——**语义任务意图与机器人位姿 / 观测 / 执行状态脱节**、**历史任务经验没有被系统性保留与检索**、**提示词 / 工具策略 / 任务图 / 技能的改动难以评估、溯源与安全回滚**。
+
+---
+
+### 2. 主要方法/创新点
+
+#### 2.1 整体框架：四个平面 + 一条自进化环
+
+HROS 把系统分成四层：**Robot Runtime**（硬件抽象：边缘算力、多模态传感、连接与 I/O、四足执行）、**Embodied Autonomy Skills**（把 SLAM、感知、全局规划、局部运动封装成有状态、可复用的「技能」）、**Cognitive Agent Runtime**（智能体编排、分层记忆、多模态推理、技能与工具调度，以及自进化闭环）、**Interaction and Operations**（语音与多模态 I/O、巡检任务控制台、企业闭环）。四层之间不是调用栈而是绑定关系：每个技能把自己的输入时间戳、执行状态、置信度或失败码、输出引用上报到共享上下文总线，认知层据此监控进度，**但不进入实时控制回路**。
+
+<div align="center">
+  <img src="/images/vln/HROS-architecture.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1273/933" />
+<figcaption>HROS 四层架构。深色实线是运行时数据流，双向箭头是智能体与技能的绑定，虚线是自进化通路，绿线是安全门——只有过了安全门的候选版本才能回到技能运行时</figcaption>
+</div>
+
+**卡点降维｜「具身智能体运行时」到底比普通导航栈多了什么**
+
+| 维度 | 常规四足巡检系统 | HROS |
+|---|---|---|
+| 状态归属 | 各模块自持状态，靠任务专用适配器点对点互通 | 共享上下文总线，物理状态与智能体推理同源 |
+| 历史经验 | 跑完即弃，最多留一份日志 | working / episodic / semantic 三级记忆，按意图加位置条件检索 |
+| 变更治理 | 改提示词或技能直接上线，出事靠人肉回滚 | 候选版本走离线回归加安全门加版本灰度，可溯源可回滚 |
+| 控制权边界 | 上层可直接下发运动指令 | 智能体只能编排技能，运动指令必须过 robot-runtime 接口 |
+
+#### 2.2 Robot Runtime：Vbot 四足平台
+
+物理层用 Vbot 四足作为传感、算力、通信与移动的载体：双目相机、16 线激光雷达、IMU、GNSS 与 4G/5G，边缘计算机为地平线 RDK S100P（6 核 ARM Cortex-A78AE + 128 TOPS Nash BPU），机上跑感知与智能体服务。机器人控制器通过 HROS 的 robot-runtime 接口暴露运动指令与状态反馈——**这层隔离的设计动机就是防止上层智能体绕过校验直接发底层执行器指令**。
+
+#### 2.3 Embodied Autonomy Skills：四个有状态技能
+
+这一层是全文唯一有实测数字的部分，四个模块全是现成开源件的工程化组合：
+
+- **状态估计 · Fast-LIO2**：输入激光雷达点云与 IMU，紧耦合估计 6-DoF 位姿并增量建图，输出先验点云地图与在线位姿。三种工作模式——建图（现场勘测阶段）、在线定位（日常巡逻，实时扫描配准到先验地图）、重定位（跟踪退化或重启后恢复位姿）。设计动机是一个**共享地图坐标系**：住宅巡逻会在不同光照、不同场景外观下反复重访同一资产，只有把每张图像、每个航点、每次隐患事件、每份报告都绑到这个坐标系，HROS 才能做空间相关的记忆检索与跨任务对比。
+- **局部感知 · Hobot-Stereo**：输入同步双目图像，输出稠密近场深度并与激光雷达障碍表示融合。设计动机是激光稀疏采样对近场矮障碍、细结构、遮挡边界表达不足。深度点先变换到地图系，按距离与置信度过滤后插入 EGO-Planner 消费的局部体素表示；**双目是补充而非替代**，不确定观测按保守处理，长时间未被重复观测就从局部地图过期删除。
+
+<div align="center">
+  <img src="/images/vln/HROS-environment-representation.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1277/655" />
+<figcaption>两套互补的环境表示。左：Fast-LIO2 在共享任务坐标系下建出的全局三维点云图，用于重定位与任务规划；右：Hobot-Stereo 的稠密深度（左上）、融合点云（右上）、RGB 输入（左下）、局部鸟瞰几何（右下），补齐激光在近场的缺口</figcaption>
+</div>
+
+- **任务规划 · PCT-Planner**：物业巡检是**覆盖型任务**而非单次起点到终点的查询，路线必须串起策略定义的视点（消防设施、设备房入口、垃圾收集点）且全程可通行。PCT-Planner 在三维先验点云图上算无碰路段，任务层按巡检策略排序并把结果存成可复用的任务模板。运行时全局路线只是**参考**而非直接运动指令，进度用「当前路段 + 当前航点 + 已完成视点 + 剩余巡检动作」表示——这样编排器可以暂停、恢复、重排非安全关键任务，而完全不碰局部控制器。
+
+<div align="center">
+  <img src="/images/vln/HROS-inspection-route.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1277/727" />
+<figcaption>PCT-Planner 在先验点云图上生成的全局巡检路线，串联 8 个巡检航点，作为任务模板存档复用</figcaption>
+</div>
+
+- **运动智能 · EGO-Planner**：输入全局参考路线、当前位姿、融合后的障碍表示，输出动力学可行的局部轨迹，再转成受速度、净空、连续性约束的四足控制指令。三种行为——标称跟踪、局部重规划（行人、违停车辆、保洁设备等临时遮挡时生成短绕行）、恢复（无可行局部轨迹时停机并上报**带类型的失败码**，交由任务层决定等待、重试还是呼叫操作员）。
+
+<div align="center">
+  <img src="/images/vln/HROS-local-corridor.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1270/750" />
+<figcaption>EGO-Planner 在遛狗行人前方优化出的局部可通行走廊（蓝色区域），全局路线只给方向，让路的决策由局部规划器完成</figcaption>
+</div>
+
+#### 2.4 Cognitive Agent Runtime（一）：接地的语音交互
+
+流式 ASR 把语音转成带时间戳的意图假设，**但不直接执行**——要先用当前机器人位姿、活动任务、可见场景、权限策略做接地（grounding），有歧义或涉及安全的指令必须显式确认。TTS 回报任务受理、导航进度、发现的隐患、恢复动作、完成状态。设计动机是让文本、语音、图像、企业消息进同一个多模态任务接口，而不是各自散在独立应用里。
+
+#### 2.5 Cognitive Agent Runtime（二）：分层记忆
+
+记忆按**保留期限**切三层：working 存短程信息（当前任务、近期对话、机器人状态、局部观测、待返回的工具调用）；episodic 存按时间索引的任务片段（轨迹、决策、观测、隐患事件、失败与恢复结果）；semantic 存稳定的场地知识（地图分区、资产标识、巡检规则、历史缺陷、物业处置流程）。检索由任务意图、空间位置、场景语义、执行状态共同条件化。
+
+**卡点降维｜三层各装什么、检索到底怎么发生**
+
+> **举个例子**：机器人第 7 次巡检 3 号楼配电房门口，画面里地上有个纸箱。
+>
+> - **working memory** 装「此刻」：当前任务 ID、刚才那句「去 3 号楼看看」、当前位姿、最近两帧观测、还没返回的 Qwen3-VL 调用。任务结束即清。
+> - **episodic memory** 装「哪一次」：第 3 次巡检在同一位置判过「杂物堆放」，人工复核改判为「临时快递件」；第 5 次因行人挡路触发过一次局部重规划。带时间戳，按次索引。
+> - **semantic memory** 装「这地方一贯如此」：配电房属消防重点区域，规则是门前 1 米内不得堆物，历史缺陷记录里它是高频点位。不随单次任务变。
+>
+> 检索不是把三层全灌进上下文，而是拿「意图=巡检 + 位置=配电房 + 场景语义=地面有箱子」去条件化召回：semantic 给出适用规则，episodic 给出「上次这类箱子被人判成快递件」，working 给出当前画面。于是这次就有机会不再误报——而这正是论文说要用 Recall@5 与任务完成率去量的东西，只是**数字还没给**。
+
+#### 2.6 Cognitive Agent Runtime（三）：安全门把守的自进化
+
+自进化被明确定义为「经验到更新」的**受治理流程**，而不是在线改模型。每次任务结束把执行轨迹与人工反馈写入经验缓冲区；反思与评估阶段做成败打分、失败归因、一致性检查，产出候选更新（记忆条目、提示词、工具选择策略、任务图、可复用技能）；候选版本在离线回归用例与安全规则上评估，带溯源记录，过了安全门才走版本化灰度上线。
+
+```mermaid
+graph TD
+    A["任务执行轨迹 + 人工反馈"] --> B["经验缓冲区<br/>episodes · traces · failures"]
+    B --> C["反思与评估<br/>成败打分 · 失败归因 · 一致性检查"]
+    C --> D["候选更新<br/>记忆 / 提示词 / 工具策略 / 任务图 / 技能"]
+    D --> E{"安全门<br/>离线回归 + 安全规则"}
+    E -- "不通过" --> F["拒绝并留痕，不进运行时"]
+    E -- "通过" --> G["带溯源的版本化灰度"]
+    G --> H["部署进技能运行时"]
+    G --> I["保留一键回滚到上一版本"]
+    H -.-> A
+```
+
+注意这张图里 **F 与 I 两个节点才是真正的设计主张**：任何候选更新都有一条「被拒绝且留痕」的路径，任何已上线版本都有一条「回退」的路径。论文把这条边界称为长期运行机器人保持可复现、可审计所必需的东西。
+
+#### 2.7 端到端：从图像到工单的证据链
+
+巡检推理流水线按「观测 → 解释 → 校验 → 上报 → 复核」组织。OpenClaw 选定与航点关联的图像，绑上位姿、时间戳、航点、任务 ID、适用巡检策略，再调 Qwen3-VL；返回的描述被解析进一个**受约束的事件 schema**（隐患类别、严重度、证据、位置、建议处置动作）。目标类别分两组——安全类（设备房周边堆物、消防通道占用、地面积水、线缆裸露）与环卫类（垃圾桶满溢、地面污渍、散落垃圾落叶、公共区域异常堆积）。
+
+只有 schema 校验通过的事件才进入运营流水线。系统保留原始图像、模型原始响应、解析后字段、投递状态，打上位置与区域标签后生成结构化报告，经钉钉 / 飞书适配器路由给责任人做复核与派单。**人工修正以带标签的反馈形式回写，而不是静默覆盖原结果**——既保证后续评估与记忆更新有料，又保住了可审计、可回放的记录。这个设计同时把多模态推理挡在安全关键的运动回路之外。
+
+#### 2.8 关于「训练目标」
+
+这篇没有训练环节，全系统由现成组件拼装，没有可学习参数也没有损失函数。全文唯一的公式是语音实验的词错率定义：
+
+$$\text{WER} = (S + D + I) / N$$
+
+其中 $S$、$D$、$I$ 分别是替换、删除、插入错误数，$N$ 为参考词总数。
+
+---
+
+### 3. 核心结果/发现
+
+在真实住宅小区部署的系统级测量（Table 1）：
+
+| 分组 | 子系统 | 指标 | 结果 |
+|---|---|---|---|
+| 导航与运动 | 任务执行 | 航点可达率 | 100% |
+| | Fast-LIO2 | 室外定位误差 | < 10 cm |
+| | EGO-Planner | 障碍响应时延 | < 200 ms |
+| 语义巡检 | Qwen3-VL | 垃圾满溢检出率 | 95% |
+| | Qwen3-VL | 消防通道占用检出率 | 95% |
+| | Qwen3-VL | 车道占用检出率 | 90% |
+| | Qwen3-VL | 地面积水检出率 | 88% |
+| | Qwen3-VL | 公共设施损坏检出率 | 85% |
+| | 巡检推理 | 隐患误报率 / 漏检率 | 均 < 5% |
+| 运营闭环 | 钉钉 / 飞书适配器 | 告警投递成功率 | 99% |
+| | HROS 报告 | 结构化报告生成准确率 | 99% |
+| 现场运行 | 机器人平台 | 连续续航 | > 3 h |
+| | 端到端任务 | 全覆盖单次巡检耗时 | ≤ 60 min |
+
+几点值得注意的：
+
+- **检出率随视觉类别下降得很规律**：垃圾满溢与消防通道占用 95%，公共设施损坏只有 85%。作者归因于设施损坏这一类的视觉形态多样性远大于前两类——这与「隐患由空间与运营上下文定义、而非仅由物体身份定义」的立论是自洽的。
+- **续航 3 h 对单次任务 60 min，留出了跑多轮的余量**，这是能排班的前提。
+- **最重要的一条反而是没有数字的那部分**：论文 §5.6 为语音交互、分层记忆、安全门自进化写了完整的受控实验协议（WER、接地意图准确率、确认准确率、P95 端到端时延；Recall@5、时空接地准确率、上下文 token 缩减率、陈旧记忆错误率；任务成功率变化、回归率、安全规则违反率、安全门拒绝率、回滚成功率、**要求安全门逃逸率为零**），但 Table 1 里这三块一个数都没有，原文自陈「数值需待相应受控试验完成后才报告」。也就是说，**HROS 的认知运行时目前是一份架构主张与一套评测设计，实证的是它下面那层经典导航加 VLM 巡检的流水线**。
+
+---
+
+### 4. 局限性
+
+作者列了四条：长期地图维护（停车格局、施工、植被、季节变化需要增量建图、变化检测与多会话地图管理）、开放世界隐患识别（更宽的隐患分类体系需要更多样的标注数据、校准置信度与歧义处理）、智能体评测与安全（记忆与自进化机制需要专门基准衡量检索质量、适配收益、回归风险与回滚可靠性，之后才谈得上在生产环境放开自动更新）、人机协作（户外噪声下的 ASR 鲁棒性、安全关键指令的确认设计、操作员负荷、与门禁广播报警数字孪生的集成）。
+
+补一句读这篇时最该带着的判断：它是一篇**系统与架构论文**，导航与感知全部采用现成开源件，真正的新意在于层间边界与治理流程的设计；而这套设计里最有主张的三块（语音接地、分层记忆、安全门自进化）恰恰还停在协议阶段，尚未提供可比较的实验证据。
+
+---
+
 # 参考资料
 
 ## 论文引用
@@ -1092,19 +1387,24 @@ $$
 4. **Zetta** (2026). An Efficient Closed-Loop Embodied Harness for Self-Evolving Physical Intelligence. arXiv: [2608.16590](https://arxiv.org/abs/2608.16590) · Project Page: [air-embodied-brain.github.io/zetta](https://air-embodied-brain.github.io/zetta)
 5. **Show-Harness** (2026). Show-Harness: Just a VLM Agent Can Play Robots. arXiv: [2609.10522](https://arxiv.org/abs/2609.10522) · Project Page: [showlab.github.io/Show-Harness](https://showlab.github.io/Show-Harness)
 6. **SPACE** (2026). Act More, Decide Less: Skill-Guided Adaptive Action Chunking for Long-Horizon LLM Agents. arXiv: [2609.02042](https://arxiv.org/abs/2609.02042)
+7. **ABot-AgentOS** (2026). 面向具身智能的通用机器人 Agent 操作系统与终身多模态记忆系统. arXiv: [2607.10350](https://arxiv.org/abs/2607.10350) · Project Page: [ABot-AgentOS](https://amap-cvlab.github.io/ABot-AgentOS)
+
+8. **Harness Robotic OS** (2026). 把四足巡检从「导航栈」升级为「具身智能体运行时」. arXiv: [2609.11225](https://arxiv.org/abs/2609.11225)
 
 <script>
 (function () {
   var TAG_MAP = [
+    { m: 'Harness Robotic OS', t: ['AgentOS', 'Harness', '闭环系统', '空间记忆', '自演化', '实机部署'] },
     { m: 'HoloAgent-0', t: ['AgentOS', '闭环系统', '类型化动作', '空间记忆', '场景图', '3D语义', '实机部署', '多机协同'] },
     { m: 'Pigey',       t: ['闭环系统', '具身操作', '快慢双系统', '实机部署', 'TAMP', 'VLA', '双重校验', '零微调'] },
     { m: 'Thea',        t: ['Harness', '闭环系统', '场景图', '退出码评估', '实机部署', '跨本体', '主动探索', '具身操作'] },
     { m: 'Zetta',       t: ['Harness', '闭环系统', '自演化', '高频裁判', '异常恢复', '具身操作', '高通量基建'] },
     { m: 'Show-Harness', t: ['Harness', '闭环系统', '具身操作', '类型化动作', '实机部署', '跨本体', 'VLA', '零微调'] },
     { m: 'SPACE',       t: ['动作分块', '强化学习', '技能归纳', '长程任务'] },
+    { m: 'ABot-AgentOS', t: ['AgentOS', 'Harness', '闭环系统', '拓扑图', '空间记忆', '自演化', '实机部署'] },
   ];
 
-  var ALL_TAGS = ['闭环系统', 'Harness', 'AgentOS', '具身操作', '场景图', '实机部署', '快慢双系统', '类型化动作', '空间记忆', '3D语义', '多机协同', 'TAMP', 'VLA', '双重校验', '退出码评估', '自演化', '高频裁判', '跨本体', '主动探索', '零微调', '动作分块', '强化学习', '技能归纳', '长程任务'];
+  var ALL_TAGS = ['闭环系统', 'Harness', 'AgentOS', '具身操作', '场景图', '拓扑图', '实机部署', '快慢双系统', '类型化动作', '空间记忆', '3D语义', '多机协同', 'TAMP', 'VLA', '双重校验', '退出码评估', '自演化', '高频裁判', '跨本体', '主动探索', '零微调', '动作分块', '强化学习', '技能归纳', '长程任务'];
 
   var activeTags = [];
   var resultsPanel = null;
@@ -1132,14 +1432,18 @@ $$
   function updateFilter() {
     var sections = document.querySelectorAll('.paper-section');
     var bar = document.getElementById('paper-filter-bar');
+    if (!bar) return;
     var matchedSections = [];
 
     bar.querySelectorAll('.filter-btn').forEach(function (btn) {
       var t = btn.getAttribute('data-tag');
       if (t === '__all__') {
         btn.classList.toggle('active', activeTags.length === 0);
+        btn.setAttribute('aria-pressed', activeTags.length === 0 ? 'true' : 'false');
       } else {
-        btn.classList.toggle('active', activeTags.indexOf(t) !== -1);
+        var active = activeTags.indexOf(t) !== -1;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
       }
     });
 
@@ -1195,6 +1499,9 @@ $$
 
     var allBtn = document.createElement('button');
     allBtn.className = 'filter-btn active';
+    allBtn.type = 'button';
+    allBtn.setAttribute('aria-label', '清除论文筛选');
+    allBtn.setAttribute('aria-pressed', 'true');
     allBtn.setAttribute('data-tag', '__all__');
     allBtn.textContent = '全部';
     allBtn.addEventListener('click', function () {
@@ -1206,6 +1513,8 @@ $$
     ALL_TAGS.forEach(function (tag) {
       var btn = document.createElement('button');
       btn.className = 'filter-btn';
+      btn.type = 'button';
+      btn.setAttribute('aria-pressed', 'false');
       btn.setAttribute('data-tag', tag);
       btn.textContent = tag;
       btn.addEventListener('click', function () { toggleTag(tag); });
@@ -1214,10 +1523,12 @@ $$
 
     var count = document.createElement('span');
     count.className = 'filter-count';
+    count.setAttribute('aria-live', 'polite');
     bar.appendChild(count);
 
     resultsPanel = document.createElement('div');
     resultsPanel.className = 'paper-filter-results';
+    resultsPanel.setAttribute('aria-live', 'polite');
     resultsPanel.style.display = 'none';
     var rLabel = document.createElement('span');
     rLabel.className = 'results-label';
@@ -1257,8 +1568,16 @@ $$
           paperTags.forEach(function (t) {
             var span = document.createElement('span');
             span.className = 'paper-tag';
+            span.setAttribute('role', 'button');
+            span.setAttribute('tabindex', '0');
             span.textContent = t;
             span.addEventListener('click', function () { toggleTag(t); });
+            span.addEventListener('keydown', function (event) {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                toggleTag(t);
+              }
+            });
             row.appendChild(span);
           });
           wrapper.appendChild(row);
@@ -1282,41 +1601,5 @@ $$
     buildFilterBar();
     updateFilter();
   });
-})();
-</script>
-
-<script>
-(function () {
-  var CONCURRENCY = 3;
-
-  function prefetchAll() {
-    var conn = navigator.connection;
-    if (conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ''))) return;
-
-    var nodes = document.querySelectorAll('img[loading="lazy"]');
-    var urls = [], seen = {};
-    for (var i = 0; i < nodes.length; i++) {
-      var u = nodes[i].src;
-      if (u && !seen[u]) { seen[u] = 1; urls.push(u); }
-    }
-    if (!urls.length) return;
-
-    var next = 0;
-    function pump() {
-      if (next >= urls.length) return;
-      var probe = new Image();
-      probe.onload = probe.onerror = pump;
-      probe.src = urls[next++];
-    }
-    for (var k = 0; k < CONCURRENCY && k < urls.length; k++) pump();
-  }
-
-  function schedule() {
-    if (window.requestIdleCallback) requestIdleCallback(prefetchAll, { timeout: 2000 });
-    else setTimeout(prefetchAll, 500);
-  }
-
-  if (document.readyState === 'complete') schedule();
-  else window.addEventListener('load', schedule);
 })();
 </script>

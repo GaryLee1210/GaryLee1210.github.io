@@ -33,7 +33,7 @@ excerpt: "深入剖析 Meta AI、NVIDIA 等机构提出的 Mixture-of-Transforme
 ### 1.2 梯度冲突（Gradient Conflict）
 在联合训练过程中，文本损失函数产生的梯度和图像损失函数产生的梯度，在更新同一组参数时常常会发生反向拉扯。更新参数以拟合文本，可能会损害图像的表征质量，反之亦然。这种负面的干扰导致了多模态模型在扩大规模（Scaling Up）时，收敛效率极低，甚至出现表现停滞（Performance Plateau）。
 
-<div align="center"><img src="/images/llm-training/mixture-of-transformers/modality_interference.jpg" width="90%" /><figcaption>图 1：传统密集模型中的模态梯度冲突 vs. MoT 中的模态隔离</figcaption></div>
+<div align="center"><img src="/images/llm-training/mixture-of-transformers/modality_interference.webp" width="90%" /><figcaption>图 1：传统密集模型中的模态梯度冲突 vs. MoT 中的模态隔离</figcaption></div>
 
 为了解决这一冲突，最直接的想法是引入稀疏性，让不同的参数处理不同的信号。这就自然引出了 MoE 与 MoT 的对比。
 
@@ -54,7 +54,7 @@ excerpt: "深入剖析 Meta AI、NVIDIA 等机构提出的 Mixture-of-Transforme
 * **确定性路由（Deterministic Routing）**：由于每个 token 属于什么模态在数据输入时是已知且固定的（例如，文本 token 还是图像 token），MoT 抛弃了可学习的门控 Router，直接使用预定义的模态掩码（`modality_masks`）进行**静态分流**。这消除了路由计算开销，彻底避免了表征塌陷和负载不均，极大地稳定了训练。
 * **全局融合的桥梁：全局自注意力**：虽然投影矩阵是模态特定的，但投影出来的 $$Q, K, V$$ 向量会被重新拼回全局序列，进行统一 of 的自注意力计算。这保证了模型依然具备全序列的跨模态交互能力。
 
-<div align="center"><img src="/images/llm-training/mixture-of-transformers/mot_architecture.jpg" width="90%" /><figcaption>图 2：Dense、MoE 与 MoT 的架构对比（MoT 实现了非嵌入参数的全面解耦）</figcaption></div>
+<div align="center"><img src="/images/llm-training/mixture-of-transformers/mot_architecture.webp" width="90%" /><figcaption>图 2：Dense、MoE 与 MoT 的架构对比（MoT 实现了非嵌入参数的全面解耦）</figcaption></div>
 
 ---
 
@@ -92,7 +92,7 @@ $$
 通过这种方式，文本 token 使用模态特定的投影参数，图像 token 使用其专属参数，各行其道，参数之间不再干扰。
 
 #### 第二步：全局注意力机制（Global Attention）
-将各模态分别计算得到的 $\mathbf{q}_i, \mathbf{k}_i, \mathbf{v}_i$ 按原始的序列索引重新排列，拼接为全局的矩阵：
+将各模态分别计算得到的 $$\mathbf{q}_i, \mathbf{k}_i, \mathbf{v}_i$$ 按原始的序列索引重新排列，拼接为全局的矩阵：
 
 $$
 \mathbf{Q} = [\mathbf{q}_1; \mathbf{q}_2; \dots; \mathbf{q}_N], \quad \mathbf{K} = [\mathbf{k}_1; \mathbf{k}_2; \dots; \mathbf{k}_N], \quad \mathbf{V} = [\mathbf{v}_1; \mathbf{v}_2; \dots; \mathbf{v}_N]
@@ -108,7 +108,7 @@ $$
 > 这一步非常关键。虽然 $$Q, K, V$$ 的**生成阶段**是模态解耦的（使得不同模态可以使用最适合自身的映射空间），但是**计算注意力阶段**是全局的。这使得文本能够关注到图像的内容，图像也能融合上下文的文本语义，确保了跨模态表征的“融会贯通”。
 
 #### 第三步：模态特定输出投影与残差连接（Output Projection & Residual）
-注意力机制计算得出的全局表征向量 $\mathbf{H} = [\mathbf{h}_1, \mathbf{h}_2, \dots, \mathbf{h}_N]$ 会再次根据每个位置 of 的模态进行分流，并通过模态特定的输出投影矩阵与残差连接进行处理：
+注意力机制计算得出的全局表征向量 $$\mathbf{H} = [\mathbf{h}_1, \mathbf{h}_2, \dots, \mathbf{h}_N]$$ 会再次根据每个位置 of 的模态进行分流，并通过模态特定的输出投影矩阵与残差连接进行处理：
 
 $$
 y_i = x_i + \mathbf{h}_i \mathbf{W}_{O,m_i}

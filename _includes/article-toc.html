@@ -1,12 +1,19 @@
-<aside class="article-toc" id="article-toc" aria-label="文章导航" aria-hidden="true">
+<aside class="article-toc" id="article-toc" aria-label="{{ ui.article_navigation }}" aria-hidden="true">
   <div class="article-toc-nav">
-    <nav aria-label="站点导航">
+    <nav aria-label="{{ ui.site_navigation }}">
+      {% if page_lang == 'en' %}
+      <a href="{{ '/home/' | relative_url }}" lang="en">Project</a>
+      <a href="{{ '/en/research/' | relative_url }}"{% if page.categories contains "research" %} class="is-current" aria-current="page"{% endif %}>Research</a>
+      <a href="{{ '/en/blog/' | relative_url }}"{% if page.categories contains "blog" or page.categories contains "weekly" %} class="is-current" aria-current="page"{% endif %}>Blog</a>
+      <a href="{{ '/about/' | relative_url }}" lang="en">About</a>
+      {% else %}
       <a href="{{ site.baseurl }}/home">Project</a>
       <a href="{{ site.baseurl }}/research"{% if page.categories contains "research" %} class="is-current" aria-current="page"{% endif %}>Research</a>
-      <a href="{{ site.baseurl }}/blog"{% if page.categories contains "blog" %} class="is-current" aria-current="page"{% endif %}>Blog</a>
-      <a class="article-toc-star" href="https://github.com/{{ site.repository }}" target="_blank" rel="noopener noreferrer" aria-label="在 GitHub Star 本站项目（新窗口打开）" title="前往 GitHub 为项目加 Star">Star☆</a>
+      <a href="{{ site.baseurl }}/blog"{% if page.categories contains "blog" or page.categories contains "weekly" %} class="is-current" aria-current="page"{% endif %}>Blog</a>
+      {% endif %}
+      <a class="article-toc-star" href="https://github.com/TingdeLiu/tingdeliu.github.io" target="_blank" rel="noopener noreferrer" aria-label="{{ ui.star }}" title="{{ ui.star }}">Star☆</a>
     </nav>
-    <button class="article-toc-close" type="button" aria-label="关闭文章目录">
+    <button class="article-toc-close" type="button" aria-label="{{ ui.close_contents }}">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="m6.7 5.3 12 12-1.4 1.4-12-12 1.4-1.4Zm10.6 0 1.4 1.4-12 12-1.4-1.4 12-12Z"/>
       </svg>
@@ -14,11 +21,12 @@
   </div>
 
   <div class="article-toc-heading">
-    <span>目录</span>
-    <span class="article-toc-depth">H1—H3</span>
+    <span>{{ ui.contents }}</span>
+    <span class="article-toc-depth">{% if page.vla_survey %}{% if page_lang == 'en' %}Sections and papers{% else %}章节与论文{% endif %}{% else %}H1—H3{% endif %}</span>
   </div>
 
-  <nav class="article-toc-scroll" aria-label="文章目录">
-    {% include toc.html html=content sanitize=true h_min=1 h_max=3 class="article-toc-list" id="article-toc-list" item_class="toc-level-%level%" anchor_class="article-toc-link" %}
+  <nav class="article-toc-scroll" aria-label="{{ ui.article_contents }}">
+    {% assign article_toc_depth = page.toc_depth | default: 3 %}
+    {% include toc.html html=content sanitize=true h_min=1 h_max=article_toc_depth class="article-toc-list" id="article-toc-list" item_class="toc-level-%level%" anchor_class="article-toc-link" %}
   </nav>
 </aside>

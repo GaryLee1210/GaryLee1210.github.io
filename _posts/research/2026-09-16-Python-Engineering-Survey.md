@@ -1,7 +1,9 @@
 ---
 layout: post
+lang: zh-CN
+translation_id: python-engineering-survey
 title: "Python 工程实践指南"
-date: 2026-09-23
+date: 2026-10-04
 tags: [Python, uv, pyproject, Packaging, Ruff, pytest, PyTorch, ROS2, Engineering, Reproducibility]
 categories: research
 comments: true
@@ -9,6 +11,15 @@ author: Tingde Liu
 toc: true
 excerpt: "把一堆能跑的研究脚本，整理成别人能安装、能运行、能维护的 Python 项目。本文围绕一个贯穿全文的示例工程，系统讲解解释器与环境边界、src 布局与 pyproject 声明、uv 依赖工作流与锁文件的真实保证范围、质量与测试流水线、构建交付与 CI，并专章处理 AI/机器人场景的 CUDA 依赖分层、ROS 2 与虚拟环境的兼容边界、实验可复现的四个层次，以及一张高频故障排查表。"
 ---
+
+# 引言
+
+Python 工程的目标，是让研究代码成为别人能够安装、运行和维护的项目。本文沿着环境与依赖、项目组织、质量检查和构建交付展开，并讨论 AI 与机器人场景中的平台和复现边界。
+
+<figure class="survey-intro-figure">
+  <img src="/images/python/python-engineering-survey-intro.webp" width="1672" height="941" alt="Python 工程从环境与依赖、项目与接口、质量与测试走向构建与交付，并持续维护。" loading="lazy" decoding="async" />
+  <figcaption>图：把研究脚本变成可安装项目，需要明确环境与依赖、组织代码与接口、建立质量检查，并完成构建交付；可复现性还取决于平台、数据与运行条件。</figcaption>
+</figure>
 
 # 一、从研究脚本到可安装项目
 

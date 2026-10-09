@@ -1,0 +1,510 @@
+# English edition: scope and maintenance
+
+The English edition contains the complete VLN Survey, VLN Papers: Instruction
+Following (56 readings), and VLN Papers: Goal Navigation and Extensions
+(34 main readings and 3 related readings, 37 total), and all eight existing
+embodied-navigation weekly digests (six published and two unpublished), plus `/en/`, `/en/research/`, and
+`/en/blog/`. Both paper collections have localized filters, leaderboards,
+and reciprocal English companion links. The Traditional Robot Navigation
+Algorithms survey also has a complete English edition. The three agent articles
+(AI Agents, Embodied Agent Harness and Runtime Architecture, and Embodied Agent
+Paper Readings) are translated in full. The Machine Learning Foundations group
+also contains complete Machine Learning, Deep Learning, and Reinforcement Learning
+surveys. The Large Models and Spatial Intelligence group now contains complete LLM Training, VLM, and Spatial Intelligence surveys. The Embodied Manipulation (VLA) group now has complete VLA Survey, VLA Paper Readings, and World Models Survey editions. The Engineering Practice group now contains complete Python Engineering and ROS 2 Core Architecture guides.
+
+
+## Engineering Practice release (2026-10-04)
+
+The complete English articles are `_translations/en/research/Python-Engineering-Survey.md`
+and `ROS2-Survey.md`. They retain every source section, table, equation, executable
+example, and external citation. Code comments, Mermaid labels, captions, and
+alternative text are localized. Two English SVG introduction diagrams explain
+the same concepts as the Chinese originals. Companion links select the matching
+English article, and section-preserving language switching uses the original
+heading IDs. Both articles appear in the Engineering Practice Research group.
+
+Public prose used machine translation assistance followed by terminology,
+structural, numerical, code, and editorial review. The English editions retain
+source claims and version qualifications; they do not independently update
+software release status or revalidate every technical recommendation. Source
+pairing metadata and the Python article date were updated on 2026-10-04;
+source technical content was retained. Synchronization snapshots are
+`docs/translations/python-engineering-survey.en.json` and `ros2-survey.en.json`.
+
+Validation passed for all 135 heading IDs, 40 tables, 50 Mermaid diagrams, and
+11 rendered formulas. Both pages have no untranslated visible prose, formula
+errors, diagram errors, or horizontal overflow at 1440, 390, and 320 pixels.
+All images load; contents navigation, reciprocal section switching, and the
+English Research cards work. Jekyll build, the English site validator, post
+lint, and 20 existing regression tests pass. Both new source snapshots are
+synchronized. The pre-existing stale VLN Papers snapshot remains separate.
+
+## Embodied Manipulation (VLA) release (2026-10-04)
+
+The complete English editions are `_translations/en/research/VLA-Survey.md`,
+`VLA-Papers.md`, and `World-Models-Survey.md`. VLA Paper Readings includes all
+36 source readings, the official RoboDojo snapshot, and the five groups of
+controlled experimental comparisons. The English editions preserve source
+heading IDs, formulas, numerical tables, reference links, and figures. Captions,
+alternative text, code comments, Mermaid labels, and the VLA contents label are
+localized. Two English SVG introduction diagrams replace the corresponding
+Chinese introduction graphics. Moved paper bookmarks redirect to the matching
+language edition.
+
+Public prose used machine translation assistance followed by terminology,
+structural, numerical, and targeted editorial review. These translations retain
+the source claims and qualifications; they do not independently update the
+papers or live leaderboards. Source revision dates are 2026-10-02 for VLA Survey
+and 2026-10-04 for the other two articles. All translation dates are 2026-10-04.
+Synchronization records are `docs/translations/vla-survey.en.json`,
+`vla-papers.en.json`, and `world-models-survey.en.json`. The validator uses
+`normalize_vla_labels` to account for reviewed English descriptions within an
+otherwise unchanged equation and for equivalent numerical date/unit labels.
+The three articles join the Embodied Manipulation group automatically through
+the existing shared Research index configuration.
+
+Validation covered 479 matching headings, 70 tables, 185 images, 417 rendered
+mathematical expressions, and all 16 Mermaid diagrams. Desktop (1440px) and
+390/320px mobile checks passed with no page errors, untranslated visible prose,
+formula errors, or page overflow. Images load, ranking jumps work, section
+switching is reciprocal, and moved VLA paper bookmarks preserve the language.
+The Jekyll build, English site validator, post linter, and 20 existing tests pass.
+The three new source snapshots are synchronized. The full-registry strict
+synchronization check separately reports pre-existing changes in VLN Paper
+Readings; that record was not accepted as reviewed by this release.
+
+## Large Models and Spatial Intelligence release (2026-10-04)
+
+The three complete articles are `_translations/en/research/LLM-Training-Survey.md`,
+`VLM-Survey.md`, and `Spatial-Intelligence-Survey.md`. They retain the source
+section order, heading IDs, equations, numerical tables, reference links, code
+examples, and paper readings. Captions, alternative text, Mermaid labels, and
+explanatory comments are localized. Three English SVG introduction diagrams
+replace the corresponding Chinese introduction graphics. Four VLM training
+plots are recreated in English as illustrative diagrams, preserving their
+learning-rate levels, stage descriptions, and diagnostic meaning; they are not
+measured training runs.
+
+Public prose used machine translation assistance followed by terminology and
+structural review. Equations, links, and executable identifiers were protected
+locally. The translation preserves the source article's claims and limitations;
+it does not independently update the papers or benchmark results. Companion
+links use `content-link.html` to select available English editions.
+
+Source revision dates are 2026-10-04 for LLM Training and Spatial Intelligence,
+and 2026-10-02 for VLM. Translation dates are 2026-10-04. Synchronization records
+live in `docs/translations/llm-training-survey.en.json`, `vlm-survey.en.json`, and
+`spatial-intelligence-survey.en.json`. `normalize_large_model_labels` in the
+translation validator lists the reviewed English descriptions inside equations;
+the mathematical expressions remain identical. The English release validator
+checks structural parity, protected mathematical and numerical content,
+companion links, language switching, and inclusion in the Research index.
+The release has 962 headings, 104 tables, and 189 images. Desktop and 390/320px
+browser checks verified all 52 Mermaid diagrams and 997 rendered formulas,
+zero visible untranslated prose, and reciprocal section switching.
+
+## Content contract
+
+- Chinese is the source edition. Translate the complete article; preserve its
+  conclusions, caveats, formulas, numbers, citations, and reference numbering.
+- Use natural research English. Distinguish paper findings from the author's
+  interpretation and proposed experiments. Do not strengthen claims.
+- A translation date does not change the source verification date.
+- Keep short numerical ranges together. Use one inline formula for mathematical
+  endpoints (for example, `$10^3 \text{–} 10^4$`) or a non-wrapping text span
+  for ordinary percentages and currency. Use `USD` for dollar ranges to avoid
+  confusing currency symbols with MathJax delimiters. The post linter reports
+  `split-math-range` and `currency-range`; browser regression checks live in
+  `scripts/tests/check_inline_ranges.cjs` and `check_label_smoothing.cjs`.
+- Reuse original English paper figures; translate captions, alternative text,
+  Mermaid labels, and explanatory graphics made for this site.
+- Preserve source heading IDs and explicit anchors in the English edition so
+  shared links and language switching continue to reach the same section.
+  The initial translation retains existing Chinese IDs for compatibility.
+
+## Files and metadata
+
+English articles are grouped by content type under `_translations/en/`:
+
+```text
+_translations/en/
+├── research/
+│   ├── VLN-Survey.md
+│   ├── VLN-Papers.md
+│   ├── VLN-Papers-Extended.md
+│   ├── Robot-Navigation-Survey.md
+│   ├── AI-Agent-Survey.md
+│   ├── Embodied-Agent-Harness-Survey.md
+│   ├── Embodied-Agent-Papers.md
+│   ├── Machine-Learning-Survey.md
+│   ├── Deep-Learning-Survey.md
+│   ├── Reinforcement-Learning-Survey.md
+│   ├── VLA-Survey.md
+│   ├── VLA-Papers.md
+│   ├── World-Models-Survey.md
+│   ├── Python-Engineering-Survey.md
+│   └── ROS2-Survey.md
+└── blog/
+    ├── vln-weekly-2026-08-01.md
+    └── ... (eight weekly digests through 2026-09-27)
+```
+
+Research surveys and paper readings belong in `research/`; technical blog posts
+and weekly digests belong in `blog/`. Digests retain `categories: weekly`.
+Set `categories` to match the content type
+and declare an explicit `/en/.../` permalink so moving files does not change URLs.
+When moving an existing translation, update its `translation` path in the
+snapshot under `docs/translations/`; preserve the reviewed source hashes and dates.
+
+English articles render through the shared post layout.
+They do not become extra Chinese posts, feed entries, or tag/archive
+results. English entry pages live in `en/`. UI strings live in `_data/ui.yml`;
+JavaScript interaction labels are in `assets/js/article-ui.js`.
+
+The English Research index shows article cards without an extra reading-path,
+companion-link, or author section. Its sidebar contains Project, Research, Blog,
+and About; Project links to the existing `/home/` page, Blog links to `/en/blog/`,
+and About links to the existing `/about/` page.
+Language switching stays in the page's language selector.
+Both Research indexes use `_data/research_groups.json` for the same topic
+membership and group order. The English page shows groups with published
+translations, with jump links and article counts; currently navigation has
+four articles, embodied agents has three, and machine learning foundations has
+three. Future translations join their
+source article's group automatically; unclassified articles appear under Other.
+
+Each article declares `lang`, `translation_id`, `permalink`, `source_path`,
+`source_url`, `source_revision_date`, and `translation_updated`. Its source has
+the same `translation_id`. The same ID pairs equivalent index pages, too.
+Do not place incomplete drafts in the published translations collection.
+
+Use `content-link.html` for companion article links. It selects the translated
+target by `source_url` when available and otherwise labels the Chinese link.
+New translations must preserve any fragments used by existing references.
+Only genuine equivalent pages receive reciprocal `hreflang` annotations;
+each language has its own canonical URL. URL language determines rendering.
+
+## Update workflow
+
+### Blog and weekly digests
+
+The English Blog lists the six published weekly digests in reverse publication order,
+with explicit `issue_number`, `period_start`, and `period_end` metadata. Each
+digest preserves the original publication date; `source_revision_date` reflects
+the last source commit before translation, not the translation date. The latest
+issue includes the source's 2026-10-01 correction and links to the English
+GPT-6-Astra paper reading. The two early source drafts (2026-08-01 and
+2026-08-15) also have complete English translations but retain `published: false`.
+
+Public source prose used machine translation assistance followed by terminology,
+conclusion, limitation, numerical, and Markdown review. Links and numeric values
+were protected during translation. Each issue has a synchronization snapshot
+under `docs/translations/vln-weekly-*.en.json`; the shared site validator checks the
+complete issue set, heading IDs, source links, numerical values, language pairs,
+card order, and exclusion from Chinese feeds and Research cards. Technical essays
+remain untranslated and are not shown as English articles.
+
+Desktop validation at 1440×1000 passed for the six published issues: card order,
+article contents links, section-preserving language switching, Blog navigation,
+and exclusion from the three-card Research collection. No horizontal overflow,
+unrendered emphasis, or page errors occurred. The built-site validator reports
+12 English pages with zero errors. Both unpublished translations also passed
+rendered source-link and heading-ID checks (19 matching headings each) and are
+absent from the production output. All 16 source/translation weekly files pass
+the post linter, and the 11 existing regression tests pass.
+
+### SeekVLN synchronization (2026-10-05)
+
+The instruction-following collection now includes SeekVLN as reading 56. Its
+complete methods, equations, examples, experimental results, limitations,
+Mermaid diagram, and four figure captions are translated. Both English
+leaderboards, the 23-entry component matrix, adoption-rate analysis, references,
+tags, and reciprocal cross-page search are synchronized with the Chinese
+editions. The two collections contain 93 readings in total.
+
+Earlier AwareVLN and Robostral source revisions were reviewed against the
+English text. NaVid's two input/output expressions now retain the source's math
+format instead of a text code block. The latest source-parity checks cover all
+56 main and 37 extended readings, including equations, image paths, external
+citations, table values, and table columns. Prior build and browser evidence is
+retained with its original review date in the progress records; this update has
+not been rebuilt locally because Ruby and Bundler are unavailable.
+
+### VLN Papers completion and draft workflow
+
+`_translations/en/research/VLN-Papers.md` contains the complete 56-paper
+instruction-following collection, including leaderboards, the component matrix,
+analysis, references, captions, and interactive controls. The four earlier
+reviewed readings were retained. Remaining prose used machine assistance,
+followed by terminology, negation, numerical, markup, and targeted technical
+review. This is a translation of the source article, not a new independent
+verification of every underlying paper.
+
+`docs/translations/vln-papers.en.progress.json` records completion and validation.
+`docs/translations/vln-papers.en.json` is the authoritative synchronization snapshot.
+Repeated section labels are scoped by each paper's stable anchor so additions
+elsewhere do not renumber their keys. Source checks cover per-paper equations,
+figures, external citations, and table values; the opening leaderboards and
+comparison tables are included in numerical checks too.
+
+Desktop is the primary reading and validation target. At 1440×1000, the complete
+page has 524 matching heading IDs, 52 tables, 233 captioned figures, 23 code
+blocks, 1,243 rendered mathematical expressions, and 19 Mermaid diagrams.
+All 55 paper wrappers, AND tag filters, companion-collection links,
+three leaderboards, best-value bolding, contents links, figure enlargement, and
+code copying were checked. No page errors or formula/diagram errors occurred.
+
+MapNav's R2R OS/SR headers were corrected in both editions against
+[arXiv v5, Table 1](https://arxiv.org/html/2502.13451v5#S4.T1). DualVLN's
+illustrative code now preserves query gradients through a frozen VLM, matching
+[Appendix A.2](https://arxiv.org/html/2512.08186v1#A2), and its real-world RGB-D
+and odometry pipeline is distinguished from RGB-only simulation.
+
+### Goal-navigation and extensions completion
+
+`_translations/en/research/VLN-Papers-Extended.md` contains all 37 readings,
+five goal-navigation leaderboard groups, related-reading notes, references,
+134 figures with English captions and alternative text, and 17 localized
+Mermaid diagrams. The full page has 37 tables. Harness Robotic OS links to the
+companion Embodied Agent Paper Readings article.
+
+Prose used machine translation assistance followed by terminology, numerical,
+negation, protected-element, and editorial review. The numerical audit restored
+a missing ReMEmbR accuracy of 0.61; the negation review corrected SparseNav's
+warning that more complete semantic maps are not always better. Original
+leaderboard rows were retained with explicit label translations to prevent
+omitted textual cells or inconsistent filter vocabulary. This process does not
+constitute independent verification of every underlying paper.
+
+Descriptive TeX labels, units, and reward predicates are translated using an
+explicit normalization map. Formula checks still detect changed mathematical
+values and predicates. Raw table column counts supplement numerical checks.
+Two malformed figure wrappers in the Chinese source were repaired in both
+editions; paper content and reported experimental values were retained.
+
+`docs/translations/vln-papers-extended.en.json` records source synchronization, and
+`docs/translations/vln-papers-extended.en.progress.json` records completion and the
+review process. The published-site validator checks both paper collections.
+Main/extended filters search 93 papers in total and link directly to the
+corresponding English collection. Research cards and Survey companion links
+also resolve to the English extension.
+
+Desktop verification at 1440×1000 passed: all 37 paper wrappers, 53 rows across
+five leaderboards, 273 matching heading IDs, 37 tables, 134 images, 762 MathJax
+expressions, and 17 Mermaid diagrams. AND tag filtering, open-source/paradigm
+filters, nonstandard-row hiding, figure enlargement, contents navigation,
+section-preserving language switching, English cross-page search results, and
+the research card were checked. No page, formula, diagram, or horizontal
+overflow errors occurred. The Jekyll build, synchronized-source checks, post
+linter, published-site validator, and 11 regression tests pass.
+
+### Traditional robot navigation
+
+`_translations/en/research/Robot-Navigation-Survey.md` translates all 12 main
+sections, from perception and localization through mapping, planning, tracking,
+kinematics, motion control, and ROS stack integration. Its 164 heading IDs match
+the Chinese edition, preserving section links and language switching. It retains
+62 tables, 46 images, and 33 demonstration videos. Table values, external
+citations, and mathematical expressions are checked against the source; only
+explicit descriptive TeX labels and direction subscripts are normalized.
+
+Public prose used translation assistance followed by terminology, markup,
+numerical, and targeted technical review. This translates the source's claims
+and does not independently reverify every algorithm comparison or ROS default.
+The English edition has a new SVG navigation overview and 13 localized vector
+diagrams, plus English captions and alternative text. Existing raster figures
+and demonstration videos are retained; embedded text in those original media
+may remain Chinese. Source synchronization is recorded in
+`docs/translations/robot-navigation-survey.en.json`.
+
+The source tracker supports repeated survey subheadings by scoping subsequent
+occurrences to their enclosing section hierarchy. Existing snapshot keys and
+paper-anchor behavior are retained.
+
+Verified on 2026-10-04: Jekyll build, built-site validation (13 English pages,
+zero errors), post lint (zero errors), and all 12 regression tests pass.
+At 1440×1000, all 18 Mermaid diagrams and 407 MathJax expressions render without
+errors. Contents navigation, reciprocal section-preserving language switching,
+and the English Research card pass. The 390×844 layout has no horizontal page
+overflow; long equations scroll within their own containers. The new article's
+source snapshot is synchronized. The unrelated VLN Papers snapshot currently
+needs updates, so the repository-wide strict synchronization command remains
+nonzero until that collection is reviewed.
+
+### Machine learning foundations
+
+The three complete English surveys cover Machine Learning, Deep Learning, and
+Reinforcement Learning, including all twelve RL paper readings. They retain all
+351 source heading IDs, 101 tables, 54 figures, equations, code blocks, and external
+citations. The English Research index displays three cards under Machine Learning
+Foundations, and language switching preserves the current section.
+
+Public prose used machine translation assistance followed by technical terminology,
+markup, and numerical review. Numerical magnitudes were explicitly checked:
+ImageNet uses 1.28 million images in the ML survey; GPT-1/2/3 use 117 million,
+1.5 billion, and 175 billion parameters; the DreamerV3 Minecraft milestone uses
+100 million environment steps. The DL survey retains its source's rounded
+ImageNet counts of 1.2 million training and 50,000 validation images. Descriptive
+TeX labels for gates and optimizer moments are localized while equations remain
+unchanged. English overview SVGs and an English multi-head-attention SVG supplement
+reused technical figures. These editions translate the source's claims, rather
+than independently re-verifying every historical or current claim.
+
+Translation updates are dated 2026-10-04. The ML source revision before pairing is
+2026-10-02; the DL and RL revisions are 2026-10-04. The authoritative snapshots
+are `docs/translations/machine-learning-survey.en.json`,
+`docs/translations/deep-learning-survey.en.json`, and
+`docs/translations/reinforcement-learning-survey.en.json`.
+
+Verified on 2026-10-04: the Jekyll build and built-site validator pass with 19
+English pages and zero errors. Browser checks at 1440×1000 and 390×844 show all
+40 Mermaid diagrams and 712 MathJax expressions rendering without errors, all
+images loading, no horizontal page overflow, and reciprocal section switching
+working. The release validator checks heading IDs, table dimensions and values,
+mathematics, citations, research cards, language alternates, and exclusion from
+the Chinese feed. Unit normalization tests reject incorrect hundred-million
+conversions and changes to gate equations. The existing VLN Papers translation
+still requires synchronization with its source; the three new surveys are current.
+
+### Agent surveys and paper readings
+
+The English edition includes the complete AI Agent survey, the complete
+Embodied Agent Harness survey, and all eight Embodied Agent paper readings.
+Chinese publication dates, original section IDs, equations, paper citations,
+experimental values, and code interfaces are retained. English Research cards,
+reciprocal language switching, companion links, and the paper collection's AND
+tag filter use the shared site infrastructure.
+
+Public prose used machine translation assistance with terminology, numerical,
+negation, and markup review. Chinese numerical units require explicit
+conversion (for example, 100 万 tokens means one million tokens). The English
+overview figures are local SVGs; original paper figures are reused with English
+captions and alternative text. This translation preserves the source's claims
+and evidence boundaries; it is not a fresh verification of every paper,
+product release, benchmark, or library version.
+
+Source revisions are 2026-10-02 for the two surveys and 2026-10-04 for the
+paper collection; translation updates are dated 2026-10-04. Synchronization
+snapshots are stored under `docs/translations/ai-agent-survey.en.json`,
+`docs/translations/embodied-agent-harness-survey.en.json`, and
+`docs/translations/embodied-agent-papers.en.json`. The release validator checks
+heading IDs, table dimensions and values, equations, external citations,
+Research cards, language pairs, and exclusion from the Chinese feed.
+
+Verified on 2026-10-04: all 355 section IDs match their Chinese sources, with
+95 tables, 60 figures, 63 rendered Mermaid diagrams, and 175 MathJax
+expressions. The build and built-site validator pass (16 English pages, zero
+errors), as do all 14 regression tests and lint for the six agent files.
+At 1440×1000 and 390×844, reciprocal section switching, all eight paper
+wrappers, AND filtering and reset, and the three Research cards pass. There
+are no page, formula, diagram, raw-emphasis, or horizontal-overflow errors.
+Long inline equations scroll locally in the English edition. The unrelated
+VLN Papers source snapshot remains stale and still requires its own review.
+
+All article math scrollers share styles across Chinese and English, including
+vertical space for glyphs extending beyond MathJax's reported box, such as the
+descender in `g_E`. Long inline and display equations scroll locally on mobile.
+The browser regression `scripts/tests/check_math_layout.cjs` checks visible
+CommonHTML glyph clipping, typesetting errors, uncontained equations, and raw
+TeX at 1440px and 390px. Hidden assistive MathML is excluded from glyph bounds.
+Run `node scripts/tests/check_math_layout.cjs URL --all` after a Jekyll build
+to discover all math-enabled articles in `_site`; the default checks the English
+embodied paper collection. Specific article routes can replace `--all`.
+The test requires Playwright and Chrome.
+
+The October 4 site-wide audit covered 29 math-enabled article pages and 7,607
+rendered expressions at both widths. The shared styles resolved mobile equation
+overflow in 17 Chinese articles; all pages passed the browser regression.
+
+### Future drafts
+
+Future incomplete drafts use `published: false` and `translation_scope: partial`.
+They are excluded from normal output, language pairs, cards, and translated
+companion links. Record section-level progress without claiming a reviewed
+whole-source snapshot. Validate with `python scripts/check_translation_drafts.py
+--strict`. To review them locally:
+
+```text
+bundle exec jekyll build --unpublished --destination _site-drafts
+python -m http.server 4174 --bind 127.0.0.1 --directory _site-drafts
+```
+
+Never upload `_site-drafts`. When a translation is complete, remove the draft
+metadata, pair its Chinese source, and record its synchronized source snapshot.
+
+### Published translations
+
+1. Update the Chinese source as usual.
+2. Run `python scripts/check_translations.py` to see changed, added, or removed
+   sections. This generates `_data/translation_status.json` for the build.
+3. Translate the changed sections and review surrounding context, tables,
+   equations, diagrams, links, and terminology. Retain reviewed English prose
+   elsewhere instead of regenerating the whole document.
+4. Update `source_revision_date` and `translation_updated` in the English file.
+5. After reviewing, run
+   `python scripts/check_translations.py --record vln-survey --date YYYY-MM-DD`.
+   Commit the resulting `docs/translations/vln-survey.en.json` with the translation.
+   Recording accepts the current source as reviewed; it does not translate it.
+6. Run the checks below and inspect desktop rendering; mobile is a secondary check.
+
+Snapshots contain per-section SHA-256 hashes, including source metadata, and
+report additions/removals as well as modifications. They never modify English
+content automatically. CI warns on stale translations and renders a visible
+notice without preventing publication of Chinese updates. Use `--strict` to
+require synchronization for an English release. Missing or mismatched records
+are build errors. A plain Jekyll build without the preprocessing step shows
+an explicit unchecked-status message instead of claiming synchronization.
+While stale or unchecked, language switching opens the counterpart at its top
+because section IDs may have changed. Structural parity checks run only when
+synchronized; standalone English page and link checks always run.
+
+## Validation
+
+```text
+python scripts/check_translations.py --strict
+python scripts/lint_posts.py
+python -m unittest discover -s scripts/tests
+bundle exec jekyll build
+python scripts/check_english_site.py
+```
+
+Also inspect language switching with section fragments, mobile contents,
+code and link copying, image enlargement, horizontal tables, English feedback
+forms, and Chinese article regression. Confirm that formulas, reference URLs,
+and all 10 main sections are preserved. All prose and diagram labels should be
+English except language selectors, legacy IDs, and explicitly marked links.
+
+## Terminology
+
+| Chinese | English | Usage |
+| --- | --- | --- |
+| 视觉语言导航 | vision-language navigation (VLN) | Expand at first use |
+| 指令跟随 | instruction following | Distinguish from goal search |
+| 语言落地 | language grounding | Alignment to observations/actions |
+| 目标指代 | object grounding / referring expression | Match the task context |
+| 连续环境 | continuous environment | Does not imply continuous actions |
+| 快慢双系统 | fast-slow dual system | Distinguish control hierarchy from context updates |
+| 路点 | waypoint | Preserve action-interface meaning |
+| 路径忠实度／保真度 | path fidelity | Separate from endpoint success |
+| 免训练 | training-free | Preserve the source's qualification |
+| 具身形态 | embodiment / morphology | Select according to context |
+| 回溯 | backtracking | Spatial recovery, not model backpropagation |
+| 卡住 | immobilization / getting stuck | Physical execution failure |
+| 测地距离 | geodesic distance | Do not replace with Euclidean distance |
+| 真机 | real robot | Separate from physics-based simulation |
+
+## First-release checklist
+
+- [x] Full survey translation with original structure, equations, and references
+- [x] English entry pages and links to the existing Blog and About pages
+- [x] Shared language switching, localized reading controls, and feedback
+- [x] Explicit labels for Chinese-only companion articles
+- [x] Per-section source snapshots and visible stale notices
+- [x] Build, structural checks, and desktop/mobile verification
+
+Verified on 2026-10-03: Jekyll build; 117 matching headings, 32 tables, formulas
+and citation links; four synchronization tests; desktop and 390 px mobile
+Chrome interactions; all 13 Mermaid diagrams and 45 MathJax expressions render.
+A simulated stale build with an extra Chinese heading also passes while
+displaying its warning and switching languages without a section fragment.
+The post linter reports no errors and 26 existing image-size warnings elsewhere.
