@@ -2,18 +2,18 @@
   "name": "GaryLee1210",
   "description": "Personal Blog & Research Notes",
   "tagline": "学习镜像 · 原文 Tingde Liu",
-  "company": null,
+  "company": false,
   "avatar": "https://avatars.githubusercontent.com/u/106992479?v=4",
   "url": "https://garylee1210.github.io",
   "baseurl": "",
   "repository": "GaryLee1210/GaryLee1210.github.io",
   "content_author": "Tingde Liu",
   "source_url": "https://tingdeliu.github.io",
-  "google_analytics": null,
+  "google_analytics": false,
   "visitor_baseline": {"visitors": 0, "views": 0},
   "footer-links": {
     "home": "https://garylee1210.github.io/",
     "github": "GaryLee1210",
-    "email": null
+    "email": false
   }
 }

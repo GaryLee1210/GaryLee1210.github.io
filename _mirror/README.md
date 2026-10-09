@@ -5,6 +5,7 @@
 ## 日常修改
 
 - 账号、头像、网址、分析统计开关等：修改 [config.json](config.json)。它在构建时覆盖上游配置；根目录 `_config.yml` 保留原样。
+- 关闭上游布尔开关使用 `false`，不要使用 `null`：Jekyll 合并配置时可能保留 `null` 对应的旧值。
 - 自己新增或修改的页面、图片和模板：放在 `_mirror/overrides/` 下，路径与上游对应，例如 `_mirror/overrides/pages/my-project.md`。构建时覆盖同名文件，但不改动上游原始快照。
 - 如直接修改并提交根目录中由上游管理的文件，下次同步会将这些修改保存成 overrides。直接删除的文件记录在 `_mirror/deleted.json`，只在构建时删除。如果根目录与同名 override 同时出现不同修改，任务会明确停止，要求保留想要的版本，避免猜测你的意图。
 - 根目录 README、`.github/`、`.gitignore`、`CNAME` 与 `_mirror/` 由本站管理，上游更新不会覆盖。

@@ -205,8 +205,10 @@ def finalize(root):
         if not page.is_file() or page.stat().st_size < 500:
             raise ValueError(f"Required page is missing or empty: {name}")
         text = page.read_text(encoding="utf-8")
-        if 'id="mirror-attribution"' not in text or "G-KXKFYB0T0H" in text:
-            raise ValueError(f"Attribution or analytics validation failed: {name}")
+        if 'id="mirror-attribution"' not in text:
+            raise ValueError(f"Original-author attribution missing: {name}")
+        if "G-KXKFYB0T0H" in text:
+            raise ValueError(f"Original author's analytics still enabled: {name}")
     styles = [p for p in site.rglob("*.css") if p.stat().st_size > 1000]
     if not styles:
         raise ValueError("Compiled stylesheet missing; refusing to publish an unstyled site.")
