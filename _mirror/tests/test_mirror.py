@@ -111,6 +111,17 @@ class SnapshotTests(unittest.TestCase):
         mirror.snapshot(self.root, "upstream")
         self.assertEqual((self.root / "images").read_bytes(), b"replacement file\n")
 
+    def test_new_upstream_file_matching_mirror_ignore_rules_is_still_committed(self):
+        self.write(".gitignore", "*.dat\n")
+        self.commit()
+        self.git("checkout", "upstream")
+        self.write("new-assets/data.dat", "data required by the new upstream theme\n")
+        self.commit()
+        self.git("checkout", "main")
+        mirror.snapshot(self.root, "upstream")
+        mirror.stage(self.root)
+        self.assertEqual(self.git("show", ":new-assets/data.dat"), "data required by the new upstream theme")
+
 
 class PublicationTests(unittest.TestCase):
     def setUp(self):

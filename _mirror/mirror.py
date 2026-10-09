@@ -218,9 +218,25 @@ def finalize(root):
     print(f"Publication validated: {len(list(site.rglob('*.html')))} HTML files, attribution and CSS present.")
 
 
+def stage(root):
+    """Stage every managed blob, including new files matching local ignore rules."""
+    state = json.loads((root / "_mirror/state.json").read_text(encoding="utf-8"))
+    paths = list(state["files"])
+    override = root / "_mirror/overrides"
+    if override.exists():
+        paths.extend(p.relative_to(root).as_posix() for p in override.rglob("*") if p.is_file())
+    git(root, "add", "-A")
+    git(root, "add", "-f", "--pathspec-from-file=-", "--pathspec-file-nul",
+        data=b"\0".join(p.encode("utf-8") for p in paths) + b"\0")
+    candidate = git(root, "write-tree").decode().strip()
+    if tree(root, candidate) != state["files"]:
+        raise ValueError("Staged upstream files differ from the downloaded snapshot; refusing to commit.")
+    print(f"Verified all {len(state['files'])} staged upstream blobs against their original Git hashes.")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("snapshot", "prepare", "finalize"))
+    parser.add_argument("command", choices=("snapshot", "prepare", "finalize", "stage"))
     parser.add_argument("--ref", default="refs/remotes/upstream/main")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
@@ -228,8 +244,10 @@ def main():
         snapshot(root, args.ref)
     elif args.command == "prepare":
         prepare(root)
-    else:
+    elif args.command == "finalize":
         finalize(root)
+    else:
+        stage(root)
 
 
 if __name__ == "__main__":
