@@ -1,5 +1,5 @@
 {
-  "checked_week": "2026-10-05",
+  "checked_week": "2026-10-12",
   "files": {
     "Gemfile": "42ee374695083219c797d381bfd5676658bdb924",
     "Gemfile.lock": "9112b138c00f01ff82716f125e7342d280097452",
@@ -41,8 +41,8 @@
     "_posts/blog/2026-07-28-RoboTTT-Fast-Weights.md": "68a494cd9e0e6874e8a88fa47a1c36420f5fe7e3",
     "_posts/blog/2026-09-25-Jev-Embodied-Navigation.md": "e4058e293c5b9eb6269e92a5fcb9a02f3498fdba",
     "_posts/research/2026-01-04-VLN-Survey.md": "efe1b21542a71142fcca03cc88e1d57ab060894f",
-    "_posts/research/2026-01-05-VLN-Papers.md": "5def5a756c66fcab5a74fcf83d132f8ba78bcbc4",
-    "_posts/research/2026-01-06-VLN-Papers-Extended.md": "914ad61735d8588ae9e811bbb02c429e6dcb4199",
+    "_posts/research/2026-01-05-VLN-Papers.md": "6aacd5395f04c1088ab50ab41e3ec5ba91fc8a66",
+    "_posts/research/2026-01-06-VLN-Papers-Extended.md": "e635b4609f4f57057b52d325cd052871e13291d4",
     "_posts/research/2026-01-24-VLA-Survey.md": "b6dd247a5bc6217f068f25268d4dc4dfbe273fe1",
     "_posts/research/2026-02-06-LLM-Training-Survey.md": "cdeb62b093a36a094cd481a644f9758f3b3d7fc9",
     "_posts/research/2026-02-27-Robot-Navigation-Survey.md": "6863b9ef9b60f776aef17b0fee468d11023b48c6",
@@ -936,6 +936,11 @@
     "images/vln/NavDP-cross-embodiment-ablation.webp": "eea40ab1bb4ce8db1c013a4f915b489d7808bbb4",
     "images/vln/NavDP-overview.webp": "b90e380b9f52f07c3d1f92549428ea791d30409c",
     "images/vln/NavFoM-pipeline-overview.webp": "f0f4706afc434d710ba2ac9f31cfec5a87894650",
+    "images/vln/NavGPT-3-codec-ablation.webp": "06706307995b3f7a9b932fb8d3d51d0d4c6df2c9",
+    "images/vln/NavGPT-3-codec-allocation.webp": "296726cc37aaa1ca6f4c3a44413ba6c00d7bb62a",
+    "images/vln/NavGPT-3-data-scaling.webp": "047e55452d4dc0bd8828cf6fa8b048f609db9a92",
+    "images/vln/NavGPT-3-overview.webp": "660ae12dbae75b37d83bebda7bd1bed33b07a4ad",
+    "images/vln/NavGPT-3-runtime.webp": "cfd06de7f640bd6291f99a4e6c8b2a401e6c5018",
     "images/vln/NavHarness-continuous-deployment.webp": "8badf185b25e1c67182bbb6bc242d7e825608e7c",
     "images/vln/NavHarness-execution-flow.webp": "ee803a8d63bb4b3b39d5be382e7a9c165d0326e3",
     "images/vln/NavHarness-memory-reuse.webp": "9cf96cd52687a7929d1346a29cacad36bf59619a",
@@ -1290,6 +1295,6 @@
     "scripts/tests/test_translation_features.py": "3ec53be4ea3c52e6346c69584041d4d0b29239b0",
     "scripts/tests/test_translation_sync.py": "6c698634fde7109b6f124bfa3bff51c2bee51acd"
   },
-  "revision": "e4c0a747fc24bd05cddf5133931cbeb7296e8ca8",
+  "revision": "554129ee85355bd376c0d5e2b7c34edb8efd91f3",
   "upstream": "TingdeLiu/tingdeliu.github.io"
 }
