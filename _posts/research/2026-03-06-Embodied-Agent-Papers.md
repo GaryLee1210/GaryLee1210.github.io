@@ -3,20 +3,20 @@ layout: post
 lang: zh-CN
 translation_id: embodied-agent-papers
 title: "Embodied Agent 论文精读"
-date:   2026-10-09
+date:   2026-10-13
 tags: [Agent, Embodied AI, Robotics, VLA, Deep Learning]
 categories: research
 comments: true
 author: Tingde Liu
 toc: true
-excerpt: "本文按系统运行时、物理编排、场景图评估、自演化治理、语义动作接口、动作分块、AgentOS、巡检系统治理、导航会话交接与导航工具编排十条路线，收录 Embodied Agent 领域的代表性论文。"
+excerpt: "本文按系统运行时、物理编排、场景图评估、自演化治理、语义动作接口、动作分块、AgentOS、巡检系统治理、导航会话交接、导航工具编排、视觉记忆检视与推理预算分配十二条路线，收录 Embodied Agent 领域的代表性论文。"
 ---
 
 > 本文是 [AI Agent 综述](/AI-Agent-Survey/) 与底层系统架构指南 [Embodied Agent 综述](/Embodied-Agent-Harness-Survey/) 的配套具身论文精读，系统收录 Embodied Agent（具身智能体）领域的代表性工作与前沿突破。
 
 # 具身智能体论文精读
 
-本文关注一个共同问题：机器人如何把感知、规划、执行、验证和恢复组织成可持续运行的闭环。十篇论文分别从运行时、编排器、评估器、演化机制、动作接口、训练目标、通用 AgentOS、巡检系统治理、导航会话交接和导航工具编排切入，实验覆盖仿真环境、文本交互环境与真实机器人；其中 SuperNav 提供简要导读，完整解析链接到 VLN 扩展篇。
+本文关注一个共同问题：机器人如何把感知、规划、执行、验证和恢复组织成可持续运行的闭环。十二篇论文分别从运行时、编排器、评估器、演化机制、动作接口、训练目标、通用 AgentOS、巡检系统治理、导航会话交接、导航工具编排、视觉记忆检视和推理预算分配切入，实验覆盖仿真环境、文本交互环境、交互式视觉游戏与真实机器人；其中 SuperNav 提供简要导读，完整解析链接到 VLN 扩展篇。
 
 | 论文 | 主要切入点 | 代表性验证 |
 |---|---|---|
@@ -30,6 +30,8 @@ excerpt: "本文按系统运行时、物理编排、场景图评估、自演化�
 | [Harness Robotic OS](#harness-robotic-os) | 巡检运行时、分层记忆与自进化治理 | 真实小区导航与巡检；认知运行时尚待受控验证 |
 | [NavHarness](#navharness) | 跨会话搜索交接、记忆处理、恢复与双阶段核验 | GOAT-Bench、IR2R-CE、36 房屋持续部署（仿真） |
 | [SuperNav](#supernav) | 可读取导航技能、视觉点选工具与任务上下文管理 | 单 / 多物体与需求驱动导航、HM3D、Unitree Go2 真机 |
+| [VISTA](#vista) | 无损视觉记忆、模型自主视觉检视与跨上下文笔记 | ARC-AGI-3、GameWorld、AI GameStore、BabyVision |
+| [RACE](#race) | 跨轮推理覆盖、似然代理信号与自适应推理强化学习 | ScienceWorld、WebShop、AppWorld、DeepSearch |
 
 下方筛选栏支持多标签组合；同时选中多个标签时，页面只保留同时满足这些标签的论文。
 
@@ -1572,6 +1574,329 @@ SuperNav 是以导航为主要验证场景的具身 Agent Harness。它让通用
 
 ---
 
+## 11. VISTA (2026) {#vista}
+———给多模态模型一副「能回放、能放大」的眼睛：无损视觉记忆 + 模型自主视觉检视
+
+📄 **Paper**: [arXiv:2610.02200](https://arxiv.org/abs/2610.02200) · [Code](https://github.com/joshhhhhan/VISTA)
+
+**收录说明**：VISTA 的实验环境是交互式视觉游戏而非机器人，但它研究的正是本文的共同问题——不改模型、只改 Harness，让通用多模态模型在长程交互中保留并按需回看视觉证据；作者也把具身任务列为下一步方向。
+
+---
+
+### 精华
+
+- **瓶颈往往不在模型能力，而在 harness（外壳）怎么喂信息**：同一个 Claude Opus 5.0，官方最简 harness 在 ARC-AGI-3 上只有 40.68 RHAE，换成 VISTA 直接 100.00，模型零训练。
+- **"编码一次就丢原图"是多模态 agent 的隐性天花板**：模型在编码时并不知道之后哪些细节会有用；把每一帧原图无损存档，让模型推理时按需回看，等于给它一个**显式的、可寻址的注意力**。
+- **观测用图像而非文本网格**：64×64 网格转文本约 4K token，渲染成 512×512 图只需约 308 token，性能持平甚至更好，每局 token 用量从 71.9M 降到 30.7M。
+- **工具设计要"只读免费、动作收费"**：`inspect` / `read_pixels` 不消耗游戏步数，只有 `play` 计步，鼓励模型"先看清再动手"，结果动作数比首次玩的人类少 57.4%。
+- **简单即通用**：同一套 harness 和几乎相同的短 prompt，原样迁移到 GameWorld、AI GameStore、BabyVision 三个基准，全部大幅超过同模型的官方基线。
+
+---
+
+### 1. 研究背景/问题
+
+ARC-AGI-3 是一组**不给规则、不给目标**的交互式视觉小游戏，agent 必须靠试探自己摸清"哪个是玩家、点哪里会发生什么、怎样算赢"。现有高分方法大多把画面转成数字网格、再让 LLM 写程序构建可执行的世界模型（program synthesis），画面一复杂就难以扩展；而直接用 VLM 的方案又受困于两点：图像只编码一次、细节可能在压缩中丢失，长程交互中早期观测还会因上下文超限被截断或被文字摘要替代。本文想回答：**不写程序、纯靠视觉 + 自然语言推理，配一个合适的 harness，能否把通用多模态模型推到满分？**
+
+---
+
+### 2. 主要方法/创新点
+
+<div align="center">
+  <img src="/images/agent/VISTA-agent-design-comparison.webp" width="60%" />
+<figcaption>三种 agent 设计对比：(a) 语言 agent 只看文本；(b) 常规多模态 agent 把图像一次性编码后就不再回看；(c) VISTA 在每次行动前可以反复调用视觉工具，取回历史帧、重组自己的视觉输入</figcaption>
+</div>
+
+**① 整体框架概述**
+
+VISTA 不是一个新模型，而是一个**纯机械、不含任何训练参数的 harness**：它由三个视觉组件——**视觉观测**、**无损视觉记忆**、**视觉检视工具**——加上两份**笔记文件**（`GUIDE.md` / `WORKING.md`）构成。harness 负责执行工具调用并返回图像或像素值；所有"理解、推理、决策"都交给底座多模态模型（Claude Opus 5.0 / GPT-5.6 Sol / GLM-5.3 Flash）在一个多轮对话里完成。
+
+<div align="center">
+  <img src="/images/agent/VISTA-components-and-pipeline.webp" width="100%" />
+<figcaption>VISTA 的核心组件与单回合流程（以 ARC-AGI-3 为例）：(a) 观测从 64×64 数字网格换成渲染图像；(b) 环境返回的每一帧都以原分辨率存档，可按"回合号 + 帧号"寻址；(c) 模型可在空间上放大任意区域、在时间上一次取回多个历史帧；(d) 每回合 观察 → 推理 → 行动，读写笔记与检视记忆均为可选步骤，只有行动消耗步数</figcaption>
+</div>
+
+**② 逐模块讲解**
+
+**视觉观测（Visual observation）**
+- **输入**：环境当前状态。ARC-AGI-3 官方给的是 64×64 的整数网格（每格是颜色编号）。
+- **处理**：按 8× 最近邻放大，渲染成 512×512 的 PNG，每个格子变成一块纯色像素。
+- **输出**：一张图 + 当前可用动作列表。
+- **设计动机**：图像保留了物体的外观和空间关系，模型可以直接调用预训练中学到的视觉先验（"这是墙"、"这两个东西对称"），而不必在 4096 个数字里自己拼出形状；同时 token 成本大幅下降（见下方卡点 ②）。
+
+**无损视觉记忆（Lossless visual memory）**
+- **输入**：环境返回的**每一帧**，包括一个动作引发的所有中间动画帧（例如点一下方块，会返回 6 帧动画）。
+- **处理**：原样存档，按 `(turn, frame)` 编号索引，与模型上下文里留下了什么完全解耦。
+- **输出**：一个可随时寻址的帧仓库（论文示例中一局已存 1,472 帧）。
+- **设计动机**：常规做法是"编码一次、上下文满了就截断或摘要"，但模型在编码时无法预知哪个细节以后会关键。把原图留在上下文**之外**，上下文压缩就不再意味着视觉证据丢失。
+
+**视觉检视工具（Visual inspection）**
+
+这是让记忆"活起来"的接口，模型自主决定何时用、看哪里：
+- `inspect(question, views)`：**空间上**可裁剪任意帧的任意矩形并放大（论文示例放大约 13× 来分辨小方块的朝向）；**时间上**一次调用可取回多个历史回合的帧做对比，或逐帧回放某个动作的动画过程。
+- `read_pixels(question, views)`：把区域切成网格，返回每格的精确 RGB 数值——用于"两个颜色到底一不一样"这类肉眼易错的判断。
+- 每次调用都要附一个 `question`，强迫模型说清"这次看是为了确认什么"。
+- **关键设计**：检视工具**不消耗游戏动作**，只有 `play` 计步。
+
+<div align="center">
+  <img src="/images/agent/VISTA-visual-memory-usage.webp" width="100%" />
+<figcaption>模型自主使用视觉记忆的两种方式：(a) 跨时空检视——棋盘重置后，模型一次 inspect 调用取回过去 22 回合中的 4 帧，拼出完整地图；(b) 局部细节检视——把三个小方块放大约 13×，看清紫色标记在哪一侧，从而判断每个守卫的朝向</figcaption>
+</div>
+
+**笔记文件（GUIDE.md / WORKING.md）**
+- `GUIDE.md`：跨关卡、跨上下文长期有效的"游戏规则手册"（例如"点击橙色块会把它变成 X 标记，再点 X 会重建方块"）。
+- `WORKING.md`：当前关卡的草稿本，关卡推进时清空。
+- 上下文接近上限时，agent 先把交接摘要写进 `WORKING.md`，再在全新上下文中恢复；笔记、视觉记忆、动作历史都保留。
+
+**③ 端到端数据流**
+
+一个回合内，模型可以与 harness 多次往返，但只执行一个游戏动作。下图是"读者版"的单回合流程：
+
+```mermaid
+graph TD
+    A["收到当前帧 + 可用动作"] --> B["读 GUIDE.md / WORKING.md (可选)"]
+    B --> C["自然语言推理: 假设规则、预测结果"]
+    C --> D{"证据够不够?"}
+    D -- "不够" --> E["inspect / read_pixels 回看记忆 (不计步)"]
+    E --> C
+    D -- "够了" --> F["更新笔记 (可选)"]
+    F --> G["play 执行一个动作 (唯一计步的操作)"]
+    G --> H["所有返回帧存入无损视觉记忆"]
+    H --> I["最后一帧成为下一回合观测"]
+    I --> A
+```
+
+prompt 也极简，核心只有四句：尽量少用动作通关；构建并持续修正一个紧凑的游戏模型；每次 `play` 前说出预期、之后说出所有可见变化；把稳定的认识写进 `GUIDE.md`。这种"先预测、再对照"的写法相当于让模型在线做假设检验。
+
+> **卡点 ① — 为什么不把所有帧都塞进上下文就行了？举个例子**：官方实现每个动作自动塞入最多 7 帧。若用文本网格，每帧约 4K token，一个请求光观测就是约 28K token；即便换成图像（每帧约 308 token，共约 2.2K），玩 300 步也会累积约 65 万 token，迟早超出 200K 上下文被截断。VISTA 反过来：每回合**只自动给最后 1 帧**（约 308 token），其余帧全部留在上下文外的仓库里，需要时才用 `inspect` 精准调回 1–4 帧。上下文里装的是"模型此刻认为相关的"画面，而不是"最近发生的"画面——这就是论文所说的"显式注意力"。
+
+**④ 训练目标 / 损失函数**
+
+无。VISTA 完全免训练，所有提升都来自 harness 设计；底座模型以闭源 CLI（Claude Code / Codex）或开源权重原样调用。
+
+**⑤ 评测指标：RHAE（卡点 ②）**
+
+ARC-AGI-3 用 **Relative Human Action Efficiency（RHAE）** 衡量"和第一次玩的人类相比，你用的步数有多省"。设某关人类基准步数为 $h$（首次通关玩家步数的上中位数）、agent 用了 $a$ 步，单关得分为
+
+$$S_{\ell,g} = \min\left(1.15,\ \left(\frac{h_{\ell,g}}{a_{\ell,g}}\right)^2\right)$$
+
+未通关记 0 分。一局游戏有 $n$ 关，第 $\ell$ 关权重 $w_\ell = \ell$（越靠后越重要）；若只通到第 $k$ 关，整局得分取"加权平均关卡分"与"加权完成比例"两者中的较小值：
+
+$$S_g = \min\left(\frac{\sum_{\ell=1}^{k} w_\ell}{\sum_{\ell=1}^{n} w_\ell},\ \frac{\sum_{\ell=1}^{n} w_\ell S_{\ell,g}}{\sum_{\ell=1}^{n} w_\ell}\right)$$
+
+> **举个例子**：一局 2 关，权重 1、2。人类第 1 关 32 步，agent 16 步 → $(32/16)^2=4$，封顶 1.15；人类第 2 关 40 步，agent 50 步 → $(40/50)^2=0.64$。
+> 两关都通：加权平均 $(1.15\times1 + 0.64\times2)/3 = 0.81$，完成比例 $3/3=1$，取小 → **0.81**。
+> 只通第 1 关：加权平均 $1.15/3 = 0.38$，完成比例 $1/3=0.33$，取小 → **0.33**。
+> 可见：平方项让"多走几步"的惩罚很重；而 100 分意味着**每局都通关、且整体加权效率不低于人类**——省下的步数可以在 1.15 封顶内弥补个别多走的关卡。
+
+**⑥ 与官方基线的差异（卡点 ③）**
+
+| 维度 | 官方最简 harness | VISTA |
+|---|---|---|
+| 观测形式 | 64×64 文本数字网格 | 512×512 渲染图像 |
+| 历史保留 | 175K 滑动窗口，超出就丢最早的回合 | 所有帧无损存档于上下文之外，可按回合/帧号取回 |
+| 每步自动输入 | 最多 7 帧中间状态 | 只给最后 1 帧，其余由模型按需检视 |
+| 长期知识 | 无 | `GUIDE.md` + `WORKING.md`，跨上下文重启保留 |
+
+---
+
+### 3. 核心结果/发现
+
+**ARC-AGI-3（25 个公开游戏）**：VISTA + Claude Opus 5.0（xhigh）**RHAE 100.00**，共 7,302 步，比首次玩的人类（17,135 步）少 57.4%；VISTA + GPT-5.6 Sol（max）同样 25 局全通，RHAE 99.00（三次运行 99.04 ± 0.17）。同模型在官方实现下分别只有 40.68 和 13.33。据作者所知，这是**首个不依赖程序合成**就达到满分/近满分的系统，与 Tycho（100.00）、Retrodict（99.86）等程序合成方案持平。
+
+<div align="center">
+  <img src="/images/agent/VISTA-harness-ablation.webp" width="100%" />
+<figcaption>逐步叠加 harness 组件的消融（GPT-5.6 Sol）：文本网格换图像 13.33→47.32；放宽步数/时间上限 51.66；连续对话 65.82；加入两份笔记 70.05；加入无损记忆与检视 94.10（跃升最大）；再加精确像素读取即完整 VISTA 99.00，且总步数降到 9,126</figcaption>
+</div>
+
+**组件消融的关键读数**：最大的一跳来自"无损记忆 + 检视"（70.05 → 94.10，+24），同时动作数从 23,702 骤降到 12,261——能回看之后，模型少了大量盲目试错。
+
+<div align="center">
+  <img src="/images/agent/VISTA-text-vs-image.webp" width="100%" />
+<figcaption>观测表示对比：同一 harness 下，图像观测（99.00）与文本网格（96.75）性能相当，但动作更少（9,126 vs 10,614），每局 token 用量不到一半（30.7M vs 71.9M）</figcaption>
+</div>
+
+<div align="center">
+  <img src="/images/agent/VISTA-context-and-scale-ablation.webp" width="100%" />
+<figcaption>上下文长度与输入分辨率消融：(a) 200K 上下文最佳（99.0），100K 仅降 0.4 但 token 减半，780K 反而更差且 token 翻三倍多；(b) 4× 放大（256 像素，约 77 token/帧）与默认 8× 效果相当，2× 偏糊、16× 浪费上下文导致下降到 88.3</figcaption>
+</div>
+
+**其他发现**：
+- **上下文不是越长越好**：500K / 780K 反而下降到 94.4 / 93.9，说明"按需检视"比"什么都留着"更有效。
+- **开源底座**：GLM-5.3 Flash 320B 下，官方实现 1.89 → 去掉检视工具的 VISTA 13.27 → 完整 VISTA **66.93**，视觉工具贡献了绝大部分增益。
+- **3D 渲染**：把同样的游戏渲染成等轴 3D 视角，RHAE 仍有 84.12（动作数增至 20,640），远高于官方文本基线。
+
+<div align="center">
+  <img src="/images/agent/VISTA-general-benchmarks.webp" width="100%" />
+<figcaption>迁移到其他视觉环境（GPT-5.6 Sol）：GameWorld 成功率 63.3% / 进度 79.3%，超过新手人类（55.3% / 64.1%）；AI GameStore 几何均值 140.3，超过人类中位数（100）；静态的 BabyVision 视觉追踪题准确率 41.0% → 63.2%，但仍明显低于人类的 92.3%</figcaption>
+</div>
+
+**跨基准迁移**：同一 harness 只改了动作接口名（`play` → `act`）和任务描述，就在三个基准上全面超过同模型的官方基线和此前最佳报告结果。BabyVision 没有交互历史，提升纯粹来自"在单张图里放大看、读像素"，说明检视工具本身就有独立价值。
+
+---
+
+### 4. 局限性
+
+成功在很大程度上仰赖底座模型本身的能力，VISTA 只是把它"引出来"；且所用模型发布晚于公开测试集，无法排除这些游戏已出现在训练数据中，需在 ARC-AGI-3 私有集等全新游戏上进一步验证泛化性。
+
+---
+
+## 12. RACE (2026) {#race}
+———Agent 什么时候该想？用"动作似然掉了多少"判断旧推理还够不够用
+
+📄 **Paper**: [arXiv:2610.12061](https://arxiv.org/abs/2610.12061) · [Code](https://github.com/HututuAI/RACE)
+
+**收录说明**：RACE 的实验环境是文本与 API 交互任务而非机器人，但它回答的是长程闭环 Agent 的共同成本问题——每一轮都推理代价高昂，旧推理能撑多远、何时才需要重新想；这套「跨轮推理覆盖」的判定与训练方法可直接迁移到具身 Agent 的多轮决策中。
+
+### 精华
+
+- 推理有"保质期"：前面某一轮想好的计划，往往能撑住后面好几轮动作，没必要每轮都重新想；真正的问题不是"这一轮能不能不想"，而是"旧推理还能撑多远"。
+- 用便宜的代理信号替代昂贵的验证：不必把每个候选上下文都重新生成一遍动作来检验，只要用 teacher-forcing 算一下参考动作的似然掉了多少，就能近似判断动作还能不能复现。
+- 删一步推理要看它对**之后所有动作**的影响，而不仅是当前这一步——这是"跨轮"估计与以往逐轮独立判断的根本区别。
+- 同一个标注器（LoGiC）离线给 SFT 造数据、在线给 RL 造信号，一套机制贯通两个训练阶段；RL 里用"掩码 + 主动教模型闭合 `</think>`"两手配合，而不是靠调奖励。
+
+---
+
+### 1. 研究背景/问题
+
+ReAct 式 LLM Agent 默认每一轮动作前都先推理，长轨迹下推理 token 成本线性累积。已有的自适应推理方法要么逐轮独立判断"这一轮要不要想"，忽略了早先推理可以跨多轮持续生效；要么靠"有推理 vs 无推理各生成一次动作再比较"来获得监督信号，轨迹越长、尤其在 on-policy RL 里每个 batch 都要重做，代价难以承受。
+
+---
+
+### 2. 主要方法/创新点
+
+#### 2.1 动机实验：推理会跨轮持续生效，且似然下降能预测这一点
+
+<div align="center">
+  <img src="/images/agent/RACE-cross-turn-analysis.webp" width="100%" />
+<figcaption>跨轮推理支撑分析：(a) 截断第 s 轮之后的所有推理，看后续动作还能否复现，得到推理支撑的"持续跨度" L；(b) 参考动作似然下降 d 与动作复现率高度对应，d ≤ 0.001 时复现率超过 99%</figcaption>
+</div>
+
+作者用 Qwen3.5-9B 在 ScienceWorld、WebShop 的成功轨迹上做了两个分析：
+
+- **生成式测量（图 a）**：选一个截断点 s，保留第 s 轮及之前的推理，删掉之后所有推理（动作、观测不变），在每个后续轮 j 采样 K=4 次动作，统计能复现参考动作 $a_j^*$ 的比例 $$\mathrm{Rec}_j$$。结果显示：有的推理只能撑一步，有的能连续撑住后面多步（ScienceWorld 上约 11% 的推理能撑满 5 步）——作者称之为**跨轮推理持续性**（cross-turn reasoning persistence）。
+- **似然式估计（图 b）**：对参考动作计算平均 token 对数似然 $\ell(a_j^* \mid h)$，比较"完整上下文"与"截断上下文"下的差值
+
+$$d_j = \ell(a_j^* \mid x_j, r_j) - \ell(a_j^* \mid \tilde x_j)$$
+
+$d_j$ 越小，说明删掉推理后模型"照样很笃定地会做这个动作"；实验发现 $d_j$ 与复现率几乎单调对应。这就把"要生成很多次才能验证"换成了"一次 teacher-forced 打分"。
+
+| 维度 | 生成式验证（以往做法） | 似然代理（本文做法） |
+|---|---|---|
+| 每个候选上下文的成本 | 自回归采样 K 次动作再比对 | 一次批量 teacher-forcing 打分 |
+| 能否放进 on-policy RL | 每个 batch 都要重做，开销太大 | 便宜，可每个 rollout batch 都跑 |
+| 看到的影响范围 | 通常只看当前一轮 | 当前轮 + 之后所有轮的参考动作 |
+
+#### 2.2 整体框架
+
+<div align="center">
+  <img src="/images/agent/RACE-overview.webp" width="100%" />
+<figcaption>RACE 训练框架：核心算法 LoGiC 判定每一轮推理"留（THINK）"还是"删（SKIP）"；离线用于构造 SFT 数据，在线用于 RL 中的推理掩码与推理闭合监督</figcaption>
+</div>
+
+RACE（Reasoning Adaptation through Cross-Turn Estimation）由三部分组成：**LoGiC** 负责给一条轨迹标出哪些推理可删；**SFT 阶段**用 LoGiC 把全推理轨迹压缩成"该想才想"的轨迹做监督；**RL 阶段**在每批成功 rollout 上重跑 LoGiC，用结果屏蔽冗余推理的梯度、并直接教模型在该停的地方立刻闭合推理。
+
+```mermaid
+graph LR
+    A["全推理轨迹（DeepSeek-V4-Pro 标注）"] --> B["LoGiC 离线标注"]
+    B --> C["自适应推理轨迹"]
+    C --> D["RACE-SFT"]
+    D --> E["on-policy rollout"]
+    E --> F{"轨迹是否成功?"}
+    F -- "成功" --> G["LoGiC 在线标注 SKIP 轮"]
+    G --> H["掩码 GRPO + 推理闭合损失"]
+    F -- "失败" --> I["标准 GRPO"]
+    H --> J["RACE-SFT-RL"]
+    I --> J
+```
+
+#### 2.3 LoGiC：似然引导的渐进式推理覆盖检测
+
+<div align="center">
+  <img src="/images/agent/RACE-LoGiC.webp" width="100%" />
+<figcaption>LoGiC 三步流程：(1) 在完整轨迹上初始化各参考动作的似然向量；(2) 从第 2 轮起逐轮尝试删掉当前推理，构造候选轨迹；(3) 若当前及之后所有动作的似然下降都不超过阈值则接受删除，并把删除结果带入后续轮次的判断</figcaption>
+</div>
+
+"推理覆盖"（reasoning cover）的直觉：留下最少的几段推理，让它们**合起来**仍能撑住整条轨迹的所有动作——就像用最少的路灯照亮整条路。LoGiC 按"输入 → 处理 → 输出"运作：
+
+- **输入**：一条成功轨迹 $$\tau = (q, (r_t, a_t, o_t)_{t=1}^T)$$，把每个 $a_t$ 视为固定的参考动作 $a_t^*$；阈值 $\epsilon = 0.001$。
+- **① 初始化**：在完整推理上下文下算出似然向量 $\ell^{(0)} = [\ell(a_1^* \mid x_1, r_1), \dots, \ell(a_T^* \mid x_T, r_T)]$。第 1 轮推理默认保留。
+- **② 渐进压缩**：从 t=2 开始，在"已接受的删除都已生效"的当前压缩上下文 $x^{(t)}$ 中，再试着删掉 $r_t$，重新计算第 t 轮及之后所有参考动作的似然 $\tilde\ell_j^{(t)}$（之前轮次不受影响，直接沿用）。
+- **③ 似然验证**：计算 $d_j^{(t)} = \ell_j^{(t-1)} - \tilde\ell_j^{(t)}$，只有当 $d_j^{(t)} \le \epsilon$ 对所有 $j \in \{t, \dots, T\}$ 都成立时才接受删除；接受则更新似然向量与上下文，否则保留 $r_t$ 并放入覆盖集合。
+- **输出**：压缩轨迹 $\tilde\tau$ 与推理覆盖 C，即每一轮的 THINK / SKIP 标签。
+- **设计动机**：一是"渐进"——每次判断都基于已删过的上下文，避免多个"单独看都可删"的推理被同时删掉、合起来却撑不住；二是"看后续"——一段推理可能对当前动作无关紧要，却是后面某一步的唯一依据。
+
+> **举个例子**：一条 4 轮轨迹，阈值 ε = 0.001，初始化似然 $\ell^{(0)}$ = [-0.20, -0.35, -0.10, -0.40]。
+> - **t=2，试删 r2**：重算第 2–4 轮得 [-0.3504, -0.1003, -0.4006]，下降量 0.0004 / 0.0003 / 0.0006 全部 ≤ 0.001 → **接受**，r2 标为 SKIP，似然向量更新为 [-0.20, -0.3504, -0.1003, -0.4006]。
+> - **t=3，试删 r3**（r2 已删）：第 3 轮动作似然只降 0.0001，单看当前轮完全可删；但第 4 轮从 -0.4006 跌到 -0.52，下降 0.12 → **拒绝**，r3 保留。这正是"逐轮独立判断"会误删的情形。
+> - **t=4，试删 r4**：第 4 轮似然跌到 -0.95，下降 0.55 → 拒绝。
+>
+> 最终推理覆盖为 {r1, r3, r4}，即 THINK / SKIP / THINK / THINK。整个过程只做了 3 次候选轨迹的批量打分；若用生成式验证，每个候选的每个后续轮都要采样 K=4 次动作，共 (3+2+1)×4 = 24 次自回归生成。
+
+阈值取 0.001 有图 1(b) 的支撑：d ≤ 0.001 时 ScienceWorld / WebShop 的动作复现率分别为 99.52% / 99.07%。
+
+#### 2.4 Stage 1：基于 LoGiC 的 SFT 数据合成
+
+用 DeepSeek-V4-Pro 采集成功的全推理轨迹，用 Qwen3.5-9B 跑 LoGiC 得到 $\tilde\tau = \mathrm{LoGiC}(\tau)$——被删除的轮次保留一个空的 `<think></think>`，直接给动作。再对 Qwen3.5-9B 做标准 SFT：
+
+$$\mathcal L_{SFT} = -\mathbb E_{\tilde\tau \sim \mathcal D_{SFT}} \sum_{n=1}^{\lvert \tilde\tau \rvert} \log \pi_\theta(\tilde\tau_n \mid \tilde\tau_{<n})$$
+
+损失只作用于模型生成的推理与动作 token。这一步让模型先学会"什么情况可以直接动手"，作为 RL 的初始化。
+
+#### 2.5 Stage 2：推理覆盖感知的 Agentic RL
+
+离线数据和不断演化的策略会逐渐脱节，因此 RL 中对每个 rollout batch 的**成功轨迹**重新跑 LoGiC，得到各轨迹的 SKIP 轮集合 $S_i$；失败轨迹走标准 GRPO。两个机制配合：
+
+| 机制 | 做什么 | 解决什么问题 |
+|---|---|---|
+| 推理掩码（Reasoning Masking） | SKIP 轮的**推理 token** 不参与 GRPO 梯度，**动作 token** 照常优化；归一化分母仍按原 token 总数 | 防止成功轨迹的正优势把冗余推理也一起强化 |
+| 推理闭合（Reasoning Closure） | 在 SKIP 轮的压缩上下文后，直接最大化生成推理终止符 `</think>` 的概率 | 掩码只是"不奖励"，闭合监督才是"主动教它在这里马上收尾" |
+
+掩码后的 GRPO 损失（$K_i$ 为去掉 SKIP 轮推理 token 后剩下的位置，$P_i$ 为全部策略 token 位置）：
+
+$$\mathcal L_{GRPO} = -\frac{1}{\sum_{i \in B} \lvert P_i \rvert} \sum_{i \in B} \sum_{k \in K_i} \min\left(r_{i,k}(\theta) \hat A_i, \mathrm{clip}(r_{i,k}(\theta), 1-\epsilon_{clip}, 1+\epsilon_{clip}) \hat A_i\right)$$
+
+推理闭合损失（$e$ 为 `</think>`，$I_{succ}$ 为成功轨迹集合，按轨迹总轮数 $T_i$ 归一化，使监督强度与 SKIP 轮的占比成正比）：
+
+$$\mathcal L_{close} = -\frac{1}{\sum_{i \in B} T_i} \sum_{i \in I_{succ}} \sum_{t \in S_i} \log \pi_\theta(e \mid x_i^{(t)})$$
+
+最终 actor 目标为 $\mathcal L_{actor} = \mathcal L_{GRPO} + \lambda \mathcal L_{close}$，λ 在 ScienceWorld / WebShop / AppWorld 取 0.02，DeepSearch 取 0.01。任务奖励负责"做对"，LoGiC 信号负责"少想"，两者分工明确，不需要在奖励里加长度惩罚。
+
+**推理时**无额外步骤：模型在每一轮自行决定写一段推理，还是输出空 `<think></think>` 后直接调用工具。
+
+---
+
+### 3. 核心结果/发现
+
+在 ScienceWorld（科学推理）、WebShop（网购）、AppWorld（应用 API 操作）、DeepSearch（检索问答）四个基准上，以 Qwen3.5-9B 为骨干：
+
+| 方法 | ScienceWorld 成功率 / Tok. | WebShop | AppWorld | DeepSearch |
+|---|---|---|---|---|
+| Qwen3.5-9B（Base） | 18.52 / 2,210 | 15.60 / 2,713 | 46.15 / 3,134 | 29.25 / 1,281 |
+| AdaptThink | 64.49 / 1,252 | 44.60 / 748 | **68.72** / 2,381 | 33.50 / 1,481 |
+| SFT+GRPO（无 LoGiC） | 74.55 / 2,073 | 52.00 / 2,702 | 65.30 / 3,545 | 35.75 / 2,163 |
+| **RACE-SFT-RL** | 73.28 / 1,403 | **53.40** / **535** | 65.13 / **1,900** | 35.00 / **822** |
+
+- **省 token 而不掉点**：与标准 SFT+GRPO 相比，成功率差距在 1.4 分以内，推理 token 分别减少 **32.3% / 80.2% / 46.4% / 62.0%**。
+- **小模型追平大模型**：9B 的 RACE 在 ScienceWorld（73.28）超过 GPT-5.5（69.88），在 WebShop（53.40）与 Claude-Opus-4.6 持平；但 AppWorld 仍明显落后于 GPT-5.5（91.11）和 DeepSeek-V4-Pro（87.69）。
+- **RL 阶段贡献最大**：RACE-SFT 相比标准 SFT 只省 4.3%–20.0% token；进入 RL 后，RACE-SFT-RL 相比 RACE-SFT 成功率再涨 2–30 分、token 再降 29%–57%。
+
+<div align="center">
+  <img src="/images/agent/RACE-ablation.webp" width="100%" />
+<figcaption>有无 LoGiC 的对比：上排为成功率，下排为每条轨迹的推理 token 数；SFT 阶段差别不大，RL 阶段 RACE-SFT-RL 在成功率持平的前提下大幅压低推理 token</figcaption>
+</div>
+
+- **消融**：RL 中去掉 LoGiC 后推理成本暴涨（AppWorld 1,900 → 8,574 token）——说明标准 GRPO 本身会把推理越练越长；只去掉推理掩码，token 有时更少（WebShop 仅 124），但成功率掉到 46.00，说明掩码负责的是"别把推理砍过头"。
+- **行为分析**：RL 后跳过推理的轮次比例大幅上升（ScienceWorld 37% → 70%、WebShop 7% → 56%、AppWorld 8% → 52%），但保留下来的推理并非一律变短——ScienceWorld、AppWorld 单次推理反而更长（132 → 273 token），即把思考集中到规划与出错恢复等关键轮次；DeepSearch 跳过率仅 5.77%，几乎每次检索后仍需推理。
+- **规模扩展**：在 Qwen3.5-2B / 4B / 9B 上趋势基本一致，AppWorld 因训练数据少（147 个任务），RL 增益在小模型上不稳定。
+
+---
+
+### 4. 局限性
+
+LoGiC 依赖成功轨迹与固定参考动作，RL 中失败轨迹得不到任何推理信号，且阈值 ε 为全局统一值，未按任务难度自适应；在推理密集型的检索问答（DeepSearch）上几乎跳不过推理，在 AppWorld 上与前沿大模型仍有明显差距。（以上为本摘要的观察，论文未单列局限性章节。）
+
+---
+
 # 参考资料
 
 ## 论文引用
@@ -1587,6 +1912,8 @@ SuperNav 是以导航为主要验证场景的具身 Agent Harness。它让通用
 8. **Harness Robotic OS** (2026). 把四足巡检从「导航栈」升级为「具身智能体运行时」. arXiv: [2609.11225](https://arxiv.org/abs/2609.11225)
 9. **NavHarness** (2026). NavHarness: Towards Lifelong Embodied Navigation. arXiv: [2609.34276](https://arxiv.org/abs/2609.34276) · Code: [billzhao1030/NavHarness](https://github.com/billzhao1030/NavHarness) · Project Page: [billzhao1030.github.io](https://billzhao1030.github.io)
 10. **SuperNav** (2026). SuperNav: An Agentic Navigation System for Any Task in Any Scene. arXiv: [2610.12126](https://arxiv.org/abs/2610.12126) · 完整解析：[VLN 扩展篇](/VLN-Papers-Extended/#supernav)
+11. **VISTA** (2026). VISTA: A Visual Harness for Reasoning in an Interactive World. arXiv: [2610.02200](https://arxiv.org/abs/2610.02200) · Code: [joshhhhhan/VISTA](https://github.com/joshhhhhan/VISTA)
+12. **RACE** (2026). When Should Agents Think? Adaptive Reasoning via Cross-Turn Estimation. arXiv: [2610.12061](https://arxiv.org/abs/2610.12061) · Code: [HututuAI/RACE](https://github.com/HututuAI/RACE)
 
 <script>
 (function () {
@@ -1601,9 +1928,11 @@ SuperNav 是以导航为主要验证场景的具身 Agent Harness。它让通用
     { m: 'ABot-AgentOS', t: ['AgentOS', 'Harness', '闭环系统', '拓扑图', '空间记忆', '自演化', '实机部署'] },
     { m: 'NavHarness', t: ['Harness', '闭环系统', '空间记忆', '异常恢复', '具身导航', '零微调', '长程任务'] },
     { m: 'SuperNav', t: ['Harness', '闭环系统', '主动探索', '异常恢复', '具身导航', '实机部署'] },
+    { m: 'VISTA', t: ['Harness', '视觉记忆', '主动探索', '零微调', '长程任务'] },
+    { m: 'RACE', t: ['强化学习', '长程任务', '推理预算'] },
   ];
 
-  var ALL_TAGS = ['闭环系统', 'Harness', 'AgentOS', '具身操作', '场景图', '拓扑图', '实机部署', '快慢双系统', '类型化动作', '空间记忆', '3D语义', '多机协同', 'TAMP', 'VLA', '双重校验', '退出码评估', '自演化', '高频裁判', '跨本体', '主动探索', '零微调', '动作分块', '强化学习', '技能归纳', '长程任务', '异常恢复', '具身导航'];
+  var ALL_TAGS = ['闭环系统', 'Harness', 'AgentOS', '具身操作', '场景图', '拓扑图', '实机部署', '快慢双系统', '类型化动作', '空间记忆', '3D语义', '多机协同', 'TAMP', 'VLA', '双重校验', '退出码评估', '自演化', '高频裁判', '跨本体', '主动探索', '零微调', '动作分块', '强化学习', '技能归纳', '长程任务', '异常恢复', '具身导航', '视觉记忆', '推理预算'];
 
   var activeTags = [];
   var resultsPanel = null;
