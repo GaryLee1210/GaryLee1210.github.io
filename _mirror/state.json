@@ -68,6 +68,7 @@
     "_posts/weekly-reports/2026-09-27-VLN-Weekly.md": "627aeaf07f9f03cb7371dab0086a8ac539a3b4e1",
     "_posts/weekly-reports/2026-10-05-VLN-Weekly.md": "338aa4f4a0fcee813e052744a09740e71694926f",
     "_posts/weekly-reports/2026-10-11-VLN-Weekly.md": "fb90888cad46773f072fbed44bd170ede9bea7e2",
+    "_posts/weekly-reports/2026-10-17-VLN-Weekly.md": "4e194a50d0d2e12229b3a9905b59979211ec1e39",
     "_sass/_feedback.scss": "d37fad0661b1447e0e5c51732ee1cca75889f6e4",
     "_sass/_gitalk.scss": "63916689d75ac2c234e86e1c1507838164468284",
     "_sass/_highlights.scss": "3ce190e07842c1ac950893ad8d677d15a4f3b5e7",
@@ -86,6 +87,7 @@
     "_translations/en/blog/vln-weekly-2026-09-27.md": "fb4426df0c8f7794d87dea69b40ec89abf1d2e15",
     "_translations/en/blog/vln-weekly-2026-10-05.md": "45a2274f548990aedfe5b4f49ffd7992ef30cfa4",
     "_translations/en/blog/vln-weekly-2026-10-11.md": "a56e5dde4efaf5ab38de16c451878f695464afb4",
+    "_translations/en/blog/vln-weekly-2026-10-17.md": "e2cf72531f37f5399b5adc6d57b6b225551a260c",
     "_translations/en/research/AI-Agent-Survey.md": "20b13bd0b437f711b09a1513d3ffd29f36767b83",
     "_translations/en/research/Deep-Learning-Survey.md": "d3f4f59dd3df0ff8ed0f80ad531f44be3ac62974",
     "_translations/en/research/Embodied-Agent-Harness-Survey.md": "e092043e28684f21c99cac92f08d8ce388a00dd4",
@@ -150,6 +152,7 @@
     "docs/translations/vln-weekly-2026-09-27.en.json": "602992d8dc78725d81b34d88c9cfda03352d3c98",
     "docs/translations/vln-weekly-2026-10-05.en.json": "3e770a72e704be101c2bc251ca3e25efe67a4f68",
     "docs/translations/vln-weekly-2026-10-11.en.json": "91bde5f771609d81b61b70a0d811818d90cd3bb7",
+    "docs/translations/vln-weekly-2026-10-17.en.json": "a2e30b4e782e583c013d8f8c8bd8337a5065f4e2",
     "docs/translations/world-models-survey.en.json": "ec3a951d7b19313a5470346a81dc6851ce275a6d",
     "images/DL/Clock-Hands1.webp": "442a38f31c9ba257f3499c4d347f427d5b45c1a2",
     "images/DL/Clock-Hands2.webp": "91f9e096e63296f1d2f56057d929f19f44d606b0",
@@ -1314,6 +1317,6 @@
     "scripts/tests/test_translation_features.py": "3ec53be4ea3c52e6346c69584041d4d0b29239b0",
     "scripts/tests/test_translation_sync.py": "0b29538b5396cc67c2191312dbecec7ddc305054"
   },
-  "revision": "0713c340e6ebff6f00480486b0186645a801544b",
+  "revision": "b9e5f4f849fd6518434c27bfd25cf2f1b160aa10",
   "upstream": "TingdeLiu/tingdeliu.github.io"
 }
