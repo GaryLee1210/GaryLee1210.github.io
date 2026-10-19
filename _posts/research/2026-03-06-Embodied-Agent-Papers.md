@@ -3,20 +3,20 @@ layout: post
 lang: zh-CN
 translation_id: embodied-agent-papers
 title: "Embodied Agent 论文精读"
-date:   2026-10-15
+date: 2026-10-19
 tags: [Agent, Embodied AI, Robotics, VLA, Deep Learning]
 categories: research
 comments: true
 author: Tingde Liu
 toc: true
-excerpt: "本文按系统运行时、物理编排、场景图评估、自演化治理、语义动作接口、动作分块、AgentOS、巡检系统治理、导航会话交接、导航工具编排、视觉记忆检视、推理预算分配与统一分类十三条路线，收录 Embodied Agent 领域的代表性论文。"
+excerpt: "本文按系统运行时、物理编排、场景图评估、自演化治理、语义动作接口、动作分块、AgentOS、巡检系统治理、导航会话交接、导航工具编排、视觉记忆检视、推理预算分配、统一具身推理、统一分类与递归 Harness 优化十五条路线，收录 Embodied Agent 领域的代表性论文。"
 ---
 
 > 本文是 [AI Agent 综述](/AI-Agent-Survey/) 与底层系统架构指南 [Embodied Agent 综述](/Embodied-Agent-Harness-Survey/) 的配套具身论文精读，系统收录 Embodied Agent（具身智能体）领域的代表性工作与前沿突破。
 
 # 具身智能体论文精读
 
-本文关注一个共同问题：机器人如何把感知、规划、执行、验证和恢复组织成可持续运行的闭环。十三篇论文分别从运行时、编排器、评估器、演化机制、动作接口、训练目标、通用 AgentOS、巡检系统治理、导航会话交接、导航工具编排、视觉记忆检视、推理预算分配和统一分类切入，实验覆盖仿真环境、文本交互环境、交互式视觉游戏与真实机器人；其中 SuperNav 提供简要导读，完整解析链接到 VLN 扩展篇。
+本文关注一个共同问题：机器人如何把感知、规划、执行、验证和恢复组织成可持续运行的闭环。十五篇论文分别从运行时、编排器、评估器、演化机制、动作接口、训练目标、通用 AgentOS、巡检系统治理、导航会话交接、导航工具编排、视觉记忆检视、推理预算分配、统一具身推理、统一分类和递归 Harness 优化切入，实验覆盖仿真环境、文本交互环境、交互式视觉游戏、真实机器人和软件专业任务；其中 SuperNav 提供简要导读，完整解析链接到 VLN 扩展篇。
 
 | 论文 | 主要切入点 | 代表性验证 |
 |---|---|---|
@@ -27,12 +27,14 @@ excerpt: "本文按系统运行时、物理编排、场景图评估、自演化�
 | [Show-Harness](#show-harness) | 语义动作单元与本体解释器 | Franka、AgileX、仿真与真机泛化 |
 | [SPACE](#space) | 技能引导的自适应动作分块与强化学习 | ALFWorld、ScienceWorld |
 | [ABot-AgentOS](#abot-agentos) | 双 LLM、Agent Harness 与终身多模态记忆 | EmbodiedWorldBench、记忆基准 |
+| [ABot-ER](#abot-er) | 统一具身推理与数据—模型协同演化 | 十二项具身理解与规划基准、真机定性演示 |
 | [Harness Robotic OS](#harness-robotic-os) | 巡检运行时、分层记忆与自进化治理 | 真实小区导航与巡检；认知运行时尚待受控验证 |
 | [NavHarness](#navharness) | 跨会话搜索交接、记忆处理、恢复与双阶段核验 | GOAT-Bench、IR2R-CE、36 房屋持续部署（仿真） |
 | [SuperNav](#supernav) | 可读取导航技能、视觉点选工具与任务上下文管理 | 单 / 多物体与需求驱动导航、HM3D、Unitree Go2 真机 |
 | [VISTA](#vista) | 无损视觉记忆、模型自主视觉检视与跨上下文笔记 | ARC-AGI-3、GameWorld、AI GameStore、BabyVision |
 | [RACE](#race) | 跨轮推理覆盖、似然代理信号与自适应推理强化学习 | ScienceWorld、WebShop、AppWorld、DeepSearch |
 | [Agentic Robots](#agentic-robots) | Model、Data、Environment、Harness 四领域与 17 类功能 | 综述归纳；未提出统一新方法实验 |
+| [Harness²](#harness2) | 无标准答案的行为对比、双层递归与改进经验库 | 通用 Agent 方法参考；WorkBuddy-Bench、JobBench、LAB |
 
 下方筛选栏支持多标签组合；同时选中多个标签时，页面只保留同时满足这些标签的论文。
 
@@ -1222,7 +1224,194 @@ Agent Harness 改变了传统单模型控制器的设计，将 Agent 调度划�
 
 ---
 
-## 8. Harness Robotic OS (2026) {#harness-robotic-os}
+## 8. ABot-ER (2026) {#abot-er}
+———让具身理解、长程规划与交互点定位共享一个模型，用失败诊断驱动训练数据的持续修正
+
+📄 **Paper**: [arXiv:2610.18355v2](https://arxiv.org/abs/2610.18355v2) · [Code](https://github.com/amap-cvlab/ABot-ER)
+
+### 精华 {#abot-er-key-takeaways}
+
+ABot-ER 把机器人在行动前后需要的空间关系、场景状态、事件变化、行动计划与交互位置统一到一个具身推理模型，向 [ABot-AgentOS](#abot-agentos) 等运行时提供判断、计划和图像坐标，物理动作由下游策略完成。
+它最值得借鉴的是先辨认训练数据出了什么问题，再协调补充监督、修正输出协议与调整采样比例，而不是把每次低分都归结为数据不够。
+模型在共享主干上增加问答与规划两类低秩残差，但主干仍联合训练，且协议修复后的消融没有显示两类任务均分继续受益，结构收益有明确边界。
+单次使用收敛后的语料可以用五分之一的累计后训练量获得接近六轮链式训练的十二项均分，说明可复用的资产包含经过审计的数据与评测规则。
+阅读时应区分点定位命中率、仿真任务成功率和真机定性演示，也应区分训练中的语料演化与机器人部署后的在线适应。
+
+---
+
+### 1. 研究背景/问题 {#abot-er-background}
+
+机器人把物体移到指定位置，需要同时理解物体与人的相对方位、当前状态、步骤依赖和可交互区域；这些能力分别训练时容易各有所长，联合训练又可能因输出格式和学习进度不同而互相干扰。
+论文将两个瓶颈分别称为 **Data-Model Drift**——固定数据比例逐渐跟不上模型当前的短板，以及 **Modality Entanglement**——文字、计划和坐标监督对共享参数提出不同要求。
+ABot-ER 的目标是在一个检查点中兼顾五类具身判断，并建立可以诊断、修订和审计的训练流程。
+
+---
+
+### 2. 主要方法/创新点 {#abot-er-method}
+
+<div align="center">
+  <img src="/images/agent/ABot-ER-reasoning-interface.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1326/1014" />
+<figcaption>原文图 2：ABot-ER 位于观测与控制之间，输出语义判断、行动计划和归一化图像坐标；Agent 运行时决定何时查询、验证与重规划，下游策略执行动作。</figcaption>
+</div>
+
+#### ① 整体框架：统一推理模型、数据修订引擎与训练选择流程 {#abot-er-overview}
+
+**在线模型**接收图像、视频或文字上下文，生成任务要求的回答；**离线数据引擎**读取评测和错误记录，修订下一版训练语料；**两阶段训练与检查点选择**把修订后的数据转化为新模型，并检查原有能力是否明显退化。
+这里的“执行”专指识别可交互目标与位置，模型不直接生成底盘速度、关节位置或力矩；部署时，运行时把这些判断交给导航、操作等执行策略。
+
+| 能力维度 | 输入与处理 | 输出示例 |
+|---|---|---|
+| 空间与关系推理 | 根据图像或多视图判断方向、距离与布局 | 从使用者视角判断哪个物体在左侧 |
+| 场景与状态理解 | 识别任务相关物体、属性与当前状态 | 桌上有哪些积木，表达式是否有效 |
+| 时间与事件推理 | 从视频或前后观测判断事件顺序、状态变化 | 积木已经放下，还是在搬运中掉落 |
+| 长程行动组织 | 结合目标、历史与反馈安排有前置条件的步骤 | 先取物，再移动，最后放到目标区域 |
+| 点定位与可供性 | 将指令落到图像中的可操作区域 | 抓取点或可放置区域内的坐标 |
+
+#### ② 共享主干与任务条件低秩残差：共用知识，保留任务适配容量 {#abot-er-task-conditioning}
+
+<div align="center">
+  <img src="/images/agent/ABot-ER-model-architecture.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1286/823" />
+<figcaption>原文图 3：图像编码、语言主干和输出头由任务共享；最后四个全注意力块的 Q/V 投影增加两类任务残差，一条序列确定一条路由，点定位仍走问答分支。</figcaption>
+</div>
+
+**多模态编码模块**：图像或视频帧经过视觉编码器与投影器形成视觉表示，文字转成嵌入，随后按原有图文顺序送入共享解码器；纯文字任务绕过视觉分支。
+9B 实例基于 **Qwen3.5-9B**，有 32 个解码块，每三个 Gated DeltaNet 线性注意力块后接一个全注意力块，各任务共用语言输出头。
+
+**任务路由模块**：数据加载器在首条用户消息内加入任务标记，依据样本所属任务族确定分支，并在整段序列中保持不变。
+论文中的 `[EQA]` 覆盖空间、状态、时序问答以及交互坐标，`[TASK_PLAN]` 覆盖行动计划；这是按数据采集的任务族分组，并非按“文字或坐标”分组，也没有为五种能力分别建五个解码器。
+
+**残差适配模块**：在从零编号的第 19、23、27、31 层，即最后四个全注意力块的 `q_proj` 与 `v_proj` 上，各增加两组任务专用低秩参数。
+对一个投影，计算可概括为：
+
+$$
+\widetilde z_c = Wx + b + \frac{\alpha}{r} B_c A_c x, \qquad r=16,\quad \alpha=16.
+$$
+
+前两项是共享变换，最后一项是当前任务族的补偿；共享语言主干和残差共同更新，视觉编码器冻结、投影器可训练，因此不能把它理解为冻结整个基座后只训练 LoRA。
+
+> **举个例子**：面对同一张柠檬图片，“有几个柠檬”和“指出可抓取的中心”都选择问答残差；“把柠檬放进锅，再把锅送进烤箱”选择规划残差。
+> 三次调用共享物体与空间知识，但允许计划输出拥有专用的参数修正；路由由调用任务确定，模型不用先生成一段文字猜自己该选哪一支。
+
+#### ③ 数据自演化引擎：从错误证据决定修什么 {#abot-er-data-evolution}
+
+<div align="center">
+  <img src="/images/agent/ABot-ER-data-model-evolution.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1326/886" />
+<figcaption>原文图 4：每轮先评测诊断，再协调监督内容、输出协议与训练比例三类修订，经过数据审计、训练和能力保持检查后选择新模型；图中三流比例描述特定开发轮次的问答数据配置。</figcaption>
+</div>
+
+引擎接收能力分数、逐题输出、训练日志与数据来源记录，由一个协调语言模型 Agent 提出根因假设和数据需求，确定性程序检查候选数据是否满足格式、来源、采样上限及轨迹回放要求。
+最初几轮由专家校准诊断和验收规则；后续运行受这些规则约束，演化对象是训练语料，模型架构和学习算法不会自行改写。
+
+**能力诊断**先把错误分为格式解析、坐标协议与点位命中、选择题、数值解析、开放问答扣分及计划执行失败等类别，再映射到能力缺口；一个基准掉分不自动等于整类能力不足，需结合其他基准趋势或逐项错误证据。
+诊断结果随后进入三种可配合、但不能互相替代的修订：
+
+| 修订机制 | 解决的问题 | 具体处理 |
+|---|---|---|
+| Content Evolution：监督内容演化 | 缺少正确或完整的学习目标 | 构造满足前置条件、回放后能到终态的计划；保留有证据支持的交互目标 |
+| Protocol Evolution：协议演化 | 同一目标被写成不兼容的数值或格式 | 统一坐标数值约定，同时按任务固定点数、包装格式与动作模式 |
+| Mixture Evolution：比例演化 | 正确数据的训练曝光不足 | 在来源与重复次数上限内调整采样预算，保留已掌握能力的数据 |
+
+**坐标协议是最直观的例子。** 历史数据混用了 0–1000 坐标、归一化单点和八点 XML；此外，一些标签写的是手臂运动终点，并非题目要求的目标区域。
+修订一方面把坐标统一为相对原图的 `[0, 1]` 数值、保留三位小数，另一方面保留不同任务各自要求的输出形式：VABench-P 用八点 XML，Where2Place 用一至三个点的元组列表。
+
+> **举个例子**：同一个位于画面正中央的目标，在旧坐标尺度下可能写作 `(500, 500)`，统一后写作 `(0.500, 0.500)`。
+> 但数值统一还不够：如果评测要求八个点，单点列表仍可能无法解析；即使八个点都合法，若落在手臂末端而非目标上，仍然没有学对任务。
+
+**训练预算也要说清统计口径。** 引擎构建数据时使用字符与媒体开销估计的 token proxy，它并非真实 tokenizer 计数；独立样本数、重复展开后的训练记录数和助手输出 token 数回答的是不同问题。
+例如最终 Stage B 中规划占 **25.00% 的训练记录**、却占 **63.76% 的助手监督 token**，因为完整计划远长于一个选项答案；由于损失按序列归一化，后一个比例也不能直接等同于损失权重。
+图中约 45% 细粒度能力、15% 基准保障、40% 通用基础的三流配比属于 **R6 的问答分区**，规划另行分配，并非最终两阶段训练统一采用的固定比例；配额由人工写入配置，程序负责实现与检查。
+
+**数据治理**贯穿修订过程：检查同图同问的冲突答案、重复媒体、无效引用、来源资格与测试重叠，新增标签须依据图像、环境状态或可信标注。
+一个实际教训是 R3 曾出现 EB-ALFRED 的“100 分”：汇总只包含 300 个 episode 中先完成的 12 个，且旧训练池另有正式测试轨迹混入；补全汇总得到的 27 分也因权重受污染而不能采用。
+作者随后整体隔离三个来源、涉及 23,565 条候选记录，R3 仅作为诊断历史，不纳入性能结论，正式发布线路从清理后的数据和未承接污染权重的初始化重新训练。
+
+#### ④ 两阶段训练、统一损失与模型选择 {#abot-er-training}
+
+**Stage A：建立跨能力基础。** 从预训练 VLM 出发，在联合语料上做监督训练，使模型覆盖五类能力并掌握统一数值协议。
+**Stage B：修补剩余短板。** 从选出的 Stage A 检查点继续做较短的监督微调，降低学习率，增加规划恢复等目标数据，并保留其他能力的数据以抑制遗忘；这一阶段不是强化学习。
+
+所有任务都用同一个自回归交叉熵目标，只监督助手输出，输入、媒体占位和填充不计入损失。
+把一条样本的助手输出位置记为集合 $S$，其序列归一化目标可写为：
+
+$$
+\mathcal L = -\frac{1}{\lvert S\rvert}\sum_{t\in S}\log p_{\theta}(y_t\mid x,c,y_{<t}).
+$$
+
+多轮样本的助手 token 一起归一化，任务间的训练曝光主要由数据构建与采样控制，而非为五类能力各加一个独立损失。
+论文 v2 报告 Stage A 为 **462,390 条训练记录、294,762 个独立身份**，Stage B 为 **104,960 条记录、52,480 个独立身份**，后者恰好各重复两次；记录数不能相加当作独立样本量。
+两阶段解码器学习率分别为 **4×10⁻⁶、3×10⁻⁷**，阶段切换时重置优化器与调度器；32 张 GPU 完整作业合计约 **826 GPU 小时**，不含数据构造与全套评测。
+
+模型选择先检查其他能力退化、解析可靠性和已检测测试重叠等约束，再比较同一个检查点的领先基准数与目标分数。
+开发历史并非六轮连续叠加权重：协议、来源规则等大改动往往从预训练模型重训，正式发布的 Stage A→B 线路也不能与 R6 混为一谈。
+
+#### ⑤ 推理与真机系统如何衔接 {#abot-er-inference}
+
+推理时，调用方确定任务族并激活对应残差，模型通过共享输出头逐 token 生成答案；它不需要另载五套任务模型，但自回归生成仍包含多次解码计算。
+在 Galaxea R1 Pro 演示中，ABot-ER 作为 [ABot-AgentOS](#abot-agentos) 的视觉问答组件，部署在外部单张 RTX 5090D 主机；AgentOS 负责交互编排，独立的 **ABot-M** VLA 执行操作。
+每个动作步骤前查询场景与交互位置，动作后再次查询结果，运行时依据判断继续或修订剩余计划。
+
+```mermaid
+graph TD
+    A["任务指令与当前观测"] --> B["ABot-ER：状态判断与交互目标"]
+    B --> C["ABot-AgentOS：组织与调度步骤"]
+    C --> D["ABot-M 等下游策略执行动作"]
+    D --> E["获取动作后的新观测"]
+    E --> F["ABot-ER：判断状态变化与结果"]
+    F --> G{"运行时判断是否达成目标"}
+    G -- "继续或修订" --> C
+    G -- "已达成" --> H["结束任务"]
+```
+
+<div align="center">
+  <img src="/images/agent/ABot-ER-real-world-deployment.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1328/974" />
+<figcaption>原文图 7：积木算术与石头剪刀布定性演示。ABot-ER 读取视觉状态，ABot-AgentOS 决定任务进展，下游 VLA 完成动作；这些案例没有提供额外的真机成功率统计。</figcaption>
+</div>
+
+---
+
+### 3. 核心结果/发现 {#abot-er-results}
+
+**① 单个检查点兼顾多类能力。** 主表比较 9 个公开基线，9B ABot-ER 在十二项中的六项取得所列最佳结果。
+按感知七项、规划三项和点定位两项分别等权汇总，均分为 **63.86、41.61、67.06**，分别比各组最强所列基线高 **3.94、4.20、11.81**；三个参照值来自不同模型。
+
+| 代表性基准 | ABot-ER 9B | 所列最佳基线 | 指标含义 |
+|---|---|---|---|
+| ERQA | **47.31** | Cosmos3-Nano 46.09 | 具身推理选择题准确率 |
+| RoboVQA | **71.79** | MiMo-Embodied 66.09 | 开放式机器人视频问答评分 |
+| Cosmos | **68.96** | Cosmos3-Nano 63.18 | 时序与物理事件选择题准确率 |
+| EB-ALFRED | **26.67** | MiMo-Embodied 17.33 | 交互任务成功率 |
+| EB-Habitat | **37.00** | Cosmos3-Nano 26.67 | 交互任务成功率 |
+| VABench-P | **63.33** | Cosmos3-Nano 47.54 | 点落入目标框的命中率 |
+
+这些数值统一展示在 0–100 尺度，但评分含义不同，不能把跨基准均分视为真实机器人的总体成功率。
+EQA 九项均分 **64.57** 包含七项感知和两项点定位；十二项均分为 **58.83**，也不等于 EQA 与规划两个均分再各占一半。
+
+**② 定向后训练存在收益和代价。** Stage A 到发布检查点，规划均分 **39.43→41.61**，EB-ALFRED 与 EB-Habitat 分别增加 **3.00、3.33** 点，但 Where2Place **72.90→70.79**，并非所有能力同步提升。
+
+**③ 条件分支的收益依赖数据状态。** 在 **Qwen3.6-35B-A3B** 上的受控成对消融中，未统一协议的数据使条件分支改善 11/12 项、十二项均分增加 **1.36**；协议修复后，各自最佳检查点的 EQA 为 **66.94→66.27**、规划为 **42.87→41.94**，均未改善。
+仍然稳定的收益是 ET-Plan-Bench：17 个配对检查点全部更高，平均 **+3.3** 点；此消融同时开关任务标记和残差，没有单独识别二者贡献，也不能直接外推成 9B 的独立结构增益。
+
+**④ 收敛数据可以复用，但训练历史影响能力分布。** 共享起点、最终语料和最终阶段进度的比较中，单次后训练与六轮链式后训练的十二项均分分别为 **60.00、60.09**，前者累计后训练量为五分之一；不过交互规划仍较弱，EB-ALFRED 为 **25.00 对 30.00**，EB-Habitat 为 **48.67 对 51.67**。
+同一对两阶段语料还迁移到 2B、4B、27B 和 35B-A3B 等骨干，无需为每种规模重新运行数据修订闭环；其中 27B 的十二项均分为 **62.57**，这是另一组模型规模实验，不能与前述训练历史对照混用。
+
+<div align="center">
+  <img src="/images/agent/ABot-ER-cross-round-tradeoffs.webp" width="100%" loading="lazy" decoding="async" style="aspect-ratio:1061/433" />
+<figcaption>原文图 6a：每次开发版本切换都同时出现增益与退化。各轮预算、初始化和部分历史协议不同，热力图描述开发过程，不能把每列当作只改变数据策略的严格对照实验。</figcaption>
+</div>
+
+**⑤ 实验口径决定结论边界。** VABench-P 的当前预测归档把同一个位置重复八次，不能解释为八个独立候选点；论文还说明 EB 归档的原始在线调用来源有待核验，不能仅凭成功率归因于模型原生的闭环纠错。
+公开基线取自不同时间的榜单快照，原始训练与评测配置未必一致；点定位分数也只验证空间目标命中，不直接衡量控制精度或物理操作成功。
+
+---
+
+### 4. 局限性 {#abot-er-limitations}
+
+开发轮次同时改变训练预算、学习率、数据与部分评测协议，数据配额仍有人为设定，附录审计也保留未覆盖媒体等残余风险，因此不能把跨轮涨分当作自演化机制的独立因果证明。
+真机主要是定性案例，缺少大规模成功率与延迟对照，交互规划还有明显失败空间，接入导航或操作项目时仍需独立验证视觉判断、运行时决策与下游控制各环节的贡献。
+
+---
+
+## 9. Harness Robotic OS (2026) {#harness-robotic-os}
 ———把四足巡检从「导航栈」升级为「具身智能体运行时」
 
 📄 **Paper**: [arXiv:2609.11225](https://arxiv.org/abs/2609.11225)
@@ -1382,7 +1571,7 @@ $$\text{WER} = (S + D + I) / N$$
 
 ---
 
-## 9. NavHarness (2026) {#navharness}
+## 10. NavHarness (2026) {#navharness}
 ———让新的导航会话接过旧的搜索证据，在连续任务中积累并修正经验
 
 📄 **Paper**: [arXiv:2609.34276](https://arxiv.org/abs/2609.34276) · [Code](https://github.com/billzhao1030/NavHarness) · [Project Page](https://billzhao1030.github.io)
@@ -1564,7 +1753,7 @@ judge 仍会接受错误完成或否决正确完成，错误记录可能被整�
 
 ---
 
-## 10. SuperNav (2026) {#supernav}
+## 11. SuperNav (2026) {#supernav}
 ———以导航技能、视觉点选工具和上下文管理组织通用导航 Agent
 
 📄 **Paper**: [arXiv:2610.12126](https://arxiv.org/abs/2610.12126) · [Project Page](https://zju3dv.github.io/SuperNav/)
@@ -1575,7 +1764,7 @@ SuperNav 是以导航为主要验证场景的具身 Agent Harness。它让通用
 
 ---
 
-## 11. VISTA (2026) {#vista}
+## 12. VISTA (2026) {#vista}
 ———给多模态模型一副「能回放、能放大」的眼睛：无损视觉记忆 + 模型自主视觉检视
 
 📄 **Paper**: [arXiv:2610.02200](https://arxiv.org/abs/2610.02200) · [Code](https://github.com/joshhhhhan/VISTA)
@@ -1741,7 +1930,7 @@ $$S_g = \min\left(\frac{\sum_{\ell=1}^{k} w_\ell}{\sum_{\ell=1}^{n} w_\ell},\ \f
 
 ---
 
-## 12. RACE (2026) {#race}
+## 13. RACE (2026) {#race}
 ———Agent 什么时候该想？用"动作似然掉了多少"判断旧推理还够不够用
 
 📄 **Paper**: [arXiv:2610.12061](https://arxiv.org/abs/2610.12061) · [Code](https://github.com/HututuAI/RACE)
@@ -1898,7 +2087,7 @@ LoGiC 依赖成功轨迹与固定参考动作，RL 中失败轨迹得不到任�
 
 ---
 
-## 13. Agentic Robots (2026)
+## 14. Agentic Robots (2026)
 {: id="agentic-robots"}
 
 ———从预测动作走向组织执行：用 Model、Data、Environment、Harness 贯通机器人能力的构建与使用
@@ -2071,6 +2260,161 @@ graph TD
 
 ---
 
+## 15. Harness² (2026) {#harness2}
+———让 Agent 改进当前任务的执行配置，也积累“下次该怎么改”的经验
+
+📄 **Paper**: [arXiv:2610.14224](https://arxiv.org/abs/2610.14224) · [Code](https://github.com/google-research/harness2) · [Project Page](https://harness2.github.io/)
+
+**收录说明**：Harness² 在编程、办公与法律任务上评估通用 Agent 的在线配置改进；本文将其作为具身 Agent 自演化与经验复用的方法参考，其结果尚不构成机器人部署有效性的实验证据。
+
+### 精华
+{: id="harness2-takeaways"}
+
+1. Agent 的能力还取决于包围模型的提示词、技能、脚本、工具约束和编排；这些可执行配置可以在模型参数冻结时继续改进。
+2. 没有标准答案时，先提出有明确针对性的修改，再在相同任务与配置下重跑，通过轨迹中的行为变化决定保留什么，比直接凭印象重写配置更有依据，但仍不能保证答案正确。
+3. 可迁移的资产不仅是最终技能或脚本，还包括“什么情境出现什么问题、哪种修改改变了什么行为”的改进经验。
+4. 每个新任务从共同的初始配置出发，再按需借鉴经验库，可以避免把上一任务的专用规则直接叠加到后续任务。
+5. 增加推理预算的价值来自候选修改、执行证据和选择性组合；评估时必须把重跑与编辑成本计入，不能只看最终一次执行的步数。
+
+---
+
+### 1. 研究背景/问题
+{: id="harness2-background"}
+
+开放世界中的 Agent 会不断接到新任务，设计执行配置时通常无法预见这些需求，在线阶段也没有标准答案或可靠验证器来指导修改。已有方法或针对固定训练集离线优化，或只改进当前任务，难以把“如何发现问题、试验修改、判断取舍”的过程转化为后续任务可用的能力。
+
+本文研究的核心是：在**不更新模型权重、不读取评分反馈、不重放已完成任务**的条件下，如何同时改进当前任务的执行配置，以及指导未来配置改进的经验。
+
+---
+
+### 2. 主要方法/创新点
+{: id="harness2-method"}
+
+<div align="center">
+  <img src="/images/agent/Harness2-framework.webp" width="100%" loading="lazy" decoding="async" alt="Harness² 双层递归整体框架" />
+<figcaption>图 3：Harness² 的双层递归。任务内由编辑器提出通用与领域两类候选，实际执行后交给组合器形成配置；任务结束后，反思器把可复用配置和有证据支持的经验存入改进库。</figcaption>
+</div>
+
+**整体框架。** Harness² 由执行器、配置编辑器、组合器与经验反思器组成：执行器产生任务轨迹和交付物，编辑器提出可运行的配置修改，组合器根据试跑证据取舍，反思器在任务结束后更新经验库。论文把包围冻结模型的整套运行配置称为 **harness**，把优化这些配置的过程称为 **harnessing**。
+
+**① 可编辑对象：八类文件化组件。** 输入是当前任务、冻结模型和初始执行配置，编辑操作作用于文件树，输出是可以挂载到 Agent 运行时的新配置。八个编辑入口为 System prompt、Guardrails、Memory、Tool guidance、Subagents、Skills、Scripts 和 Plugin；它们分别改变常驻上下文、按需加载的流程、确定性能力、独立工作上下文或工具循环中的钩子。
+
+这里不只是改提示词：Scripts 可以直接执行机械性检查，Skills 在匹配任务时才加载，Plugin 则在工具调用或回合边界介入；组件应根据被观察到的问题选择，而非每次全部增加。编辑树还要通过结构验证，例如技能有触发说明、脚本可编译、引用的辅助文件实际存在；这些检查只验证配置有效性，不提供任务正确性标签。
+
+**② 任务内的基本改进单元：Propose–Probe–Compose。** 没有答案时，先观察“修改前后具体做法是否变了”，再判断某条配置是否值得保留；这就是本文的行为对比信号。
+
+- **Propose：从参考执行定位缺陷。** 输入为任务、当前配置、参考执行记录和已有经验。两个编辑方向分别生成完整候选配置：Invariant（INV）针对跨领域的工作方式，如重试、规划、工具使用与交付检查；Domain（DOM）针对当前领域的知识、专业流程、交付结构和约束。
+- **Probe：把候选真正跑起来。** 每个候选在相同任务、模型与环境配置下执行，输出轨迹和交付物。与参考执行对照，查看目标缺陷是否缓解、是否没有变化、是否引入退化；这种对照仍会受到采样波动和共享模型偏差影响。
+- **Compose：按证据组合修改。** 输入为候选文件差异、参考轨迹、候选轨迹和已有任务内历史。组合器可以合并有支持的修改、改写冲突、采用一个候选，或保留当前配置；随后实际执行组合后的配置，并记录每项决策对应的观察证据。
+
+> **举个例子**：任务要求把排期、人员与预算文件整理成一致的交付物。参考执行漏掉跨文件核对，也没有重新打开输出文件；INV 候选加入输出重开检查脚本，DOM 候选加入排期与预算核对技能。若试跑轨迹显示两类操作确实发生，组合器便有理由保留相关修改；但“检查执行了”仍不等于“所有数字都算对了”。论文图 9 的案例中最终评分从 43.1 升至 77.8，这个分数只用于事后评估，编辑器与组合器看不到。
+
+**③ 扩大任务内搜索：并行探索与顺序修订。** 两种递归都以基本改进单元为基础，但预算的作用不同。
+
+<div align="center">
+  <img src="/images/agent/Harness2-recursion.webp" width="100%" loading="lazy" decoding="async" alt="Harness² 并行与顺序递归" />
+<figcaption>图 4：并行递归让多个候选共享同一批参考证据，再进行独立组合；顺序递归把上一轮修订后的配置及累计轨迹传给下一轮。</figcaption>
+</div>
+
+- **并行递归**：收集 $k$ 次初始配置的参考执行，独立提出并试跑 $k$ 个 INV 候选和 $k$ 个 DOM 候选；随后 $k$ 个组合会话都读取完整候选池，各自生成并执行一个后继配置。本文实现只有一次种群更新，$k$ 控制搜索宽度。
+- **顺序递归**：从初始配置开始，串联 $k$ 次改进，每一步读取当前配置及之前累积的轨迹与取舍记录，形成下一配置；后续步骤可以保留、修正或撤销早先修改，$k$ 控制修订深度。
+
+> **预算怎么算**：只看并行方案，取 $k=2$ 时有 2 次参考执行、4 次候选试跑、2 次组合配置执行，共 **8 次完整任务执行**，另外还有编辑、组合和最终选择会话。$k=1$ 也需要 1 次参考、2 次候选试跑和 1 次组合后执行，因此“一步改进”不等于“只多跑一次”；这个计数不含配置验证重试等额外开销。
+
+当 $k>1$ 时，最终选择器依据任务要求与源材料比较匿名交付物，只返回已有结果，不再合成新内容，也看不到结果对应的配置；附录提示明确允许选择初始配置产生的结果。$k=1$ 时不走最终选择，直接返回基本改进单元执行后的结果；被采用只代表本轮选择，不代表已验证最优。
+
+**④ 跨任务的改进：保存“配置＋适用情境＋改进证据”。** 经验反思器接收整个任务的改进记录，包括被拒绝候选，而非只看获选输出；它逐项记录修改、观察到的行为差异与归因可信度，再决定是否提炼可复用经验。若多项修改混在一起、只有一次执行，归因可以标为受混杂影响；没有足够可复用证据时，可以不新增经验条目。
+
+经验库保留获选的可执行配置，并用 `EXPERIENCE.md` 记录适用情境、经验、证据与可信度，通过索引供后续编辑按需读取。两个递归层次的差别在于“当前任务改什么”和“跨任务留下什么”：
+
+| 维度 | 任务级递归 | Harnessing 级递归 |
+|---|---|---|
+| 更新对象 | 当前任务的执行配置 $H$ | 指导未来编辑的改进配置 $R_t$ 中的经验库 |
+| 证据来源 | 当前任务的参考、候选与组合后执行 | 整个改进过程及其取舍记录 |
+| 生效时机 | 同一任务内试跑与迭代 | 任务完成后更新，供后续任务读取 |
+| 下一任务如何开始 | 不直接继承本任务专用配置 | 从共同初始配置出发，按需复用库中组件和经验 |
+
+```mermaid
+graph TD
+    A["新任务 t + 共同初始配置 H0"] --> B["参考执行: 轨迹与交付物"]
+    R["当前经验库 Rt"] --> C["提出 INV 与 DOM 候选"]
+    B --> C
+    C --> D["同任务试跑候选"]
+    D --> E["比较行为证据并组合配置"]
+    E --> F["执行后继配置并提交结果"]
+    F --> G["反思完整改进记录"]
+    G --> H["更新经验库 Rt+1"]
+    H --> I["下一任务: 仍从 H0 开始"]
+    I --> J["由更新后的经验库指导新一轮编辑"]
+```
+
+图中省略了 $k>1$ 时的匿名交付物选择；任务内的全部递归期间，$R_t$ 保持固定。下一任务不会直接接手上一任务的配置，过去任务发现的具体事实也需要在新任务中重新核实适用性。
+
+**⑤ 更新规则与训练目标。** 本文没有梯度训练、强化学习奖励或新损失函数，核心是冻结模型下对文件配置与经验库的离散更新。令 $e=(\tau,y)$ 表示轨迹与交付物，基本改进单元可写为：
+
+$$
+(H',e',\xi)=\Phi(q_t,H,\mathcal E;R_t).
+$$
+
+其中 $\mathcal E$ 为任务内可用历史，$\xi$ 记录候选试跑、组合决策及其证据；先运行修改再保留证据，是这个算子的关键。任务完成后再更新改进库：
+
+$$
+R_{t+1}=\operatorname{Update}(R_t,H_t^{\star},\mathcal D_t).
+$$
+
+$H_t^{\star}$ 为被采用的配置，$\mathcal D_t$ 为完整改进记录；星号表示采用，不表示正确性或全局最优。模型权重、阶段指令和决策规则保持固定，长期变化发生在库中的组件与经验。
+
+**⑥ 一次完整运行。** 接收任务后，先挂载共同初始配置并取得参考轨迹；编辑器借助当前经验库提出候选，执行器试跑，组合器按行为证据形成后继配置；按预设并行或顺序预算完成探索并交付结果，最后反思改进过程，将有依据的经验供下一个任务使用。整个过程都发生在部署阶段，基准答案、评分量规与评测分数只在外部评估时使用。
+
+---
+
+### 3. 核心结果/发现
+{: id="harness2-results"}
+
+**评测设置。** 主实验覆盖 Gemini 3.5 Flash、GLM-5 两个冻结执行模型与 OpenCode、Codex 两种初始配置，共四种组合；默认编辑器与选择器为 Claude Opus 4.8。WorkBuddy-Bench 使用 Code/Web/Office 三域的 40/35/25 个测试任务，JobBench 使用 34 个测试任务，LAB 使用 100 个测试任务；各方法沿任务流运行，主表报告三次打乱顺序运行的均值与标准差，经验库从空开始。
+
+**单步与并行递归均有收益。** 下表整理主表中的代表性结果；$k=5$ 为 $k=1$ 行与后续增量相加，WorkBuddy-Bench 与 JobBench 为分数，LAB Partial 为逐项通过率（%）。
+
+| 基准与执行配置 | 初始配置 | Harness²，$k=1$ | 并行递归，$k=5$ |
+|---|---:|---:|---:|
+| WorkBuddy-Bench 均分，Gemini 3.5 Flash / OpenCode | 72.4 | 77.5 | 80.8 |
+| WorkBuddy-Bench 均分，GLM-5 / OpenCode | 64.2 | 75.7 | 79.6 |
+| JobBench，Gemini 3.5 Flash / OpenCode | 31.5 | 36.0 | 39.0 |
+| JobBench，GLM-5 / OpenCode | 20.6 | 24.2 | 28.4 |
+| LAB Partial，GLM-5 / OpenCode | 59.6 | 71.4 | 78.1 |
+
+单步对初始配置的最大提升分别为 WorkBuddy-Bench **11.5 分**、JobBench **4.5 分**、LAB **11.8 个百分点**；增至 $k=5$ 后，四种组合分别再增加 2.9–3.9 分、3.0–4.2 分、2.6–6.7 个百分点。Harness² 在四种组合的 WorkBuddy-Bench 均分与 JobBench 分数上都超过所比较基线，但 LAB 的 Gemini 3.5 Flash / Codex 组合中，单步结果 75.6 低于 Meta-Harness 的 76.5，不能概括为所有设置均领先。
+
+**组合、分工和经验库都有贡献。** 在 Gemini 3.5 Flash / OpenCode、$k=1$ 下，完整方法的 WorkBuddy-Bench / JobBench 为 77.5 / 36.0；去掉经验库降至 74.4 / 34.2，取消 INV/DOM 分工降至 74.6 / 32.3，去掉组合、只从两个候选中挑选则为 75.9 / 34.1。附录还表明，从已改进配置删除 Skills 后，WorkBuddy-Bench 均分下降 5.3 分，删除 Scripts 下降 3.7 分；收益来自多种组件，不能简单归因于提示词变长。
+
+<div align="center">
+  <img src="/images/agent/Harness2-library-transfer.webp" width="100%" loading="lazy" decoding="async" alt="Harness² 经验库复用与跨基准迁移" />
+<figcaption>图 7：左侧测试不再新增参考执行或候选试跑、直接借助改进库编辑配置；右侧把 JobBench 经验迁移到 WorkBuddy-Bench。探索更充分的经验库对后续改进更有帮助。</figcaption>
+</div>
+
+**经验能帮助后续任务，但需要区分实验协议。** 无执行证据、无经验库地直接改配置，Code 从 73.4 降至 63.2，Web 从 69.9 降至 65.0；使用 $k=5$ 累积的库后，即使不再新增试跑，Code/Web/Office 仍分别比初始配置高 0.9/4.4/5.1 分。将 JobBench 经验用于 WorkBuddy-Bench 的单步改进，三域再提升 0.6/0.5/2.9 分；附录的留一重跑还能访问后续任务经验，属于离线复用分析，不能当作在线增益。
+
+<div align="center">
+  <img src="/images/agent/Harness2-same-model.webp" width="100%" loading="lazy" decoding="async" alt="Harness² 同模型执行与编辑实验" />
+<figcaption>图 8：在 OpenCode、k=2 下，让同一模型兼任执行器与编辑器，五个受测模型仍在三个基准上获得提升，说明收益不必依赖更强的外部编辑模型。</figcaption>
+</div>
+
+**同模型也能改进自己，成本则必须完整计算。** 同模型执行与编辑实验中，Claude Opus 5 在 WorkBuddy-Bench、JobBench、LAB 分别提升 3.3、5.5、3.0 分，GLM-5 的 LAB 提升 13.7 个百分点。图 6 在计入执行与改进总 token 成本后，显示 Gemini 3.5 Flash / OpenCode 的 $k=1$、$k=5$ 两个 Harness² 配置位于所比较方法的经验 Pareto 前沿；这只说明该组实验的成本收益取舍，主表中的 `#Steps` 是执行器会话的模型回合数，不能替代总成本。
+
+<div align="center">
+  <img src="/images/agent/Harness2-case-study.webp" width="100%" loading="lazy" decoding="async" alt="Harness² 跨文件核对与交付检查案例" />
+<figcaption>图 9：JobBench 制作统筹任务中，工作流程约束、专业核对技能、验证脚本与工具指引共同修复了跨文件数字不一致及交付缺项，评分从 43.1 提升至 77.8。</figcaption>
+</div>
+
+---
+
+### 4. 局限性
+{: id="harness2-limitations"}
+
+多轮执行与编辑会显著增加推理成本，并行只能在资源允许时缩短等待，论文也未给出通用最优预算或自动停止策略。行为对比与匿名选择仍受共享错误假设、采样和评测波动影响，附录甚至出现候选中有 95 分结果却选中 55 分结果的案例；经验库的长期去重、过时知识修订与检索管理仍待完善。
+
+---
+
 # 参考资料
 
 ## 论文引用
@@ -2083,12 +2427,14 @@ graph TD
 6. **SPACE** (2026). Act More, Decide Less: Skill-Guided Adaptive Action Chunking for Long-Horizon LLM Agents. arXiv: [2609.02042](https://arxiv.org/abs/2609.02042)
 7. **ABot-AgentOS** (2026). 面向具身智能的通用机器人 Agent 操作系统与终身多模态记忆系统. arXiv: [2607.10350](https://arxiv.org/abs/2607.10350) · Project Page: [ABot-AgentOS](https://amap-cvlab.github.io/ABot-AgentOS)
 
-8. **Harness Robotic OS** (2026). 把四足巡检从「导航栈」升级为「具身智能体运行时」. arXiv: [2609.11225](https://arxiv.org/abs/2609.11225)
-9. **NavHarness** (2026). NavHarness: Towards Lifelong Embodied Navigation. arXiv: [2609.34276](https://arxiv.org/abs/2609.34276) · Code: [billzhao1030/NavHarness](https://github.com/billzhao1030/NavHarness) · Project Page: [billzhao1030.github.io](https://billzhao1030.github.io)
-10. **SuperNav** (2026). SuperNav: An Agentic Navigation System for Any Task in Any Scene. arXiv: [2610.12126](https://arxiv.org/abs/2610.12126) · 完整解析：[VLN 扩展篇](/VLN-Papers-Extended/#supernav)
-11. **VISTA** (2026). VISTA: A Visual Harness for Reasoning in an Interactive World. arXiv: [2610.02200](https://arxiv.org/abs/2610.02200) · Code: [joshhhhhan/VISTA](https://github.com/joshhhhhan/VISTA)
-12. **RACE** (2026). When Should Agents Think? Adaptive Reasoning via Cross-Turn Estimation. arXiv: [2610.12061](https://arxiv.org/abs/2610.12061) · Code: [HututuAI/RACE](https://github.com/HututuAI/RACE)
-13. **Agentic Robots** (2026). Towards Agentic Robots: Model, Data, Environment, and Harness. arXiv: [2610.20442](https://arxiv.org/abs/2610.20442) · Code: [chonghanqin/Awesome-Agentic-Robots](https://github.com/chonghanqin/Awesome-Agentic-Robots)
+8. **ABot-ER** (2026). ABot-ER: Unified Embodied Reasoning through Agentic Data–Model Co-Evolution. arXiv: [2610.18355v2](https://arxiv.org/abs/2610.18355v2) · Code: [amap-cvlab/ABot-ER](https://github.com/amap-cvlab/ABot-ER)
+9. **Harness Robotic OS** (2026). 把四足巡检从「导航栈」升级为「具身智能体运行时」. arXiv: [2609.11225](https://arxiv.org/abs/2609.11225)
+10. **NavHarness** (2026). NavHarness: Towards Lifelong Embodied Navigation. arXiv: [2609.34276](https://arxiv.org/abs/2609.34276) · Code: [billzhao1030/NavHarness](https://github.com/billzhao1030/NavHarness) · Project Page: [billzhao1030.github.io](https://billzhao1030.github.io)
+11. **SuperNav** (2026). SuperNav: An Agentic Navigation System for Any Task in Any Scene. arXiv: [2610.12126](https://arxiv.org/abs/2610.12126) · 完整解析：[VLN 扩展篇](/VLN-Papers-Extended/#supernav)
+12. **VISTA** (2026). VISTA: A Visual Harness for Reasoning in an Interactive World. arXiv: [2610.02200](https://arxiv.org/abs/2610.02200) · Code: [joshhhhhan/VISTA](https://github.com/joshhhhhan/VISTA)
+13. **RACE** (2026). When Should Agents Think? Adaptive Reasoning via Cross-Turn Estimation. arXiv: [2610.12061](https://arxiv.org/abs/2610.12061) · Code: [HututuAI/RACE](https://github.com/HututuAI/RACE)
+14. **Agentic Robots** (2026). Towards Agentic Robots: Model, Data, Environment, and Harness. arXiv: [2610.20442](https://arxiv.org/abs/2610.20442) · Code: [chonghanqin/Awesome-Agentic-Robots](https://github.com/chonghanqin/Awesome-Agentic-Robots)
+15. **Harness²** (2026). Harness²: Recursive Agent Harnessing for an Open World. arXiv: [2610.14224](https://arxiv.org/abs/2610.14224) · Code: [google-research/harness2](https://github.com/google-research/harness2) · Project Page: [harness2.github.io](https://harness2.github.io/)
 
 <script>
 (function () {
@@ -2101,14 +2447,16 @@ graph TD
     { m: 'Show-Harness', t: ['Harness', '闭环系统', '具身操作', '类型化动作', '实机部署', '跨本体', 'VLA', '零微调'] },
     { m: 'SPACE',       t: ['动作分块', '强化学习', '技能归纳', '长程任务'] },
     { m: 'ABot-AgentOS', t: ['AgentOS', 'Harness', '闭环系统', '拓扑图', '空间记忆', '自演化', '实机部署'] },
+    { m: 'ABot-ER', t: ['具身推理', '数据治理', '自演化', '长程任务', '实机部署'] },
     { m: 'NavHarness', t: ['Harness', '闭环系统', '空间记忆', '异常恢复', '具身导航', '零微调', '长程任务'] },
     { m: 'SuperNav', t: ['Harness', '闭环系统', '主动探索', '异常恢复', '具身导航', '实机部署'] },
     { m: 'VISTA', t: ['Harness', '视觉记忆', '主动探索', '零微调', '长程任务'] },
     { m: 'RACE', t: ['强化学习', '长程任务', '推理预算'] },
     { m: 'Agentic Robots', t: ['综述', 'Harness', '闭环系统', 'VLA', '异常恢复', '自演化', '跨本体'] },
+    { m: 'Harness²', t: ['Harness', '闭环系统', '自演化', '零微调', '长程任务'] },
   ];
 
-  var ALL_TAGS = ['综述', '闭环系统', 'Harness', 'AgentOS', '具身操作', '场景图', '拓扑图', '实机部署', '快慢双系统', '类型化动作', '空间记忆', '3D语义', '多机协同', 'TAMP', 'VLA', '双重校验', '退出码评估', '自演化', '高频裁判', '跨本体', '主动探索', '零微调', '动作分块', '强化学习', '技能归纳', '长程任务', '异常恢复', '具身导航', '视觉记忆', '推理预算'];
+  var ALL_TAGS = ['综述', '闭环系统', 'Harness', 'AgentOS', '具身操作', '场景图', '拓扑图', '实机部署', '快慢双系统', '类型化动作', '空间记忆', '3D语义', '多机协同', 'TAMP', 'VLA', '双重校验', '退出码评估', '自演化', '高频裁判', '跨本体', '主动探索', '零微调', '动作分块', '强化学习', '技能归纳', '长程任务', '异常恢复', '具身导航', '视觉记忆', '推理预算', '具身推理', '数据治理'];
 
   var activeTags = [];
   var resultsPanel = null;
