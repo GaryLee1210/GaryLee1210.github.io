@@ -1,0 +1,13 @@
+.article-page.research-index-page {
+  .research-topics { display: flex; flex-wrap: wrap; gap: 12px 24px; padding-bottom: 24px; border-bottom: 1px solid var(--rule); }
+  .research-topics button { min-height: 40px; padding: 6px 0; margin: 0; border: 0; background: transparent; color: var(--muted); font: 12px $base-font; text-align: left; cursor: pointer; }
+  .research-topics button:hover { color: var(--accent); }
+  .research-topics button[aria-pressed="true"] { color: var(--ink); text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 1px; }
+  .research-topics .n { margin-left: 8px; font-size: 10px; }
+  .research-list { margin-top: 4px; }
+  .research-topics[hidden], [data-research-row][hidden] { display: none; }
+}
+
+@media (max-width: 640px) {
+  .article-page.research-index-page .research-topics { gap: 6px 18px; }
+}

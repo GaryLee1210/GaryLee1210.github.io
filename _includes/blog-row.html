@@ -1,0 +1,11 @@
+{% assign bp = include.post %}
+{% assign blog_kind = 'notes' %}
+{% if bp.categories contains 'weekly' %}{% assign blog_kind = 'weekly' %}{% elsif bp.categories contains 'research' %}{% assign blog_kind = 'research' %}{% endif %}
+<a class="rc-card blog-row" href="{{ bp.url | relative_url }}" data-blog-card data-kind="{{ blog_kind }}" data-search="{{ bp.title | escape }} {{ bp.excerpt | strip_html | normalize_whitespace | escape }} {{ bp.tags | join: ' ' | escape }}">
+  <span class="blog-row-icon" aria-hidden="true">
+    {% include post-icon.html post=bp %}
+  </span>
+  <time class="blog-row-date" datetime="{{ bp.date | date_to_xmlschema }}">{{ bp.date | date: '%Y-%m-%d' }}</time>
+  <h2 class="blog-row-title">{{ bp.title | escape }}</h2>
+  {% include reading-time.html post=bp %}
+</a>

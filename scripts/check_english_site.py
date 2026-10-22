@@ -23,7 +23,8 @@ class Document(HTMLParser):
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
         inside = any('entry' in n['attrs'].get('class', '').split() for n in self.stack)
-        node = dict(tag=tag, attrs=attrs, entry=inside, text='')
+        featured = any('home-featured' in n['attrs'].get('class', '').split() for n in self.stack)
+        node = dict(tag=tag, attrs=attrs, entry=inside, featured=featured, text='')
         self.nodes.append(node)
         if tag not in VOID:
             self.stack.append(node)
@@ -46,8 +47,52 @@ class Document(HTMLParser):
         return [n['attrs']['id'] for n in self.nodes if n['attrs'].get('id')]
 
 
+def research_pair_errors(slug, status, translated, original, source_body, english_body):
+    """Check a research translation without treating a known stale edition as synchronized."""
+    errors = []
+    stale = status['stale']
+    if ('translation-stale' in translated.raw) != stale:
+        errors.append(f'{slug}: stale translation notice missing' if stale
+                      else f'{slug}: stale translation notice shown for synchronized article')
+    if not stale:
+        heading_ids = lambda doc: [n['attrs'].get('id') for n in doc.nodes
+                                   if n['entry'] and re.fullmatch('h[1-6]', n['tag'])]
+        if heading_ids(translated) != heading_ids(original):
+            errors.append(f'{slug}: heading structure/IDs differ')
+        for tag in ('table', 'img', 'pre'):
+            if len(translated.select(tag, True)) != len(original.select(tag, True)):
+                errors.append(f'{slug}: {tag} counts differ')
+        def external(doc):
+            return Counter(n['attrs'].get('href') for n in doc.select('a', True)
+                           if n['attrs'].get('href', '').startswith(('http://', 'https://')))
+        if external(translated) != external(original):
+            errors.append(f'{slug}: external citations differ')
+        from check_translation_drafts import (features, normalize_agent_table_labels,
+                                              normalize_ml_labels, normalize_large_model_labels,
+                                              normalize_vla_labels)
+        normalize = (normalize_vla_labels if slug in ('VLA-Survey', 'VLA-Papers', 'World-Models-Survey')
+                     else normalize_large_model_labels if slug in ('LLM-Training-Survey', 'VLM-Survey', 'Spatial-Intelligence-Survey')
+                     else normalize_ml_labels if 'Learning-Survey' in slug else normalize_agent_table_labels)
+        before, after = features(normalize(source_body)), features(normalize(english_body))
+        for feature in ('math', 'links', 'table_numbers', 'table_row_widths'):
+            if before[feature] != after[feature]:
+                errors.append(f'{slug}: {feature} differ')
+    for doc in (translated, original):
+        switches = [n['attrs']['data-language-switch'] for n in doc.select('a')
+                    if 'data-language-switch' in n['attrs']]
+        if switches != ['index' if stale else 'article']:
+            errors.append(f'{slug}: unsafe section switching')
+        alternates = {n['attrs'].get('hreflang'): n['attrs'].get('href')
+                      for n in doc.select('link') if n['attrs'].get('hreflang')}
+        if alternates != {'en': f'https://tingdeliu.github.io/en/{slug}/',
+                          'zh-CN': f'https://tingdeliu.github.io/{slug}/'}:
+            errors.append(f'{slug}: incorrect language alternates')
+    return errors
+
+
 def main():
     errors, cache = [], {}
+    translation_status = json.loads((ROOT / '_data/translation_status.json').read_text(encoding='utf-8'))
 
     def check(condition, message):
         if not condition:
@@ -94,6 +139,64 @@ def main():
         doc = load(SITE / route / 'index.html')
         check(not any('data-language-switch' in n['attrs'] for n in doc.select('a')),
               f'/{route}/: unpaired page has a misleading language switch')
+    for route in ('blog', 'en/blog'):
+        doc = load(SITE / route / 'index.html')
+        check('blog-index-page' in doc.select('body')[0]['attrs'].get('class', '').split(),
+              f'/{route}/: Blog layout missing')
+        cards = [n for n in doc.select('a') if 'data-blog-card' in n['attrs']]
+        check(bool(cards) and all('blog-row' in n['attrs'].get('class', '').split() for n in cards),
+              f'/{route}/: article rows missing')
+        check(all(n['attrs'].get('data-kind') in ('weekly', 'notes') and n['attrs'].get('data-search') for n in cards),
+              f'/{route}/: article filter/search metadata missing')
+        dates = [n['attrs'].get('datetime', '') for n in doc.select('time', True) if not n['featured']]
+        check(len(dates) == len(cards) and dates == sorted(dates, reverse=True),
+              f'/{route}/: articles are not ordered by latest update')
+        check(any('data-blog-search' in n['attrs'] for n in doc.select('input')) and
+              any(n['attrs'].get('src') == '/assets/js/blog-index.js' for n in doc.select('script')),
+              f'/{route}/: interactive Blog controls missing')
+        check(not any('wrapper-sidebar' in n['attrs'].get('class', '').split() for n in doc.select('div')),
+              f'/{route}/: legacy sidebar still visible')
+    for route in ('research', 'en/research'):
+        research = load(SITE / route / 'index.html')
+        check('research-index-page' in research.select('body')[0]['attrs'].get('class', '').split(),
+              f'/{route}/: Research layout missing')
+        rows = [n for n in research.select('a') if 'data-research-row' in n['attrs']]
+        urls = [n['attrs'].get('href') for n in rows]
+        check(any('data-research-filter' in n['attrs'] for n in research.select('button')) and
+              any(n['attrs'].get('src') == '/assets/js/research-index.js' for n in research.select('script')),
+              f'/{route}/: Research filtering controls or script missing')
+        check(bool(rows) and len(urls) == len(set(urls)) and len([n for n in research.select('time', True) if not n['featured']]) == len(rows),
+              f'/{route}/: missing or duplicate dated research rows')
+        check(not any('wrapper-sidebar' in n['attrs'].get('class', '').split() for n in research.select('div')),
+              f'/{route}/: legacy sidebar still visible')
+    for route in ('blog', 'en/blog', 'research', 'en/research'):
+        listing = load(SITE / route / 'index.html')
+        rows = [n for n in listing.select('a') if 'blog-row' in n['attrs'].get('class', '').split()]
+        estimates = [n for n in listing.select('span') if 'blog-row-reading' in n['attrs'].get('class', '').split() and not n['featured']]
+        check(len(estimates) == len(rows) and all(re.search(r'[1-9]\d*', n['attrs'].get('aria-label', '')) for n in estimates),
+              f'/{route}/: reading-time estimates missing or invalid')
+    projects = load(SITE / 'home/index.html')
+    check('project-index-page' in projects.select('body')[0]['attrs'].get('class', '').split(),
+          '/home/: project layout missing')
+    check(any('article-masthead' in n['attrs'].get('class', '').split() for n in projects.select('header')),
+          '/home/: shared navigation missing')
+    check(not any('wrapper-sidebar' in n['attrs'].get('class', '').split() for n in projects.select('div')),
+          '/home/: legacy sidebar still visible')
+    project_urls = [n['attrs'].get('href') for n in projects.select('a')
+                    if 'project-card' in n['attrs'].get('class', '').split()]
+    expected_projects = re.findall(r'^  url: (.+)$', (ROOT / '_data/projects.yml').read_text(encoding='utf-8'), re.M)
+    check(bool(project_urls) and project_urls == expected_projects and len(project_urls) == len(set(project_urls)),
+          '/home/: missing or duplicate project cards')
+    check(len(projects.select('h1')) == 1, '/home/: expected one page heading')
+    about = load(SITE / 'about/index.html')
+    check(about.select('html')[0]['attrs'].get('lang') == 'en', '/about/: content language is incorrect')
+    check('about-page' in about.select('body')[0]['attrs'].get('class', '').split(),
+          '/about/: editorial layout missing')
+    check(any('article-masthead' in n['attrs'].get('class', '').split() for n in about.select('header')),
+          '/about/: article navigation missing')
+    check(not any('wrapper-sidebar' in n['attrs'].get('class', '').split() for n in about.select('div')),
+          '/about/: legacy sidebar still visible')
+    check(len(about.select('h1')) == 1, '/about/: expected one page heading')
     for path in english_files:
         doc = load(path)
         route = '/' + path.relative_to(SITE).as_posix().removesuffix('index.html')
@@ -181,25 +284,13 @@ def main():
         _, _, source_body = read_document(ROOT / fields['source_path'])
         translated = load(SITE / f'en/{slug}/index.html')
         original = load(SITE / f'{slug}/index.html')
-        heading_ids = lambda doc: [n['attrs'].get('id') for n in doc.nodes if n['entry'] and re.fullmatch('h[1-6]', n['tag'])]
-        check(heading_ids(translated) == heading_ids(original), f'{slug}: heading structure/IDs differ')
-        for tag in ('table', 'img', 'pre'):
-            check(len(translated.select(tag, True)) == len(original.select(tag, True)), f'{slug}: {tag} counts differ')
-        check(external(translated) == external(original), f'{slug}: external citations differ')
-        from check_translation_drafts import features, normalize_agent_table_labels, normalize_ml_labels, normalize_large_model_labels, normalize_vla_labels
-        normalize = normalize_vla_labels if slug in ('VLA-Survey', 'VLA-Papers', 'World-Models-Survey') else normalize_large_model_labels if slug in ('LLM-Training-Survey', 'VLM-Survey', 'Spatial-Intelligence-Survey') else normalize_ml_labels if 'Learning-Survey' in slug else normalize_agent_table_labels
-        before, after = features(normalize(source_body)), features(normalize(english_body))
-        for feature in ('math', 'links', 'table_numbers', 'table_row_widths'):
-            check(before[feature] == after[feature], f'{slug}: {feature} differ')
-        for doc in (translated, original):
-            switches = [n['attrs']['data-language-switch'] for n in doc.select('a') if 'data-language-switch' in n['attrs']]
-            check(switches == ['article'], f'{slug}: section switching missing')
-            alternates = {n['attrs'].get('hreflang'): n['attrs'].get('href') for n in doc.select('link') if n['attrs'].get('hreflang')}
-            check(alternates == {'en': f'https://tingdeliu.github.io/en/{slug}/', 'zh-CN': f'https://tingdeliu.github.io/{slug}/'}, f'{slug}: incorrect language alternates')
+        errors.extend(research_pair_errors(slug, translation_status[fields['translation_id']],
+                                           translated, original, source_body, english_body))
         check(f'/en/{slug}/' not in (SITE / 'feed.xml').read_text(encoding='utf-8'), f'{slug}: translation leaked into Chinese feed')
         cards = [n['attrs'].get('href') for n in load(SITE / 'en/research/index.html').select('a') if 'rc-card' in n['attrs'].get('class', '').split()]
         check(cards.count(f'/en/{slug}/') == 1, f'{slug}: missing or duplicate Research card')
-        print(f'{slug}: {len(heading_ids(translated))} headings; {len(translated.select("table", True))} tables; {len(translated.select("img", True))} images')
+        heading_count = sum(n['entry'] and bool(re.fullmatch('h[1-6]', n['tag'])) for n in translated.nodes)
+        print(f'{slug}: {len(translated.select("table", True))} tables; {len(translated.select("img", True))} images; {heading_count} headings')
     navigation_path = SITE / 'en/Robot-Navigation-Survey/index.html'
     if navigation_path.exists():
         navigation = load(navigation_path)
@@ -286,7 +377,10 @@ def main():
             check(route not in (SITE / 'feed.xml').read_text(encoding='utf-8'), f'{route}: weekly translation leaked into Chinese feed')
         english_blog = load(SITE / 'en/blog/index.html')
         cards = [n['attrs'].get('href') for n in english_blog.select('a') if 'rc-card' in n['attrs'].get('class', '').split()]
-        check(cards == list(reversed(weekly_urls)), 'English Blog issue order or cards differ')
+        expected_blog_urls = [fields['permalink'] for path in sorted((ROOT / '_translations/en/blog').glob('*.md'))
+                              for fields in [read_document(path)[0]] if fields.get('published', '').lower() != 'false']
+        check(len(cards) == len(expected_blog_urls) and set(cards) == set(expected_blog_urls),
+              'English Blog has missing or duplicate article cards')
         chinese_blog = load(SITE / 'blog/index.html')
         chinese_cards = [n['attrs'].get('href') for n in chinese_blog.select('a') if 'rc-card' in n['attrs'].get('class', '').split()]
         check(not any(url in chinese_cards for url in weekly_urls), 'Weekly translations duplicated in Chinese Blog')
@@ -300,7 +394,7 @@ def main():
         check((SITE / route / 'index.html').is_file(), f'Entry page missing: /{route}/')
     for asset in ('style.css', 'assets/css/vla-survey.css',
                   'assets/js/article-ui.js', 'assets/js/language-switch.js',
-                  'assets/js/leaderboard.js', 'assets/js/vla-survey.js'):
+                  'assets/js/leaderboard.js', 'assets/js/vla-survey.js', 'assets/js/blog-index.js'):
         check((SITE / asset).is_file(), f'Frontend asset missing: /{asset}')
     for directory in ('docs', 'scripts', '.cache', 'tmp', 'paper_summary', 'pages', '_site-drafts'):
         check(not (SITE / directory).exists(), f'Internal directory published: {directory}')

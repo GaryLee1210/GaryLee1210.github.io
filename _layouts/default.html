@@ -1,21 +1,28 @@
 {% include locale.html %}
+{% assign is_article_canvas = false %}
+{% if page.layout == 'post' or page.editorial %}{% assign is_article_canvas = true %}{% endif %}
 {% assign has_article_toc = false %}
 {% if page.layout == 'post' and page.toc == true %}
   {% assign has_article_toc = true %}
 {% endif %}
 <!DOCTYPE html>
-<html lang="{{ page_lang }}"{% if page.layout == 'post' %} class="article-document"{% endif %}>
+<html lang="{{ page_lang }}"{% if is_article_canvas %} class="article-document"{% endif %}>
   {% include head.html %}
-  <body class="{% if page.layout == 'post' %}no-sidebar article-page{% endif %}{% if has_article_toc %} has-article-toc{% endif %}">
+  <body class="{% if is_article_canvas %}no-sidebar article-page{% endif %}{% if page.home_index %} blog-index-page home-index-page{% elsif page.blog_index %} blog-index-page{% elsif page.research_index %} research-index-page{% elsif page.project_index %} project-index-page{% elsif page.editorial %} about-page{% endif %}{% if has_article_toc %} has-article-toc{% endif %}">
     <!-- 只在非文章页面显示导航侧边栏 -->
-    {% unless page.layout == 'post' %}
+    {% unless is_article_canvas %}
       {% include nav.html %}
     {% endunless %}
 
     {% if page.layout == 'post' %}
+      {% include article-header.html %}
       <div class="article-progress" aria-hidden="true">
         <span class="article-progress-bar"></span>
       </div>
+    {% elsif page.home_index or page.blog_index or page.project_index or page.research_index %}
+      {% include article-masthead.html %}
+    {% elsif page.editorial %}
+      {% include about-header.html %}
     {% endif %}
 
     {% if has_article_toc %}
@@ -63,7 +70,7 @@
 
     <div class="wrapper-footer-mobile">
       <footer class="footer">
-        {% include footer.html %}
+        {% if is_article_canvas %}{% include site-footer.html %}{% else %}{% include footer.html %}{% endif %}
       </footer>
     </div>
 
@@ -100,7 +107,7 @@
       }
 
       document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.tag li > a').forEach(function (el) {
+        document.querySelectorAll('body:not(.article-page) .tag li > a').forEach(function (el) {
           var tag = el.textContent.trim();
           var c = palette[hash(tag) % palette.length];
           el.style.backgroundColor = c.bg;
