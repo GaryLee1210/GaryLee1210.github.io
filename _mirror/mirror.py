@@ -135,6 +135,22 @@ def snapshot(root, ref):
     print(f"Prepared upstream {sha}: {len(incoming)} files; no Git merge involved.")
 
 
+def modernize_gemfile_platforms(text):
+    """Update deprecated Bundler platform aliases only inside platform lists."""
+    aliases = {":mingw", ":x64_mingw", ":mswin", ":mswin64"}
+
+    def replace(match):
+        symbols = re.findall(r":\w+", match[2])
+        if not aliases.intersection(symbols):
+            return match[0]
+        updated = dict.fromkeys(":windows" if item in aliases else item for item in symbols)
+        return match[1] + ", ".join(updated)
+
+    return re.sub(
+        r"(?m)(^\s*platforms\s+|(?:\bplatforms:|:platforms\s*=>)\s*\[\s*)"
+        r"(:\w+(?:\s*,\s*:\w+)*)(?=\s*(?:do\b|\]))", replace, text)
+
+
 def prepare(root):
     root = root.resolve()
     build = root / "_mirror/build"
@@ -164,6 +180,9 @@ def prepare(root):
     # Preserve the raw upstream lock, but build with the tested Linux dependency set.
     # BUNDLE_FROZEN in CI prevents a changed Gemfile from silently upgrading gems.
     shutil.copy2(root / "_mirror/dependencies/Gemfile.lock", build / "Gemfile.lock")
+    gemfile = build / "Gemfile"
+    if gemfile.is_file():
+        gemfile.write_text(modernize_gemfile_platforms(gemfile.read_text(encoding="utf-8")), encoding="utf-8")
     print(f"Build source prepared separately at {build}")
 
 

@@ -17,6 +17,7 @@
 2. 生成完整源码快照，处理上游新增、修改、删除和目录迁移，不执行 Git merge。
 3. 在 `_mirror/build/` 构建临时网站，叠加个人配置和 overrides。
    - 使用本站保存的 Linux `dependencies/Gemfile.lock`，保留原站根目录锁文件原样。Bundler 以 frozen 模式安装，Jekyll、插件及传递依赖不会在每日同步时自动换版本。兼容现有锁文件的 Gemfile 编辑仍可同步；新增或不兼容的依赖需要先验证并更新本站锁文件。
+   - 临时构建目录中的 Gemfile 将旧 `mingw` / `x64_mingw` / `mswin` 平台别名转换为 Bundler 支持的 `windows`，保留其他平台和原始源码，消除新版 Bundler 的平台弃用提示。
    - 使用 Sass 官方迁移器，将当前上游样式中的 `@import`、全局内置函数迁移到模块写法。转换只发生在临时构建目录，每次同步都会重新处理，因此不会冻结或覆盖上游的新主题。
    - 对比迁移前后编译得到的 CSS，必须逐字节一致且不再出现 Sass 弃用提示。随后使用已验证的 CSS 构建 Jekyll 页面，保留原 front matter 和 `/style.css` 地址；不再由浮动版本的 Ruby Sass 重新编译。
    - 样式工具固定为 Sass `1.106.1`、sass-migrator `2.6.1`，全部 npm 依赖通过 `styles/package-lock.json` 锁定。升级时一并更新版本与锁文件，运行 `node --test _mirror/styles/test-migrate.mjs`，再验证真实上游构建与页面。
@@ -31,6 +32,8 @@
 当前运行时固定为 Python `3.13.17`、Node `24.21.0`（附带 npm `11.19.0`）、Ruby `3.4.11` 和 Bundler `4.0.23`，运行于 `ubuntu-24.04`。Ruby 3.2 已结束维护，因此不继续冻结旧版 Ruby。所有外部 Actions 使用完整提交 SHA，版本注释便于维护；Pages 上传动作内部的 upload-artifact 同样固定为提交 SHA。
 
 Linux gem 锁文件以已成功发布的运行 `39752370296` 为基线，Jekyll 为 `4.4.1`。每次安装后核对 Ruby/npm/Python/Bundler 版本及锁文件，禁止自动重新解析依赖；测试也会阻止引入浮动 Actions 引用和范围运行时版本。
+
+版本核对读取运行时的版本常量，并输出实际值用于排错；不依赖 `bundle --version` 的展示文案（Bundler 4 已移除旧的 `Bundler version` 前缀）。
 
 升级工具时，应在同一改动中更新工作流的精确版本及 SHA、相应锁文件和版本断言，再运行 Python/Sass 测试及完整的 Linux 构建。不要通过删除锁文件、关闭 frozen、屏蔽错误来让升级通过。上游新增依赖时，在 Linux 和目标 Ruby 环境中从现有锁文件进行有针对性的 `bundle lock --update <gem>`，验证后将新锁文件保存回 `_mirror/dependencies/Gemfile.lock`。Windows 的根目录锁文件不替代该 Linux 锁文件。
 

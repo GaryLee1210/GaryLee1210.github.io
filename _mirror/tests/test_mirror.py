@@ -127,6 +127,10 @@ class SnapshotTests(unittest.TestCase):
 
     def test_build_uses_controlled_linux_lock_without_changing_upstream_lock(self):
         self.git("checkout", "upstream")
+        gemfile = ('platforms :mingw, :x64_mingw, :mswin, :jruby do\n'
+                   '  gem "tzinfo-data"\nend\n'
+                   'gem "wdm", "~> 0.2.0", :platforms => [:mingw, :x64_mingw, :mswin]\n')
+        self.write("Gemfile", gemfile)
         self.write("Gemfile.lock", "upstream Windows dependencies\n")
         self.commit()
         self.git("checkout", "main")
@@ -134,6 +138,18 @@ class SnapshotTests(unittest.TestCase):
         mirror.prepare(self.root)
         self.assertEqual((self.root / "Gemfile.lock").read_text(), "upstream Windows dependencies\n")
         self.assertEqual((self.root / "_mirror/build/Gemfile.lock").read_text(), "tested Linux dependencies\n")
+        self.assertEqual((self.root / "Gemfile").read_text(), gemfile)
+        built_gemfile = (self.root / "_mirror/build/Gemfile").read_text()
+        self.assertIn("platforms :windows, :jruby do", built_gemfile)
+        self.assertIn(":platforms => [:windows]", built_gemfile)
+
+    def test_platform_adapter_preserves_other_symbols_and_is_idempotent(self):
+        source = ('# Legacy names: :mingw, :x64_mingw, :mswin\n'
+                  'gem "example", platforms: [:ruby, :mswin64, :windows, :jruby]\n')
+        expected = source.replace('[:ruby, :mswin64, :windows, :jruby]', '[:ruby, :windows, :jruby]')
+        result = mirror.modernize_gemfile_platforms(source)
+        self.assertEqual(result, expected)
+        self.assertEqual(mirror.modernize_gemfile_platforms(result), result)
 
 
 class PublicationTests(unittest.TestCase):

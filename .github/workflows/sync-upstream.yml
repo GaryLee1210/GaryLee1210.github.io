@@ -91,9 +91,13 @@ jobs:
 
       - name: Verify the installed toolchain and unchanged dependency locks
         run: |
-          test "$(ruby -e 'print RUBY_VERSION')" = '3.4.11'
-          test "$(cd _mirror/build && bundle --version)" = 'Bundler version 4.0.23'
-          test "$(python3 -c 'import platform; print(platform.python_version())')" = '3.13.17'
+          ruby_version=$(ruby -e 'print RUBY_VERSION')
+          bundler_version=$(cd _mirror/build && ruby -rbundler -e 'print Bundler::VERSION')
+          python_version=$(python3 -c 'import platform; print(platform.python_version())')
+          printf 'Installed Ruby=%s Bundler=%s Python=%s\n' "$ruby_version" "$bundler_version" "$python_version"
+          test "$ruby_version" = '3.4.11'
+          test "$bundler_version" = '4.0.23'
+          test "$python_version" = '3.13.17'
           cmp _mirror/dependencies/Gemfile.lock _mirror/build/Gemfile.lock
           git diff --exit-code -- _mirror/dependencies/Gemfile.lock _mirror/styles/package-lock.json
 
