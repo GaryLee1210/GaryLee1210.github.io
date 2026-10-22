@@ -9,6 +9,7 @@ import argparse
 import datetime as dt
 import html
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -160,7 +161,9 @@ def prepare(root):
             safe_path(build, name).unlink(missing_ok=True)
     # JSON is a YAML subset accepted by Jekyll's --config option.
     shutil.copy2(root / "_mirror/config.json", build / "_mirror.yml")
-    (build / "Gemfile.lock").unlink(missing_ok=True)  # Upstream lock may contain Windows platforms.
+    # Preserve the raw upstream lock, but build with the tested Linux dependency set.
+    # BUNDLE_FROZEN in CI prevents a changed Gemfile from silently upgrading gems.
+    shutil.copy2(root / "_mirror/dependencies/Gemfile.lock", build / "Gemfile.lock")
     print(f"Build source prepared separately at {build}")
 
 
@@ -213,8 +216,11 @@ def finalize(root):
     if not styles:
         raise ValueError("Compiled stylesheet missing; refusing to publish an unstyled site.")
     state = json.loads((root / "_mirror/state.json").read_text(encoding="utf-8"))
-    write_json(site / "mirror-status.json", {"upstream_revision": state["revision"],
-               "source": config["source_url"], "mirror": config["url"]})
+    status = {"upstream_revision": state["revision"],
+              "source": config["source_url"], "mirror": config["url"]}
+    if os.environ.get("MIRROR_PUBLICATION_ID"):
+        status["publication_id"] = os.environ["MIRROR_PUBLICATION_ID"]
+    write_json(site / "mirror-status.json", status)
     print(f"Publication validated: {len(list(site.rglob('*.html')))} HTML files, attribution and CSS present.")
 
 

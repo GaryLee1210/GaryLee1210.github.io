@@ -26,10 +26,15 @@ jobs:
       upstream: ${{ steps.source.outputs.sha }}
     steps:
       - name: Checkout latest mirror configuration
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: main
           fetch-depth: 1
+
+      - name: Setup pinned Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.13.17'
 
       - name: Test snapshot and publication safeguards
         run: python3 -m unittest discover -s _mirror/tests -v
@@ -52,14 +57,16 @@ jobs:
           python3 _mirror/mirror.py prepare
 
       - name: Setup pinned Sass migration tools
-        uses: actions/setup-node@v7.1.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: '24'
+          node-version: '24.21.0'
           cache: npm
           cache-dependency-path: _mirror/styles/package-lock.json
 
       - name: Install and test style migration
         run: |
+          test "$(node --version)" = 'v24.21.0'
+          test "$(npm --version)" = '11.19.0'
           npm ci --prefix _mirror/styles --ignore-scripts --no-audit --no-fund
           node --test _mirror/styles/test-migrate.mjs
 
@@ -68,16 +75,27 @@ jobs:
 
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v6
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
       - name: Setup Ruby and cached dependencies
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@b1da4809b005e0178fe08a1d57317bffc00b7b4c # v1.332.0
         with:
-          ruby-version: '3.2'
+          ruby-version: '3.4.11'
+          bundler: '4.0.23'
           bundler-cache: true
           working-directory: _mirror/build
         env:
           BUNDLE_RETRY: '3'
+          BUNDLE_TIMEOUT: '30'
+          BUNDLE_FROZEN: 'true'
+
+      - name: Verify the installed toolchain and unchanged dependency locks
+        run: |
+          test "$(ruby -e 'print RUBY_VERSION')" = '3.4.11'
+          test "$(cd _mirror/build && bundle --version)" = 'Bundler version 4.0.23'
+          test "$(python3 -c 'import platform; print(platform.python_version())')" = '3.13.17'
+          cmp _mirror/dependencies/Gemfile.lock _mirror/build/Gemfile.lock
+          git diff --exit-code -- _mirror/dependencies/Gemfile.lock _mirror/styles/package-lock.json
 
       - name: Build candidate without changing the published site
         working-directory: _mirror/build
@@ -91,12 +109,15 @@ jobs:
           fi
         env:
           JEKYLL_ENV: production
+          BUNDLE_FROZEN: 'true'
 
       - name: Apply attribution and validate publication
         run: python3 _mirror/mirror.py finalize
+        env:
+          MIRROR_PUBLICATION_ID: ${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Upload validated site
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: _mirror/build/_site
 
@@ -139,20 +160,21 @@ jobs:
     steps:
       - name: Deploy validated artifact
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
 
       - name: Verify the live upstream revision
         env:
           EXPECTED_REVISION: ${{ needs.validate.outputs.upstream }}
+          EXPECTED_PUBLICATION: ${{ github.run_id }}-${{ github.run_attempt }}
         shell: bash
         run: |
           set -euo pipefail
           for attempt in $(seq 1 12); do
             actual=$(curl --fail --silent --show-error --max-time 20 \
               "https://garylee1210.github.io/mirror-status.json?run=$GITHUB_RUN_ID&attempt=$attempt" \
-              | jq -r '.upstream_revision' || true)
-            if [ "$actual" = "$EXPECTED_REVISION" ]; then
-              echo "Live website verified at $actual" >> "$GITHUB_STEP_SUMMARY"
+              | jq -r '[.upstream_revision, .publication_id] | join(" ")' || true)
+            if [ "$actual" = "$EXPECTED_REVISION $EXPECTED_PUBLICATION" ]; then
+              echo "Live website and this publication verified: $actual" >> "$GITHUB_STEP_SUMMARY"
               exit 0
             fi
             sleep 10

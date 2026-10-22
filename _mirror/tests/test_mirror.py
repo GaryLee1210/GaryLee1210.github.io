@@ -1,8 +1,10 @@
 import importlib.util
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 SPEC = importlib.util.spec_from_file_location("mirror", Path(__file__).resolve().parents[1] / "mirror.py")
 mirror = importlib.util.module_from_spec(SPEC)
@@ -26,6 +28,7 @@ class SnapshotTests(unittest.TestCase):
         self.commit()
         self.git("branch", "upstream")
         self.write("_mirror/config.json", json.dumps({"name": "owner"}))
+        self.write("_mirror/dependencies/Gemfile.lock", "tested Linux dependencies\n")
         self.write("README.md", "mirror maintenance\n")
         self.write(".github/workflows/deploy.yml", "protected workflow\n")
         self.write("_config.yml", "name: owner legacy customization\n")
@@ -122,6 +125,16 @@ class SnapshotTests(unittest.TestCase):
         mirror.stage(self.root)
         self.assertEqual(self.git("show", ":new-assets/data.dat"), "data required by the new upstream theme")
 
+    def test_build_uses_controlled_linux_lock_without_changing_upstream_lock(self):
+        self.git("checkout", "upstream")
+        self.write("Gemfile.lock", "upstream Windows dependencies\n")
+        self.commit()
+        self.git("checkout", "main")
+        mirror.snapshot(self.root, "upstream")
+        mirror.prepare(self.root)
+        self.assertEqual((self.root / "Gemfile.lock").read_text(), "upstream Windows dependencies\n")
+        self.assertEqual((self.root / "_mirror/build/Gemfile.lock").read_text(), "tested Linux dependencies\n")
+
 
 class PublicationTests(unittest.TestCase):
     def setUp(self):
@@ -163,8 +176,11 @@ class PublicationTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "stylesheet missing"):
                 mirror.finalize(root)
             (site / "style.css").write_text('body { color: black; }\n' * 100)
-            mirror.finalize(root)
-            self.assertEqual(json.loads((site / "mirror-status.json").read_text())["upstream_revision"], "abc123")
+            with patch.dict(os.environ, {"MIRROR_PUBLICATION_ID": "12345-2"}):
+                mirror.finalize(root)
+            status = json.loads((site / "mirror-status.json").read_text())
+            self.assertEqual(status["upstream_revision"], "abc123")
+            self.assertEqual(status["publication_id"], "12345-2")
 
 
 if __name__ == "__main__":
