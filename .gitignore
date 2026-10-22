@@ -13,6 +13,7 @@ _site/
 _mirror/build/
 _mirror/__pycache__/
 _mirror/tests/__pycache__/
+_mirror/styles/node_modules/
 
 # 系统文件
 .DS_Store

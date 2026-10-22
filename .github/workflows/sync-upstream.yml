@@ -51,6 +51,21 @@ jobs:
           python3 _mirror/mirror.py snapshot --ref "$sha"
           python3 _mirror/mirror.py prepare
 
+      - name: Setup pinned Sass migration tools
+        uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: _mirror/styles/package-lock.json
+
+      - name: Install and test style migration
+        run: |
+          npm ci --prefix _mirror/styles --ignore-scripts --no-audit --no-fund
+          node --test _mirror/styles/test-migrate.mjs
+
+      - name: Modernize upstream Sass and verify identical CSS
+        run: node _mirror/styles/migrate.mjs
+
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v6
@@ -66,7 +81,14 @@ jobs:
 
       - name: Build candidate without changing the published site
         working-directory: _mirror/build
-        run: bundle exec jekyll build --config _config.yml,_mirror.yml --strict_front_matter
+        shell: bash
+        run: |
+          set -euo pipefail
+          bundle exec jekyll build --config _config.yml,_mirror.yml --strict_front_matter 2>&1 | tee "$RUNNER_TEMP/jekyll-build.log"
+          if grep -Eq 'DEPRECATION WARNING|repetitive deprecation warnings' "$RUNNER_TEMP/jekyll-build.log"; then
+            echo '::error::Sass deprecations remain in the Jekyll build; review the new upstream stylesheet before publishing.'
+            exit 1
+          fi
         env:
           JEKYLL_ENV: production
 

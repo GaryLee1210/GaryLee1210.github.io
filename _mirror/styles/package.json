@@ -1,0 +1,10 @@
+{
+  "name": "research-notes-style-migration",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "dependencies": {
+    "sass": "1.106.1",
+    "sass-migrator": "2.6.1"
+  }
+}
