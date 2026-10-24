@@ -6,161 +6,58 @@ permalink: /en/VLA-Papers/
 source_path: _posts/research/2026-10-01-VLA-Papers.md
 source_url: /VLA-Papers/
 source_revision_date: 2026-10-19
-translation_updated: 2026-10-19
+translation_updated: 2026-10-24
 title: "Vision-Language-Action: Paper Readings"
-date: 2026-10-19
+date: 2026-10-24
 tags: [VLA, VLM, Robotics, Manipulation, Deep Learning]
 categories: research
 comments: false
 author: Tingde Liu
 toc: true
 vla_survey: true
-toc_depth: 2
-excerpt: "Detailed readings of VLA research, official RoboDojo leaderboard snapshots, controlled experimental comparisons, methods, evidence, and limitations."
+toc_depth: 3
+excerpt: "Detailed readings of VLA research with an official RoboDojo leaderboard snapshot, covering each paper's research question, method, evidence, and limitations."
 ---
-
 
 > This article provides the companion paper readings for {% include content-link.html path='/VLA-Survey/' fragment='' label='the VLA Survey' %}. The survey covers the methodological framework, datasets, and evaluation; this collection presents each paper's research question, method, evidence, and limitations.
 
-Paper numbering follows the survey's original Chapter 5 to preserve existing citations and cross-references. The official RoboDojo leaderboard compares models under a common evaluation protocol. Separate tables then compare experiments within individual papers under matched settings. Scores from these two kinds of evaluation must not be combined into one ranking.
+Papers are numbered in the order they were added; old section anchors still work, so links from the survey land on the right paper. The official RoboDojo leaderboard below compares models under a common evaluation protocol. Each paper's own matched-setting comparison table sits in the Experiments and evidence part of its reading; scores from the two kinds of evaluation must not be combined into one ranking.
 
 <span id="vla-leaderboard" class="vla-anchor-alias" aria-hidden="true"></span>
 
-# Performance rankings
-{: id="性能排行榜"}
+<span id="性能排行榜" class="vla-anchor-alias" aria-hidden="true"></span>
 
-<p class="vla-ranking-lead">Start with cross-model results under a common protocol, then examine controlled experiments within each paper. These evaluations answer different questions; check the platform, training data, and success criteria when switching between leaderboards.</p>
-
-<nav class="vla-ranking-nav" aria-label="Quick jump to performance list">
-<a href="#vla-ranking-robodojo"><strong>Official RoboDojo leaderboard </strong><span> Cross-model · Simulation snapshot and real-robot results </span></a>
-<a href="#vla-ranking-actionpiece"><strong> action encoding </strong><span>LIBERO/LIBERO-Plus</span></a>
-<a href="#vla-ranking-gm100"><strong> cross-robot manipulation </strong><span>GM-100 · Separate rankings for two platforms </span></a>
-<a href="#vla-ranking-tau0"><strong> Long-horizon task search </strong><span> Fixed low-level policy · real robot </span></a>
-<a href="#vla-ranking-expo"><strong> Dynamic manipulation </strong><span> Four real robot tasks · 30 trials </span></a>
-<a href="#vla-ranking-bee"><strong> Human correction </strong><span> Matched budgets · Task-specific results </span></a>
-</nav>
-
-## RoboDojo: official unified evaluation leaderboard
+# Official RoboDojo leaderboard
 {: id="vla-ranking-robodojo"}
 
-[RoboDojo](https://robodojo-benchmark.com/leaderboard) compares different policies under the unified protocol, including **42 simulation tasks and 18 real robot tasks**. The simulation covers five types of abilities: generalization, memory, fine manipulation, long-horizon tasks and open instructions; its [paper](https://arxiv.org/abs/2607.04434) states that each simulation task is evaluated 50 times. **Score** counts towards partial task progress, **SR** only counts towards complete task success. The following table is sorted by Score on the official website, excerpted from [Official homepage Top 10](https://robodojo-benchmark.com/); this is a static snapshot **accessed on 2026-10-01**. For ranking updates and real robot results, please refer to [Official real-time list](https://robodojo-benchmark.com/leaderboard).
+[RoboDojo](https://robodojo-benchmark.com/leaderboard) compares policies under a unified protocol with **42 simulation tasks and 18 real-robot tasks**. The simulation tasks cover five capabilities: generalization, memory, fine manipulation, long-horizon tasks and open instructions; its [paper](https://arxiv.org/abs/2607.04434) states that each simulation task is evaluated 50 times. **Score** credits partial task progress, while **SR** counts only complete task success. The table lists the top 10 of the official simulation leaderboard (excluding the Agent track) by Score, out of 61 evaluated models. It is a **static snapshot accessed on 2026-10-24** (official data updated 2026-10-23); see the [live official leaderboard](https://robodojo-benchmark.com/leaderboard) for current rankings and real-robot results.
 
-<p class="vla-table-hint"> Slide the table left or right to view the complete indicators →</p>
+<p class="vla-table-hint">Swipe the table sideways to see every metric →</p>
 
-|Simulation model (Score ranking)| Score ↑ | SR ↑ |
-|---|---:|---:|
-| **1** · DM0.5 | <span class="vla-score-meter" style="--vla-meter:100%"><strong>24.90</strong></span> | **19.34%** |
-| **2** · GalaxeaVLA (G0.5) | <span class="vla-score-meter" style="--vla-meter:81%">20.23</span> | 14.88% |
-| **3** · Xiaomi-Robotics-1 | <span class="vla-score-meter" style="--vla-meter:81%">20.07</span> | 13.93% |
-| **4** · OpenWAM-α | <span class="vla-score-meter" style="--vla-meter:69%">17.18</span> | 11.92% |
-| **5** · Meituan-Robotics-0 | <span class="vla-score-meter" style="--vla-meter:60%">14.95</span> | 9.53% |
-| **6** · Hy-Embodied-0.5-VLA | <span class="vla-score-meter" style="--vla-meter:52%">13.07</span> | 8.80% |
-| **7** · Spatial Forcing | <span class="vla-score-meter" style="--vla-meter:50%">12.38</span> | 8.04% |
-| **8** · Pi-05 | <span class="vla-score-meter" style="--vla-meter:46%">11.41</span> | 6.91% |
-| **9** · InternVLA-A1.5 | <span class="vla-score-meter" style="--vla-meter:45%">11.15</span> | 7.14% |
-| **10** · StarVLA-PI_v3 | <span class="vla-score-meter" style="--vla-meter:43%">10.81</span> | 7.51% |
+| Simulation model (Score rank) | Type | Score ↑ | SR ↑ |
+|---|---|---:|---:|
+| **1** · VPP2 (RobotEra) | WAM | <span class="vla-score-meter" style="--vla-meter:100%"><strong>39.26</strong></span> | **32.26%** |
+| **2** · Awomo-0.5 (Awomo) | WAM | <span class="vla-score-meter" style="--vla-meter:90%">35.34</span> | 29.64% |
+| **3** · Simate-beta (Simate) | VLA | <span class="vla-score-meter" style="--vla-meter:86%">33.95</span> | 27.96% |
+| **4** · Rex-M1 Preview (FT Lab & VisIncept) | VLA | <span class="vla-score-meter" style="--vla-meter:86%">33.79</span> | 27.44% |
+| **5** · VPP2-Preview (RobotEra) | WAM | <span class="vla-score-meter" style="--vla-meter:80%">31.40</span> | 25.62% |
+| **6** · InternW0-Δ (Shanghai AI Lab) | WAM | <span class="vla-score-meter" style="--vla-meter:78%">30.77</span> | 23.91% |
+| **7** · Liber-0 Preview (LiberAI) | VLM + WAM | <span class="vla-score-meter" style="--vla-meter:78%">30.74</span> | 25.52% |
+| **8** · Liber-0 Lite (LiberAI) | WAM | <span class="vla-score-meter" style="--vla-meter:74%">29.24</span> | 24.23% |
+| **9** · DM0.5 (Dexmal) | VLA | <span class="vla-score-meter" style="--vla-meter:63%">24.90</span> | 19.34% |
+| **10** · ME-Brain-1.0 (Li Auto) | VLA + WAM | <span class="vla-score-meter" style="--vla-meter:55%">21.67</span> | 15.99% |
 {: .vla-leaderboard-table .vla-official-table }
 
-**meter reading**: The light blue bar takes the highest Score of this meter as a reference and only assists in comparing the score difference. The rankings are arranged by Score, and SR does not necessarily change in the same order. For example, the SR of 9th and 10th place is higher than that of 8th place, but the Score including partial progress is lower. Simulation scores do not represent real robot performance; the complete model list, five-category capability breakdown and real robot rankings are on [official page](https://robodojo-benchmark.com/leaderboard).
-
-## Compare the same settings within the paper
-{: id="论文内同设置对照"}
-
-The following five sets of data come from the experimental tables of their respective papers. **Each table is sorted** only within its own evaluation settings; bold indicates the best result for that column. Some tables are controlled ablation of the same backbone, and others are systematic comparisons of different training recipes under the same task protocol, which cannot be collectively referred to as a model list.
-
-## Action encoding: LIBERO / LIBERO-Plus
-{: id="vla-ranking-actionpiece"}
-
-[ActionPiece paper Table 1](https://arxiv.org/abs/2609.18487) uses the same Qwen3-VL-4B backbone, demo data, hints, global batch size, training budget, and 8-step prediction and execution protocol; LIBERO-Plus is not involved in training. Sorted by **LIBERO-Plus success rate**, the values ​​are all percentages.
-
-|action tokenizer| LIBERO ↑ | LIBERO-Plus ↑ |
-|---|---:|---:|
-| [ActionPiece](#5-34-actionpiece-2026) | **94.8** | **68.8** |
-| FAST | 92.1 | 64.3 |
-| ActionCodec | 93.7 | 64.2 |
-| FASTerVQ* | 91.3 | 62.6 |
-| OAT | 86.1 | 60.7 |
-| Standard RVQ | 90.9 | 60.4 |
-{: .vla-leaderboard-table }
-
-\* FASTerVQ is a self-implemented version of this paper based on public methods. The comparison controls the policy settings, but different tokenizers retain their own output lengths and vocabularies; this table does not infer that their inference latencies are the same.
-
-## Cross-robot manipulation: GM-100
-{: id="vla-ranking-gm100"}
-
-[LingBot-VLA 2.0 Paper Table 5](https://arxiv.org/abs/2607.06403) Averaged across nine dual-arm tasks for each platform under *generalist mixed-training* settings. Progress measures intermediate milestones, and success rate requires the final state of the task to be completed. The two robots **ranked** respectively; the training data and recipes of each model are not completely consistent, so the ranking cannot be attributed to the architecture alone.
-
-**Agilex Cobot Magic** (sorted by success rate; unit: %)
-
-|model|Success rate ↑|Progress ↑|
-|---|---:|---:|
-| [LingBot-VLA 2.0](#5-32-lingbot-vla-20-2026) | **34.4** | **66.2** |
-| [π₀.5](#5-11-pi05-2025) | 32.2 | 59.1 |
-| LingBot-VLA 1.0 | 30.0 | 58.2 |
-| [GR00T N1.7](#5-18-gr00t-2025) | 17.8 | 36.3 |
-{: .vla-leaderboard-table }
-
-**Galaxea R1 Pro** (Success rates are sorted by progress when tied; unit: %)
-
-|model|Success rate ↑|Progress ↑|
-|---|---:|---:|
-| [LingBot-VLA 2.0](#5-32-lingbot-vla-20-2026) | **15.6** | **34.6** |
-| LingBot-VLA 1.0 | **15.6** | 32.7 |
-| [π₀.5](#5-11-pi05-2025) | 8.9 | 27.4 |
-| [GR00T N1.7](#5-18-gr00t-2025) | 5.6 | 16.4 |
-{: .vla-leaderboard-table }
-
-## Long-horizon task search: τ₀-VLA
-{: id="vla-ranking-tau0"}
-
-[τ₀-VLA Paper Table III](https://arxiv.org/abs/2608.16885) The low-level policy is fixed and only high-level direct planning (Plan Once) and test-time search (TTC) are compared. Each real robot task is evaluated 10 times; in the table **The number of successful tasks** , not to be mixed with another set of experiments in the paper "direct execution vs hierarchical decomposition".
-
-|high-level decision-making|Making milk tea ↑|Organize books ↑|Tidy up the room ↑|
-|---|---:|---:|---:|
-|[TTC Search](#5-33-tau0-vla-2026)| **7/10** | **9/10** | **7/10** |
-| Plan Once | 5/10 | 6/10 | 5/10 |
-{: .vla-leaderboard-table }
-
-## Dynamic manipulation: Real-Time EXPO-FT
-{: id="vla-ranking-expo"}
-
-[Real-Time EXPO-FT paper Table I](https://arxiv.org/abs/2609.18207) is evaluated 30 times on each of the four dynamic real robot tasks. The upper limit of online robot data collection is 10 minutes per task. Sorted by the average number of successes of the four tasks; the update methods and gradient steps of different algorithms are different. The table reflects the **system-level comparison** reported in the paper.
-
-|method|Dynamic Picking ↑|Rolling ball balance ↑|Object transfer ↑|football kicking ↑|Average of four tasks ↑|
-|---|---:|---:|---:|---:|---:|
-| [Real-Time EXPO-FT](#5-35-real-time-expo-ft-2026) | **30/30** | **28/30** | **30/30** | **28/30** | **29/30** |
-| EXPO-FT + RTC | 24/30 | 23/30 | 27/30 | 26/30 | 25/30 |
-| DSRL + RTC | 25/30 | 15/30 | 23/30 | 17/30 | 20/30 |
-| EXPO-FT | 21/30 | 18/30 | 19/30 | 17/30 | 18.8/30 |
-| DSRL | 23/30 | 11/30 | 23/30 | 16/30 | 18.3/30 |
-| SFT + RTC | 22/30 | 12/30 | 22/30 | 16/30 | 18/30 |
-| SFT | 19/30 | 8/30 | 10/30 | 13/30 | 12.5/30 |
-| RLPD | 0/30 | 12/30 | 0/30 | 6/30 | 4.5/30 |
-{: .vla-leaderboard-table }
-
-## Human correction: Bee
-{: id="vla-ranking-bee"}
-
-[Bee paper Table I](https://arxiv.org/abs/2609.27450) starts from the same fine-tuned VLA and matches about 20 pre-collected correction fragments and online data budgets for each task. The following table only lists the success rate (%) of three real robot tasks; **phone charging and cloth alignment only assess the fine-manipulation stage, and snack rack assesses the entire task**, so the total cross-task ranking is not calculated.
-
-|method|Phone Charging: The Fine-manipulation stage ↑|Snack rack: the whole task ↑|Fabric Alignment: Fine-manipulation stage ↑|
-|---|---:|---:|---:|
-| [Bee](#5-36-bee-2026) | **100.0** | **85.0** | **90.0** |
-| RLT | 58.3 | 21.7 | 73.3 |
-| DSRL | 93.3 | 13.3 | 31.7 |
-|Initial policy| 90.0 | 0.0 | 36.7 |
-{: .vla-leaderboard-table }
-
-Among the two groups of Bee and RLT that need to be manually taken over during training, the intervention rate of Bee corresponding to the three tasks is **12.2% / 17.0% / 65.3%**, and the RLT is **22.5% / 62.1% / 85.3%**; The Initial policy and DSRL do not use online manual takeover and should not be ranked directly after treating their intervention rate as 0%.
+**Reading the table**: the light-blue bar is scaled to the highest Score in the table and only helps compare gaps. Ranks follow Score, and SR does not always follow the same order; for example, 7th-place Liber-0 Preview has a higher SR than 6th-place InternW0-Δ. "Type" follows the official labels: WAM means a world action model that predicts future frames and actions together (see [DreamZero](#38-dreamzero-2026)), and 6 of the top 8 are WAMs or include one. The official site also runs an **Agent track** (entries typed AGENT, including general-purpose large models such as GPT-6-Astra); these entries are shown but not ranked, and the highest at the time of checking was HexaShell-Preview (Score 53.18 / SR 46.85%). Simulation scores do not represent real-robot performance; the five-capability breakdown and the real-robot leaderboard are on the [official page](https://robodojo-benchmark.com/leaderboard).
 
 ---
 
 <span id="vla-papers" class="vla-anchor-alias" aria-hidden="true"></span>
 
-# 5. Paper readings
+# Paper readings
 {: id="5-论文精读"}
 
-This article contains 36 representative works, including VLA models, action policies, acquisition methods and world models. Together they explain technical sources, but are not all part of the VLA, nor are they exhaustive rankings. You can jump to the corresponding paper through the search above or the side table of contents.
+This article contains 39 representative works, including VLA models, action policies, acquisition methods and world models. Together they explain technical sources, but are not all part of the VLA, nor are they exhaustive rankings. You can jump to the corresponding paper through the search above or the side table of contents.
 
 |Read the topic|Suggested tandem work|Main questions|
 |---|---|---|
@@ -177,7 +74,7 @@ Each section is organized by research questions, core methods, experimental resu
 
 <span id="51-rt-1-2022-5-1-rt-1-2022" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.1 RT-1 (2022)
+## 1. RT-1 (2022)
 {: id="5-1-rt-1-2022"}
 Robotics Transformer for Real-World Control at Scale
 
@@ -245,7 +142,7 @@ Robot control methods before 2022 generally rely on dedicated networks trained o
 
 <span id="52-rt-2-2023-5-2-rt-2-2023" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.2 RT-2 (2023)
+## 2. RT-2 (2023)
 {: id="5-2-rt-2-2023"}
 Vision-Language-Action Models Transfer Web Knowledge to Robotic Control
 
@@ -311,7 +208,7 @@ These results indicate that semantic knowledge can influence action selection, b
 
 <span id="53-rt-x--open-x-embodiment-dataset-2023-5-3-rt-x-2023" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.3 RT-X / Open X-Embodiment Dataset (2023)
+## 3. RT-X / Open X-Embodiment Dataset (2023)
 {: id="5-3-rt-x-2023"}
 Open X-Embodiment: Robotic Learning Datasets and RT-X Models
 
@@ -370,7 +267,7 @@ RLDS provides trajectory organization specifications, and motion standardization
 
 <span id="54-act-2023-5-4-act-2023" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.4 ACT (2023)
+## 4. ACT (2023)
 {: id="5-4-act-2023"}
 ———Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware
 
@@ -450,8 +347,6 @@ CVAE architecture: ideal for trajectory generation
 
 3. **Transformer architecture**: Use Transformer's encoder-decoder structure to fuse multi-view images and joint position information, and generate coherent action chunks.
 
-
-
 4. **Temporal Ensembling (Temporal Ensembling)**: During inference, the system makes predictions in each frame and performs a weighted average of overlapping action chunks. This approach not only improves the robustness of prediction, but also eliminates the sense of discontinuity in actions when switching "action chunks".
 
 <div align="center">
@@ -490,7 +385,7 @@ ACT detailed reasoning/testing process (Testing)
 
 <span id="55-diffusion-policy-2023-5-5-diffusion-policy-2023" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.5 Diffusion Policy (2023)
+## 5. Diffusion Policy (2023)
 {: id="5-5-diffusion-policy-2023"}
 Visuomotor Policy Learning via Action Diffusion
 
@@ -570,13 +465,11 @@ $$\mathcal{L} = \mathbb{E}_{t, a_0, \epsilon}\left[\|\epsilon - \epsilon_\theta(
 
 ---
 
-
-
 ---
 
 <span id="56-umi-2024-5-6-umi-2024" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.6 UMI (2024)
+## 6. UMI (2024)
 {: id="5-6-umi-2024"}
 ———Universal Manipulation Interface: In-The-Wild Robot Teaching Without In-The-Wild Robots
 
@@ -657,10 +550,9 @@ UMI proves that **data diversity is better than model fine-tuning**. Rather than
 
 ---
 
-
 <span id="57-dp3-2024-5-7-dp3-2024" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.7 DP3 (2024)
+## 7. DP3 (2024)
 {: id="5-7-dp3-2024"}
 ———3D Diffusion Policy: Generalizable Visuomotor Policy Learning via Simple 3D Representations
 
@@ -742,7 +634,7 @@ The success of DP3 once again emphasizes the importance of **perceptual represen
 
 <span id="58-unisim-2024-5-8-unisim-2024" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.8 UniSim (2024)
+## 8. UniSim (2024)
 {: id="5-8-unisim-2024"}
 ———Learning Interactive Real-World Simulators
 
@@ -847,10 +739,9 @@ Although UniSim is an important step forward, it still faces the following chall
 
 ---
 
-
 <span id="59-openvla-2024-5-9-openvla-2024" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.9 OpenVLA (2024)
+## 9. OpenVLA (2024)
 {: id="5-9-openvla-2024"}
 ——Open source vision-language-action model
 
@@ -976,17 +867,11 @@ This example requires `observation.png` to be prepared first. `bridge_orig` uses
 
 The original version of OpenVLA only supports single-image observation input and does not support multiple camera views, proprioceptive information, or observation history. The inference speed (6Hz) is still not fast enough for high-frequency control tasks (such as ALOHA at 50Hz). Although it is better than existing generalization policies, the success rate on test tasks is usually <90%, and there is still room for improvement in reliability. Due to computational limitations, many VLA design issues (such as basic VLM scale, collaborative training strategies, optimal visual features, etc.) have not been fully explored.
 
-
-
-
 ---
-
-
-
 
 <span id="510-π-2024-5-10-pi0-2024" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.10 π₀ (2024)
+## 10. π₀ (2024)
 {: id="5-10-pi0-2024"}
 A Vision-Language-Action Flow Model for General Robot Control
 
@@ -1047,7 +932,7 @@ Data coverage, robot interfaces, and observation distribution still limit migrat
 
 <span id="511-π5-2025-5-11-pi05-2025" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.11 π₀.5 (2025)
+## 11. π₀.5 (2025)
 {: id="5-11-pi05-2025"}
 ———a Vision-Language-Action Model with Open-World Generalization
 
@@ -1128,11 +1013,9 @@ This design of breaking down complex tasks allows low-level actions to benefit f
 
 ---
 
-
-
 <span id="512-π6-2025-5-12-pi06-2025" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.12 π*₀.₆ / RECAP (2025)
+## 12. π*₀.₆ / RECAP (2025)
 {: id="5-12-pi06-2025"}
 ———a VLA That Learns From Experience
 
@@ -1212,7 +1095,7 @@ RECAP workflow: starting from the pretraining VLA, collecting autonomous traject
 
 ---
 
-## 5.13 π₀.7: a Steerable Generalist Robotic Foundation Model (2026)
+## 13. π₀.7: a Steerable Generalist Robotic Foundation Model (2026)
 {: id="513-π7-a-steerable-generalist-robotic-foundation-model-2026"}
 ——Controllable universal robot base model with zero-sample cross-configuration migration and task combination capabilities
 
@@ -1315,7 +1198,7 @@ Unlike traditional discrete token prediction, π0.7 uses flow matching objective
 
 <span id="514-acot-vla-2026-5-13-acot-vla-2026" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.14 ACoT-VLA (2026)
+## 14. ACoT-VLA (2026)
 {: id="5-13-acot-vla-2026"}
 **Subtitle**: Action Chain-of-Thought for Vision-Language-Action Models
 **Translated title**: A vision-language-action model for reasoning in action space
@@ -1347,7 +1230,6 @@ Existing VLA models mainly perform reasoning in the visual-linguistic space (suc
 **Methods and innovations**
 
 This article proposes the **Action Chain-of-Thought (ACoT)** paradigm, which redefines the reasoning process as a structured sequence of action intentions and performs deliberation directly in the action space. The ACoT-VLA framework consists of three core components:
-
 
 **ACoT-VLA overall architecture** (three core modules):
 
@@ -1386,7 +1268,6 @@ noisy action├─→ IAR (Implicit Action Reasoner)
 - Flow matching loss optimizes EAR and action head simultaneously
 - Teacher Forcing stabilization: $Z^{ex}$ is calculated directly from the ground-truth trajectory during training, and switches to self-conditioning mode during inference.
 
-
 **Results and findings**
 
 **simulation experiment**:
@@ -1394,9 +1275,7 @@ noisy action├─→ IAR (Implicit Action Reasoner)
 - LIBERO-Plus: 84.1%, significantly surpassed in the robustness test, especially in camera angle changes (+11.6%), robot initial state disturbance (+16.3%), and sensor noise (+12.5%).
 - VLABench: Intention Score 63.5%, Progress Score 47.4%, significant improvements of +12.6% IS and +7.2% PS on unseen-texture track
 
-
 **Real world deployment**:
-
 
 - The average success rate on the AgiBot G1 robot is 66.7% (vs. 61.0% for π0.5 and 33.8% for π0)
 - Cross-embodiment verification: equally effective on the AgileX platform, proving the versatility of the method
@@ -1428,7 +1307,7 @@ This approach requires additional inference modules, which although has a relati
 ---
 <span id="515-vlm4vla-2026-5-14-vlm4vla-2026" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.15 VLM4VLA (2026)
+## 15. VLM4VLA (2026)
 {: id="5-14-vlm4vla-2026"}
 **Subtitle**: Revisiting Vision-Language Models in Vision-Language-Action Models
 **Translated title**: Re-examining the vision-language model in the vision-language-action model
@@ -1566,11 +1445,10 @@ For details, see [VLM4VLA paper Figure 5](https://arxiv.org/abs/2601.03309)
 
 The research did not conduct experiments on physical robots, mainly due to considerations of fairness and repeatability. Although analysis shows that the VLM-VLA gap stems from task heterogeneity rather than a simple sim-to-real gap, real-world deployment is still the ultimate goal. The paper's comprehensive simulation benchmark results can provide a valuable reference for future research.
 
-
 ---
 <span id="516-twinbrainvla-2026-5-15-twinbrain-vla-2026" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.16 TwinBrainVLA (2026)
+## 16. TwinBrainVLA (2026)
 {: id="5-15-twinbrain-vla-2026"}
 **Subtitle**: Unleashing VLM Potential in Embodied Tasks via Asymmetric Dual-Transformer Mixture
 **Translated title**: Unleashing the potential of general-purpose VLM in embodied tasks through an asymmetric dual-Transformer hybrid mechanism
@@ -1697,12 +1575,11 @@ Summary of main innovations:
 
 The current implementation requires that Left Brain and Right Brain share the same model architecture to ensure compatible hidden state dimensions. Future research directions include: exploring a more decoupled model architecture (such as supporting heterogeneous backbone through learnable projection layers), integrating specialized embodied VLM checkpoints to initialize Right Brain, extending to complete OXE data set training to fully utilize the capacity of the dual-stream architecture, and evaluating in a wider range of benchmarks and real robot scenarios.
 
-
 ---
 
 <span id="517-internvla-a1-2026-5-16-internvla-a1-2026" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.17 InternVLA-A1 (2026)
+## 17. InternVLA-A1 (2026)
 {: id="5-16-internvla-a1-2026"}
 ——Unifying Understanding, Generation and Action for Robotic Manipulation
 
@@ -1825,7 +1702,7 @@ Understanding experts lack joint training with multimodal VQA data sets, resulti
 
 <span id="518-internvla-a15-2026-5-18-internvla-a15-2026" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.18 InternVLA-A1.5 (2026)
+## 18. InternVLA-A1.5 (2026)
 {: id="5-18-internvla-a1.5-2026"}
 ——Unifying Understanding, Latent Foresight, and Action for Compositional Generalization
 
@@ -1951,7 +1828,7 @@ During inference (real robot deployment), in order to ensure real-time closed-lo
 
 <span id="519-interndata-a1-2025-5-17-interndata-a1-2025" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.19 InternData-A1 (2025)
+## 19. InternData-A1 (2025)
 {: id="5-17-interndata-a1-2025"}
 **Subtitle**: Pioneering High-Fidelity Synthetic Data for Pre-training Generalist Policy
 
@@ -2065,7 +1942,7 @@ Six sim-to-real tasks achieve over 50% success rate using only 500 simulation ep
 
 <span id="520-isaac-gr00t-2025-2026-5-18-gr00t-2025" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.20 Isaac GR00T (2025-2026)
+## 20. Isaac GR00T (2025-2026)
 {: id="5-18-gr00t-2025"}
 Generalist Robot 00 Technology
 
@@ -2090,11 +1967,13 @@ This paper studies general policy learning through multi-robot data and syntheti
 
 The tool chain can reduce some of the integration work, but the weights, training data, pretraining process and deployment hardware still need to be checked separately. When choosing this route, focus on confirming the robot interface, data format, training resources, and measured inference latency supported by the current version.
 
+NVIDIA's next-generation Isaac GR00T 2 switches to a world action model architecture; see [38. DreamZero](#38-dreamzero-2026) for the research behind it.
+
 ---
 
 <span id="521-xiaomi-robotics-0-2026-5-19-xiaomi-r0-2026" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.21 Xiaomi-Robotics-0 (2026)
+## 21. Xiaomi-Robotics-0 (2026)
 {: id="5-19-xiaomi-r0-2026"}
 MoT Architecture for Real-Time Bimanual Manipulation—the real-time benchmark of domestic open source VLA
 
@@ -2143,7 +2022,7 @@ When performing real-time inference on large VLA models (such as 7B+ parameters)
 ---
 <span id="522-x-vla-2025-5-20-xvla-2025" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.22 X-VLA (2025)
+## 22. X-VLA (2025)
 {: id="5-20-xvla-2025"}
 Scalable Cross-Embodied Learning with Soft Prompting — A concrete example of complete open source in academia
 
@@ -2190,7 +2069,7 @@ Robot hardware has different shapes (number of joints, arm lengths, degrees of f
 
 ---
 
-## 5.23 Motus (2025)
+## 23. Motus (2025)
 {: id="523-motus-2025"}
 ——A Unified Latent Action World Model
 
@@ -2354,10 +2233,9 @@ Visualization of the Motus VGM pattern (future video generation from observation
 
 Current methods require significant computing resources (~18,400 GPU hours total training). Performance on some complex tasks (such as folding towels) is still limited, with a partial success rate of only 39%. Although cross-embodiment generalization is improved through latent actions, further research is needed. Future work will explore more advanced unified model architectures, pursue more general motion priors, and learn latent actions from Internet-scale general videos. In addition, it is necessary to study how to reduce deployment costs and improve the robustness of models under extreme conditions.
 
-
 <span id="524-robogen-2024-5-23-robogen-2024" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.24 RoboGen (2024)
+## 24. RoboGen (2024)
 {: id="5-23-robogen-2024"}
 ———Towards Unleashing Infinite Data for Automated Robot Learning via Generative Simulation
 
@@ -2486,7 +2364,7 @@ For software tasks, GPT-4 is used to generate target shape description → Midjo
 
 ---
 
-## 5.25 Qwen-VLA (2026)
+## 25. Qwen-VLA (2026)
 {: id="525-qwen-vla-2026"}
 ——Embodied base model that unifies operation, navigation and trajectory prediction
 
@@ -2624,7 +2502,7 @@ The ROBOINF pipeline automatically builds scenes in IsaacLab (20 desktop scenes 
 The scale of embodied action data is much smaller than that of VL data, and the robustness of long-tail objects and contact-rich tasks (such as cloth folding, slotting) is still insufficient; there are optimization trade-offs in joint operation/navigation/VL training, and action-enhanced training will slightly damage pure VL and navigation evaluation indicators; current evaluation is mainly based on short-time domain, benchmark-driven, and long-term real deployment (fault recovery, scene memory) is still an unsolved challenge.
 <span id="526-spatialvla-2025-5-26-spatialvla" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.26 SpatialVLA (2025)
+## 26. SpatialVLA (2025)
 {: id="5-26-spatialvla"}
 ——Embodied intelligence base model that integrates 3D spatial representation and adaptive action mesh
 
@@ -2743,7 +2621,7 @@ Classification prediction errors are calculated for translation, rotation and gr
 - **High-dimensional action expansion is difficult**: The current Gaussian distribution fitting is designed for single-arm 7-degree-of-freedom actions. If it is extended to multi-dimensional high-degree-of-freedom tasks such as dual-arm collaboration and dexterous hand manipulation, the number of grid combinations will increase exponentially, and it is necessary to design a more efficient space-sharing grid or an implicit generation and decoding mechanism.
 <span id="527-harness-vla-2026-5-27-harness-vla" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.27 Harness VLA (2026)
+## 27. Harness VLA (2026)
 {: id="5-27-harness-vla"}
 📄 **Paper**: https://arxiv.org/abs/2607.08448
 
@@ -2860,7 +2738,7 @@ Comparison of out-of-distribution terminal status on<figcaption>LIBERO-Pro: beha
 2. The **Bootstrapping stage requires a trial and error budget**: to construct Task Specific Memory and Global Memory, the premise is that the use of `RESET` is allowed on the reference seed task and a certain amount of independent exploration trial and error time is provided.
 <span id="528-turbovla-2026-5-28-turbovla" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.28 TurboVLA (2026)
+## 28. TurboVLA (2026)
 {: id="5-28-turbovla"}
 ——Real-time vision-language action model: 32 Hz control and less than 1 GB GPU memory usage on RTX 4090
 
@@ -2993,7 +2871,7 @@ The training process uses the $\ell_1$ loss function under Behavior Cloning with
 - **Complex cross-modal reasoning is limited**: For complex tasks that require multi-step implicit reasoning (such as "find the bottle opener first and then open the leftmost drink bottle"), the upper large language model still needs to perform high-level planning and output sub-goal instructions, combined with TurboVLA's efficient execution path.
 <span id="529-zr-0-2026-5-29-zr-0" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.29 ZR-0 (2026)
+## 29. ZR-0 (2026)
 {: id="5-29-zr-0"}
 ——2.6B end-to-end VLA model based on dense Embodied Chain of Thinking (ECoT) supervision and cross-embodiment reasoning/execution decoupling
 
@@ -3091,7 +2969,7 @@ Here, the flow matching time step $\tau \sim \text{Beta}(1.5, 1.0)$ gives greate
 2. **One-way feedback lacks dynamic reflection during testing**: Since the inference stage skips the autoregressive generation of ECoT, the model cannot output text self-correction or perform language-based reflection re-planning in real time during execution.
 <span id="530-robottt-2026-5-30-robottt" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.30 RoboTTT (2026)
+## 30. RoboTTT (2026)
 {: id="5-30-robottt"}
 ——Extension of embodied policy attention context to test-time training (TTT) vision-language-action model with 8K Timesteps
 
@@ -3192,7 +3070,7 @@ Initialize $$\alpha \approx 0.001$$ at the beginning to make the model transitio
 * The update of fast weights relies on the auxiliary target based on MSE. The representation stability and generalization boundary when encountering extreme environmental mutations (such as large changes in illumination or violent shaking of the viewing angle) still need to be further explored.
 <span id="531-s-vla-2026-5-31-s-vla" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.31 S²-VLA (2026)
+## 31. S²-VLA (2026)
 {: id="5-31-s-vla"}
 ——State space guided dynamic adaptive attention vision-language-action model: Overcoming the cumulative error of long-range embodied control
 
@@ -3305,7 +3183,7 @@ $$\hat{A}_{t:t+K-1} = \text{LN}(H^{(L_{\mathrm{out}})}) W_{\mathrm{out}}^\top + 
 
 ---
 
-## 5.32 LingBot-VLA 2.0 (2026)
+## 32. LingBot-VLA 2.0 (2026)
 {: id="5-32-lingbot-vla-20-2026"}
 
 *From Foundation to Application: Improving VLA Models in Practice* · [Paper](https://arxiv.org/abs/2607.06403) · [Project and code](https://github.com/robbyant/lingbot-vla-v2)
@@ -3330,6 +3208,32 @@ The overall framework of<figcaption>LingBot-VLA 2.0: connecting heterogeneous ro
 
 Average Agilex Cobot Magic on GM-100's nine dual-arm task, generalist hybrid training setting **Progress/Success Rate** for **66.2% / 34.4%** , the previous version was 58.2% / 30.0%; Galaxea R1 Pro was **34.6% / 15.6%** , 32.7% / 15.6% in the previous edition. Therefore, "progress improvement" should not be written as a significant improvement in the success rate of both platforms. In the two mobile manipulation tasks, compared with the π₀.5 reproduced in the paper, both the in-domain and position perturbation settings have gains; however, for example, the out-of-domain success rate of the Astribot S1 item-into-refrigerator task is only **13.3%** (15 trials).
 
+<span id="vla-ranking-gm100" class="vla-anchor-alias" aria-hidden="true"></span>
+
+**Matched-setting comparison: GM-100 on two platforms**
+
+[LingBot-VLA 2.0 Paper Table 5](https://arxiv.org/abs/2607.06403) Averaged across nine dual-arm tasks for each platform under *generalist mixed-training* settings. Progress measures intermediate milestones, and success rate requires the final state of the task to be completed. The two robots **ranked** respectively; the training data and recipes of each model are not completely consistent, so the ranking cannot be attributed to the architecture alone.
+
+**Agilex Cobot Magic** (sorted by success rate; unit: %)
+
+|model|Success rate ↑|Progress ↑|
+|---|---:|---:|
+| LingBot-VLA 2.0 | **34.4** | **66.2** |
+| [π₀.5](#5-11-pi05-2025) | 32.2 | 59.1 |
+| LingBot-VLA 1.0 | 30.0 | 58.2 |
+| [GR00T N1.7](#5-18-gr00t-2025) | 17.8 | 36.3 |
+{: .vla-leaderboard-table }
+
+**Galaxea R1 Pro** (Success rates are sorted by progress when tied; unit: %)
+
+|model|Success rate ↑|Progress ↑|
+|---|---:|---:|
+| LingBot-VLA 2.0 | **15.6** | **34.6** |
+| LingBot-VLA 1.0 | **15.6** | 32.7 |
+| [π₀.5](#5-11-pi05-2025) | 8.9 | 27.4 |
+| [GR00T N1.7](#5-18-gr00t-2025) | 5.6 | 16.4 |
+{: .vla-leaderboard-table }
+
 ### Limitations and Enlightenments
 {: id="局限与启示"}
 
@@ -3337,7 +3241,7 @@ The cross-embodiment results here are still a comparison under the specified pla
 
 ---
 
-## 5.33 Τ₀-VLA (2026)
+## 33. Τ₀-VLA (2026)
 {: id="5-33-tau0-vla-2026"}
 
 *$\tau_0$-VLA: a Hierarchical Robot Foundation Model with World-Model-Guided Test-Time Computation* · [Paper](https://arxiv.org/abs/2608.16885) · [Project](https://tau0-vla.github.io/)
@@ -3362,6 +3266,18 @@ When the top management lacks confidence in a direct proposal, the system perfor
 
 In four long real robot tasks of about 12 minutes in length, after fixing the low-level policy, the average success rate of direct whole task execution was **27.5%**, and the *Plan Once* of high-level decomposition and no search was **45.0%**; 10 trials each. When searching during separate inspection and testing, milk tea production is improved from **5/10** to **7/10**, and book sorting is improved from **6/10** to **9/10**, room arrangement from **5/10** to **7/10**. The former group answers whether hierarchicalization is useful, and the latter group answers whether additional searches within the hierarchical system are useful. The two cannot be mixed into one gain.
 
+<span id="vla-ranking-tau0" class="vla-anchor-alias" aria-hidden="true"></span>
+
+**Matched-setting comparison: Plan Once vs. test-time search**
+
+[τ₀-VLA Paper Table III](https://arxiv.org/abs/2608.16885) The low-level policy is fixed and only high-level direct planning (Plan Once) and test-time search (TTC) are compared. Each real robot task is evaluated 10 times; in the table **The number of successful tasks** , not to be mixed with another set of experiments in the paper "direct execution vs hierarchical decomposition".
+
+|high-level decision-making|Making milk tea ↑|Organize books ↑|Tidy up the room ↑|
+|---|---:|---:|---:|
+|TTC Search| **7/10** | **9/10** | **7/10** |
+| Plan Once | 5/10 | 6/10 | 5/10 |
+{: .vla-leaderboard-table }
+
 ### Limitations and Enlightenments
 {: id="局限与启示-1"}
 
@@ -3369,7 +3285,7 @@ High-level world model prediction, candidate search, and reflection will increas
 
 ---
 
-## 5.34 ActionPiece (2026)
+## 34. ActionPiece (2026)
 {: id="5-34-actionpiece-2026"}
 
 *ActionPiece: Rethinking Action Tokenization for Autoregressive Vision-Language-Action Models* · [Paper](https://arxiv.org/abs/2609.18487) · [Project](https://deepcybo-physai.github.io/ActionPiece/)
@@ -3399,6 +3315,24 @@ Under the same Qwen3-VL-4B backbone, demonstration data, prompts, training budge
 The<figcaption> paper compares the reconstruction index and PRC with the policy success rate respectively. The right side shows the comparison of LIBERO-Plus ablation and tokenizer under the same policy settings. Source: Paper Figure 2.</figcaption>
 </div>
 
+<span id="vla-ranking-actionpiece" class="vla-anchor-alias" aria-hidden="true"></span>
+
+**Matched-setting comparison: LIBERO / LIBERO-Plus**
+
+[ActionPiece paper Table 1](https://arxiv.org/abs/2609.18487) uses the same Qwen3-VL-4B backbone, demo data, hints, global batch size, training budget, and 8-step prediction and execution protocol; LIBERO-Plus is not involved in training. Sorted by **LIBERO-Plus success rate**, the values ​​are all percentages.
+
+|action tokenizer| LIBERO ↑ | LIBERO-Plus ↑ |
+|---|---:|---:|
+| ActionPiece | **94.8** | **68.8** |
+| FAST | 92.1 | 64.3 |
+| ActionCodec | 93.7 | 64.2 |
+| FASTerVQ* | 91.3 | 62.6 |
+| OAT | 86.1 | 60.7 |
+| Standard RVQ | 90.9 | 60.4 |
+{: .vla-leaderboard-table }
+
+\* FASTerVQ is a self-implemented version of this paper based on public methods. The comparison controls the policy settings, but different tokenizers retain their own output lengths and vocabularies; this table does not infer that their inference latencies are the same.
+
 ### Limitations and Enlightenments
 {: id="局限与启示-2"}
 
@@ -3406,7 +3340,7 @@ The results are mainly for **discrete autoregressive action representation**, an
 
 ---
 
-## 5.35 Real-Time EXPO-FT (2026)
+## 35. Real-Time EXPO-FT (2026)
 {: id="5-35-real-time-expo-ft-2026"}
 
 *Reinforcement Learning for Real-Time Vision-Language-Action Policies* · [Paper](https://arxiv.org/abs/2609.18207) · [Project](https://pd-perry.github.io/real-time-expo-ft/)
@@ -3431,6 +3365,24 @@ Execution and training of<figcaption>Real-Time EXPO-FT: The left side continues 
 
 In 10 delay simulation environments of Kinetix, the paper reports that this method has **10/10** The term achieves the best results among the compared delayed and non-delayed methods. The four dynamic real robot tasks are dynamic picking, rolling ball balancing, object passing, and table football kicking; each has the most online robot data **10 minutes** , evaluate each **30 times** . The average number of successes in the author's table is from the supervised policy's **12.5/30 (about 42%)** Raise to **29/30 (about 97%)** ; where the rolling ball balance is **28/30** , not all four items have perfect scores.
 
+<span id="vla-ranking-expo" class="vla-anchor-alias" aria-hidden="true"></span>
+
+**Matched-setting comparison: four dynamic real-robot tasks**
+
+[Real-Time EXPO-FT paper Table I](https://arxiv.org/abs/2609.18207) is evaluated 30 times on each of the four dynamic real robot tasks. The upper limit of online robot data collection is 10 minutes per task. Sorted by the average number of successes of the four tasks; the update methods and gradient steps of different algorithms are different. The table reflects the **system-level comparison** reported in the paper.
+
+|method|Dynamic Picking ↑|Rolling ball balance ↑|Object transfer ↑|football kicking ↑|Average of four tasks ↑|
+|---|---:|---:|---:|---:|---:|
+| Real-Time EXPO-FT | **30/30** | **28/30** | **30/30** | **28/30** | **29/30** |
+| EXPO-FT + RTC | 24/30 | 23/30 | 27/30 | 26/30 | 25/30 |
+| DSRL + RTC | 25/30 | 15/30 | 23/30 | 17/30 | 20/30 |
+| EXPO-FT | 21/30 | 18/30 | 19/30 | 17/30 | 18.8/30 |
+| DSRL | 23/30 | 11/30 | 23/30 | 16/30 | 18.3/30 |
+| SFT + RTC | 22/30 | 12/30 | 22/30 | 16/30 | 18/30 |
+| SFT | 19/30 | 8/30 | 10/30 | 13/30 | 12.5/30 |
+| RLPD | 0/30 | 12/30 | 0/30 | 6/30 | 4.5/30 |
+{: .vla-leaderboard-table }
+
 ### Limitations and Enlightenments
 {: id="局限与启示-3"}
 
@@ -3438,7 +3390,7 @@ These four tasks emphasize rapid response and are not yet representative of long
 
 ---
 
-## 5.36 Bee (2026)
+## 36. Bee (2026)
 {: id="5-36-bee-2026"}
 
 *Bee: Intervention-Adaptive Real-World Reinforcement Learning with Vision-Language-Action Models* · [Paper](https://arxiv.org/abs/2609.27450)
@@ -3463,6 +3415,22 @@ Freeze the task at π₀.5 after fine-tuning and let the lightweight residual po
 
 The authors used matched robot data budget comparisons on three real robot tasks of phone charging, snack racking, and cloth alignment, and LIBERO-PRO's bowl placement simulation task. The average success rate of the four items is **91.2%** , compared with RLT is **57.5%** , DSRL is **42.1%** ; The manual intervention rates of the three real robot tasks are also lower than those of RLT. It should be noted that phone charging and fabric alignment are only for **Delicate operation stage** The success rate was recorded, and the snack rack and bowl placement were counted as the whole task; the mean and standard deviation of each paper were reported after three rounds of 20 evaluations each.
 
+<span id="vla-ranking-bee" class="vla-anchor-alias" aria-hidden="true"></span>
+
+**Matched-setting comparison: three real-robot tasks**
+
+[Bee paper Table I](https://arxiv.org/abs/2609.27450) starts from the same fine-tuned VLA and matches about 20 pre-collected correction fragments and online data budgets for each task. The following table only lists the success rate (%) of three real robot tasks; **phone charging and cloth alignment only assess the fine-manipulation stage, and snack rack assesses the entire task**, so the total cross-task ranking is not calculated.
+
+|method|Phone Charging: The Fine-manipulation stage ↑|Snack rack: the whole task ↑|Fabric Alignment: Fine-manipulation stage ↑|
+|---|---:|---:|---:|
+| Bee | **100.0** | **85.0** | **90.0** |
+| RLT | 58.3 | 21.7 | 73.3 |
+| DSRL | 93.3 | 13.3 | 31.7 |
+|Initial policy| 90.0 | 0.0 | 36.7 |
+{: .vla-leaderboard-table }
+
+Among the two groups of Bee and RLT that need to be manually taken over during training, the intervention rate of Bee corresponding to the three tasks is **12.2% / 17.0% / 65.3%**, and the RLT is **22.5% / 62.1% / 85.3%**; The Initial policy and DSRL do not use online manual takeover and should not be ranked directly after treating their intervention rate as 0%.
+
 ### Limitations and Enlightenments
 {: id="局限与启示-4"}
 
@@ -3470,7 +3438,7 @@ The roughly 20 pre-collected human correction clips and human takeovers during t
 
 ---
 
-## 5.37 ACE-Brain-0.5 (2026)
+## 37. ACE-Brain-0.5 (2026)
 {: id="5-37-ace-brain-05-2026"}
 
 From action generation toward a unified framework for perception, planning, execution, and evaluation
@@ -3624,3 +3592,79 @@ This ablation supports corrective data expansion as a way to reduce compounding 
 
 Task variants, manipulation fine-tuning configurations, and the appendix's 2B implementation require separate interpretation. The results do not establish that one fixed 8B checkpoint retains all capabilities simultaneously in long-horizon real-robot tasks; the interface-calibration explanation for SSR+ also needs more complete stage-wise ablations and cost reporting.
 External-memory updates and oracle-assisted offline retraining have different requirements. As checked on 2026-10-19, the official GitHub root mainly contains README and assets; model weights are linked, but complete reproduction of training, action control, and evaluation remains limited.
+
+---
+
+## 38. DreamZero / Isaac GR00T 2 (2026)
+{: id="38-dreamzero-2026"}
+
+*World Action Models are Zero-shot Policies* · [Paper](https://arxiv.org/abs/2602.15922) · [Project](https://dreamzero0.github.io/) · [NVIDIA: What is a world action model](https://www.nvidia.com/en-gb/glossary/world-action-model/)
+
+### Research questions
+{: id="研究问题-5"}
+
+Most VLA backbones are pretrained on static image-text data. They understand semantics well but lack physical priors about how objects move after being pushed or grasped, so generalization drops sharply on new tasks and in new environments. DreamZero proposes the **World Action Model** (WAM): a pretrained video diffusion model predicts future frames and actions together, using video as dense supervision of how the world evolves. NVIDIA says its next-generation robot foundation model, Isaac GR00T 2 (often called GR00T N2), is based on DreamZero research and uses the WAM architecture.
+
+### Core method
+{: id="核心方法-5"}
+
+- **Backbone**: a 14B autoregressive video diffusion Transformer initialized from Wan2.1-I2V-14B-480P; a 5B variant is used for ablations.
+- **Joint generation**: video and action latents are denoised together under one flow-matching objective, so actions act as inverse dynamics recovered from the predicted video. Inputs are multi-view images, the language instruction and proprioceptive state.
+- **Autoregressive chunks**: each chunk holds 2 latent frames, with 4 chunks by default. After each action chunk is executed, predicted frames in the KV cache are replaced by real observations to stop errors from compounding. On AgiBot G1 each chunk outputs 48 actions at 30 Hz, about 1.6 seconds.
+- **Real-time execution**: asynchronous execution, CFG parallelism across two GPUs, DiT caching, torch.compile with CUDA Graphs, NVFP4 quantization on Blackwell, and DreamZero-Flash, which decouples the video and action noise schedules to allow one-step denoising. Per-chunk latency falls from 5.7 s to about 150 ms (a 38× speedup on GB200), giving about 7 Hz closed-loop control on two GB200s.
+- **Data**: about 500 hours of AgiBot G1 teleoperation across 22 environments. Operators pick tasks from a list and a task is retired after 50 episodes, deliberately producing a long tail of behaviors. The Franka setup uses the public DROID dataset.
+
+### Experiments and evidence
+{: id="实验与证据-5"}
+
+Baselines are GR00T N1.6 and π₀.5, each trained from VLM weights only and from the official pretrained checkpoint. Evaluation defaults to unseen environments and unseen objects.
+
+- **AgiBot seen tasks**: average task progress **62.2%**, against **27.4%** for the best pretrained VLA; VLAs trained from scratch stay near 0.
+- **AgiBot, 10 unseen tasks**: **39.5%** vs. **16.3%**.
+- **DROID-Franka unseen tasks**: task progress / success **49% / 22.5%**, against 31% / 12.5% for GR00T N1.6 and 33% / 7.5% for π₀.5.
+- **Cross-embodiment transfer** (9 unseen tasks, video only, no action labels): the baseline scores 38.3%; adding 12 minutes of egocentric human video gives 54.3%, and adding 20 minutes of YAM robot video gives 55.4%. This is the source of the abstract's "over 42% relative gain".
+- **New-robot adaptation**: post-training on the YAM bimanual robot with about 30 minutes (55 trajectories) of play data keeps language following and generalization to new objects, but the paper reports this qualitatively only.
+- **Ablations**: 14B clearly beats 5B (50% vs. 21%), while VLAs scaled to 8B or 32B stay at 0%; diverse data beats repetitive data (50% vs. 33%).
+
+### Limitations and Enlightenments
+{: id="局限与启示-5"}
+
+The main metric is **task progress**, not success rate, and most tasks are the authors' own, so the numbers cannot be compared directly with success rates in other papers. The 7 Hz figure needs two GB200s, far more than VLAs that run above 20 Hz on consumer GPUs. Visual memory covers only about 6 seconds, so long tasks still need a high-level planner; sub-centimeter precision remains a weakness, and most failures come from video generation errors. The cross-embodiment and human-video experiments use only tens of minutes of data.
+
+NVIDIA's claims that GR00T 2 succeeds on new tasks in new environments more than twice as often as leading VLAs, and that it ranks first on MolmoSpaces and RoboArena, come from its own materials; NVIDIA says it will be available by the end of the year. As checked on 2026-10-24, no public GR00T 2 weights were found, so its capabilities should be judged from the official model card once released. Compared with [GR00T N1](#5-18-gr00t-2025), NVIDIA's route moves from "VLM + action expert" to "video world model as policy". Compared with [Cosmos Policy](#39-cosmos-policy-2026), both build on video diffusion backbones, but DreamZero targets zero-shot generalization after large-scale pretraining, while Cosmos Policy targets post-training on few demonstrations plus test-time planning.
+
+---
+
+## 39. Cosmos Policy (2026)
+{: id="39-cosmos-policy-2026"}
+
+*Cosmos Policy: Fine-Tuning Video Models for Visuomotor Control and Planning* · ICLR 2026 · [Paper](https://arxiv.org/abs/2601.16163) · [Project](https://research.nvidia.com/labs/dir/cosmos-policy/)
+
+### Research questions
+{: id="研究问题-6"}
+
+Video generation models have learned spatio-temporal dynamics from huge amounts of video. Can one become a robot policy after a single round of post-training, with no architectural changes? Earlier video policies usually add an action head, an inverse dynamics model or multi-stage training. Cosmos Policy (NVIDIA and Stanford) encodes actions, states and values as "video frames" and reuses the video diffusion model's denoising process directly.
+
+### Core method
+{: id="核心方法-6"}
+
+- **Backbone**: the Cosmos-Predict2-2B-Video2World latent video diffusion model (Wan2.1 VAE), fully fine-tuned with no architectural changes.
+- **Latent-frame encoding**: proprioception, action chunks and values are normalized to [-1, 1], duplicated to fill a latent volume and inserted into the frame sequence. With two third-person cameras and a wrist camera there are 11 frames: a blank placeholder, current state, three current images, the action chunk, future state, three future images and the future value.
+- **Single-stage training**: one model serves as policy, world model and value function. Half of each batch trains the policy and the other half trains the world model and value; when fine-tuning further on execution rollouts, the world-model and value share rises to 90%.
+- **Test-time planning**: the original checkpoint proposes N candidate action chunks as the policy; a planning model fine-tuned on rollouts predicts the future state and value of each candidate (3 world-model queries, 5 value queries per state), and the highest-value candidate is executed.
+
+### Experiments and evidence
+{: id="实验与证据-6"}
+
+- **LIBERO** (500 trials × 3 seeds per suite): Spatial / Object / Goal / Long are 98.1 / 100.0 / 98.2 / 97.6, averaging **98.5%**, against 97.1% for OpenVLA-OFT, 97.4% for CogVLA and 96.9% for π₀.5. Most of the margin comes from the Long suite.
+- **RoboCasa, 24 tasks**: with only 50 demonstrations per task the average is **67.1%**; GR00T-N1.5 reaches 64.1% and FLARE 66.4%, each with 300 demonstrations.
+- **Real ALOHA bimanual tasks** (score out of 100): average **93.6**, against 88.6 for π₀.5 and 77.9 for π₀; out of distribution, π₀.5 is slightly higher (92.5 vs. 89.3).
+- **Planning gain**: on the two hardest ALOHA tasks, planning with the future-state value V(s′) raises the average score by **12.5** points and beats the model-free variant that predicts Q(s, a).
+- **Ablations**: removing the auxiliary training targets costs 1.5 points on LIBERO; training from scratch without video pretraining costs 3.9 points on LIBERO and 18.7 points on shirt folding.
+
+### Limitations and Enlightenments
+{: id="局限与启示-6"}
+
+With planning enabled each action chunk takes about 5 seconds and best-of-N relies on several GPUs in parallel, which rules out dynamic tasks. Accurate world-model prediction outside the demonstration distribution needs substantial rollout data, and planning is a single layer of best-of-N search. LIBERO is close to saturation, so the gap between 98.5% and roughly 97% means little; the few-shot RoboCasa result and the real-robot planning ablation are more convincing. The work shows that "video model as policy" works without an added action head and gives value-guided test-time search a unified interface; see the previous section for how it differs from [DreamZero](#38-dreamzero-2026).
+
+---

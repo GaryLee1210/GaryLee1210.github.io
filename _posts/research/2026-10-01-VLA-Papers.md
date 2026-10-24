@@ -3,156 +3,57 @@ layout: post
 lang: zh-CN
 translation_id: vla-papers
 title: "VLA 论文精读"
-date: 2026-10-19
-last_modified_at: 2026-10-19
+date: 2026-10-24
+last_modified_at: 2026-10-24
 tags: [VLA, VLM, Robotics, Manipulation, Deep Learning]
 categories: research
 comments: true
 author: Tingde Liu
 toc: true
 vla_survey: true
-toc_depth: 2
-excerpt: "VLA 配套论文精读，链接 RoboDojo 官方统一榜，并提供同评测设置的论文实验分榜。"
+toc_depth: 3
+excerpt: "VLA 配套论文精读，附 RoboDojo 官方统一榜快照，逐篇梳理研究问题、方法、证据与局限。"
 ---
 
 > 本文是 [VLA 综述](/VLA-Survey/) 的配套论文精读。综述负责方法框架、数据与评测；这里保留逐篇的研究问题、方法、证据与局限。
 
-论文编号沿用综述原第 5 章，便于已有引用与交叉阅读。下方先列跨模型的 RoboDojo 官方统一评测榜，再列各论文同设置的实验对照；两类榜单的分数不能混排。
+论文按收录顺序编号；旧的章节锚点仍然有效，综述中的链接可直接跳转。下方先列跨模型的 RoboDojo 官方统一评测榜；各论文自己的同设置对照表放在对应精读的「实验与证据」中，两类分数不能混排。
 
 <span id="vla-leaderboard" class="vla-anchor-alias" aria-hidden="true"></span>
 
-# 性能排行榜
+<span id="性能排行榜" class="vla-anchor-alias" aria-hidden="true"></span>
 
-<p class="vla-ranking-lead">先看统一协议下的跨模型成绩，再看论文内的受控实验。两类结果回答的问题不同；切换榜单时，请同时核对平台、训练数据和成功判据。</p>
-
-<nav class="vla-ranking-nav" aria-label="性能榜单快速跳转">
-  <a href="#vla-ranking-robodojo"><strong>RoboDojo 官方榜</strong><span>跨模型 · 仿真快照与真机入口</span></a>
-  <a href="#vla-ranking-actionpiece"><strong>动作编码</strong><span>LIBERO / LIBERO-Plus</span></a>
-  <a href="#vla-ranking-gm100"><strong>跨机器人操作</strong><span>GM-100 · 双平台分别排序</span></a>
-  <a href="#vla-ranking-tau0"><strong>长任务搜索</strong><span>固定低层策略 · 真机</span></a>
-  <a href="#vla-ranking-expo"><strong>动态操作</strong><span>四项真机任务 · 30 次试验</span></a>
-  <a href="#vla-ranking-bee"><strong>人工纠正</strong><span>同预算对照 · 分任务读数</span></a>
-</nav>
-
-## RoboDojo：官方统一评测榜
+# RoboDojo 官方统一评测榜
 {: id="vla-ranking-robodojo"}
 
-[RoboDojo](https://robodojo-benchmark.com/leaderboard)在统一协议下比较不同策略，包含 **42 项仿真任务与 18 项真机任务**。仿真覆盖泛化、记忆、精细操作、长任务和开放指令五类能力；其[论文](https://arxiv.org/abs/2607.04434)说明每项仿真任务评测 50 次。**Score** 计入部分任务进度，**SR** 只计完整任务成功。下表按官网的 Score 排序，摘录[官方首页 Top 10](https://robodojo-benchmark.com/)；这是 **2026-10-01 查阅的静态快照**，名次更新和真机结果请以[官方实时榜](https://robodojo-benchmark.com/leaderboard)为准。
+[RoboDojo](https://robodojo-benchmark.com/leaderboard)在统一协议下比较不同策略，包含 **42 项仿真任务与 18 项真机任务**。仿真覆盖泛化、记忆、精细操作、长任务和开放指令五类能力；其[论文](https://arxiv.org/abs/2607.04434)说明每项仿真任务评测 50 次。**Score** 计入部分任务进度，**SR** 只计完整任务成功。下表摘录官方仿真榜（不含 Agent 赛道）按 Score 排序的前 10 名，共 61 个模型参评；这是 **2026-10-24 查阅的静态快照**（官网数据更新于 2026-10-23），名次变化和真机榜请以[官方实时榜](https://robodojo-benchmark.com/leaderboard)为准。
 
 <p class="vla-table-hint">左右滑动表格查看完整指标 →</p>
 
-| 仿真模型（Score 名次） | Score ↑ | SR ↑ |
-|---|---:|---:|
-| **1** · DM0.5 | <span class="vla-score-meter" style="--vla-meter:100%"><strong>24.90</strong></span> | **19.34%** |
-| **2** · GalaxeaVLA (G0.5) | <span class="vla-score-meter" style="--vla-meter:81%">20.23</span> | 14.88% |
-| **3** · Xiaomi-Robotics-1 | <span class="vla-score-meter" style="--vla-meter:81%">20.07</span> | 13.93% |
-| **4** · OpenWAM-α | <span class="vla-score-meter" style="--vla-meter:69%">17.18</span> | 11.92% |
-| **5** · Meituan-Robotics-0 | <span class="vla-score-meter" style="--vla-meter:60%">14.95</span> | 9.53% |
-| **6** · Hy-Embodied-0.5-VLA | <span class="vla-score-meter" style="--vla-meter:52%">13.07</span> | 8.80% |
-| **7** · Spatial Forcing | <span class="vla-score-meter" style="--vla-meter:50%">12.38</span> | 8.04% |
-| **8** · Pi-05 | <span class="vla-score-meter" style="--vla-meter:46%">11.41</span> | 6.91% |
-| **9** · InternVLA-A1.5 | <span class="vla-score-meter" style="--vla-meter:45%">11.15</span> | 7.14% |
-| **10** · StarVLA-PI_v3 | <span class="vla-score-meter" style="--vla-meter:43%">10.81</span> | 7.51% |
+| 仿真模型（Score 名次） | 类型 | Score ↑ | SR ↑ |
+|---|---|---:|---:|
+| **1** · VPP2（RobotEra） | WAM | <span class="vla-score-meter" style="--vla-meter:100%"><strong>39.26</strong></span> | **32.26%** |
+| **2** · Awomo-0.5（Awomo） | WAM | <span class="vla-score-meter" style="--vla-meter:90%">35.34</span> | 29.64% |
+| **3** · Simate-beta（Simate） | VLA | <span class="vla-score-meter" style="--vla-meter:86%">33.95</span> | 27.96% |
+| **4** · Rex-M1 Preview（FT Lab & VisIncept） | VLA | <span class="vla-score-meter" style="--vla-meter:86%">33.79</span> | 27.44% |
+| **5** · VPP2-Preview（RobotEra） | WAM | <span class="vla-score-meter" style="--vla-meter:80%">31.40</span> | 25.62% |
+| **6** · InternW0-Δ（Shanghai AI Lab） | WAM | <span class="vla-score-meter" style="--vla-meter:78%">30.77</span> | 23.91% |
+| **7** · Liber-0 Preview（LiberAI） | VLM + WAM | <span class="vla-score-meter" style="--vla-meter:78%">30.74</span> | 25.52% |
+| **8** · Liber-0 Lite（LiberAI） | WAM | <span class="vla-score-meter" style="--vla-meter:74%">29.24</span> | 24.23% |
+| **9** · DM0.5（Dexmal） | VLA | <span class="vla-score-meter" style="--vla-meter:63%">24.90</span> | 19.34% |
+| **10** · ME-Brain-1.0（Li Auto） | VLA + WAM | <span class="vla-score-meter" style="--vla-meter:55%">21.67</span> | 15.99% |
 {: .vla-leaderboard-table .vla-official-table }
 
-**读表**：浅蓝条以本表最高 Score 为参照，只辅助比较分差。名次按 Score 排，SR 不一定按同一顺序变化。例如第 9、10 名的 SR 高于第 8 名，但包含部分进度的 Score 较低。仿真分数也不代表真机表现；完整模型列表、五类能力拆分与真机榜均在[官方页面](https://robodojo-benchmark.com/leaderboard)。
-
-## 论文内同设置对照
-
-以下五组数据来自各自论文的实验表。**每张表只在自己的评测设置内排序**；粗体表示该列最佳结果。某些表是同骨干的受控消融，另一些是同任务协议下不同训练配方的系统比较，不能统称为模型总榜。
-
-## 动作编码：LIBERO / LIBERO-Plus
-{: id="vla-ranking-actionpiece"}
-
-[ActionPiece 论文 Table 1](https://arxiv.org/abs/2609.18487)使用相同的 Qwen3-VL-4B 骨干、演示数据、提示、全局批量、训练预算及 8 步预测和执行协议；LIBERO-Plus 不参与训练。按 **LIBERO-Plus 成功率**排序，数值均为百分比。
-
-| 动作 tokenizer | LIBERO ↑ | LIBERO-Plus ↑ |
-|---|---:|---:|
-| [ActionPiece](#5-34-actionpiece-2026) | **94.8** | **68.8** |
-| FAST | 92.1 | 64.3 |
-| ActionCodec | 93.7 | 64.2 |
-| FASTerVQ* | 91.3 | 62.6 |
-| OAT | 86.1 | 60.7 |
-| Standard RVQ | 90.9 | 60.4 |
-{: .vla-leaderboard-table }
-
-\* FASTerVQ 是该论文依照公开方法自行实现的版本。比较控制了策略设置，但不同 tokenizer 保留各自的输出长度和词表；此表不能推断它们的推理延迟相同。
-
-## 跨机器人操作：GM-100
-{: id="vla-ranking-gm100"}
-
-[LingBot-VLA 2.0 论文 Table 5](https://arxiv.org/abs/2607.06403)在 *generalist mixed-training* 设置下，对每个平台的九项双臂任务分别取平均。进度衡量中间里程碑，成功率要求任务终态完成。**两台机器人分别成榜**；各模型训练数据和配方不完全一致，因此名次不能单独归因于架构。
-
-**Agilex Cobot Magic**（按成功率排序；单位：%）
-
-| 模型 | 成功率 ↑ | 进度 ↑ |
-|---|---:|---:|
-| [LingBot-VLA 2.0](#5-32-lingbot-vla-20-2026) | **34.4** | **66.2** |
-| [π₀.5](#5-11-pi05-2025) | 32.2 | 59.1 |
-| LingBot-VLA 1.0 | 30.0 | 58.2 |
-| [GR00T N1.7](#5-18-gr00t-2025) | 17.8 | 36.3 |
-{: .vla-leaderboard-table }
-
-**Galaxea R1 Pro**（成功率并列时按进度排序；单位：%）
-
-| 模型 | 成功率 ↑ | 进度 ↑ |
-|---|---:|---:|
-| [LingBot-VLA 2.0](#5-32-lingbot-vla-20-2026) | **15.6** | **34.6** |
-| LingBot-VLA 1.0 | **15.6** | 32.7 |
-| [π₀.5](#5-11-pi05-2025) | 8.9 | 27.4 |
-| [GR00T N1.7](#5-18-gr00t-2025) | 5.6 | 16.4 |
-{: .vla-leaderboard-table }
-
-## 长任务搜索：τ₀-VLA
-{: id="vla-ranking-tau0"}
-
-[τ₀-VLA 论文 Table III](https://arxiv.org/abs/2608.16885)固定低层策略，只比较高层直接规划（Plan Once）与测试时搜索（TTC）。每项真机任务各评测 10 次；表中为**整任务成功次数**，不与论文中“直接执行 vs 层级分解”的另一组实验混用。
-
-| 高层决策方式 | 制作奶茶 ↑ | 整理书籍 ↑ | 整理房间 ↑ |
-|---|---:|---:|---:|
-| [TTC 搜索](#5-33-tau0-vla-2026) | **7/10** | **9/10** | **7/10** |
-| Plan Once | 5/10 | 6/10 | 5/10 |
-{: .vla-leaderboard-table }
-
-## 动态操作：Real-Time EXPO-FT
-{: id="vla-ranking-expo"}
-
-[Real-Time EXPO-FT 论文 Table I](https://arxiv.org/abs/2609.18207)在四项动态真机任务上各评测 30 次，在线机器人数据采集上限为每项 10 分钟。按四任务平均成功次数排序；不同算法的更新方式与梯度步数不相同，表格体现的是该论文报告的**系统级对照**。
-
-| 方法 | 动态拾取 ↑ | 滚球平衡 ↑ | 物体传递 ↑ | 足球踢球 ↑ | 四任务均值 ↑ |
-|---|---:|---:|---:|---:|---:|
-| [Real-Time EXPO-FT](#5-35-real-time-expo-ft-2026) | **30/30** | **28/30** | **30/30** | **28/30** | **29/30** |
-| EXPO-FT + RTC | 24/30 | 23/30 | 27/30 | 26/30 | 25/30 |
-| DSRL + RTC | 25/30 | 15/30 | 23/30 | 17/30 | 20/30 |
-| EXPO-FT | 21/30 | 18/30 | 19/30 | 17/30 | 18.8/30 |
-| DSRL | 23/30 | 11/30 | 23/30 | 16/30 | 18.3/30 |
-| SFT + RTC | 22/30 | 12/30 | 22/30 | 16/30 | 18/30 |
-| SFT | 19/30 | 8/30 | 10/30 | 13/30 | 12.5/30 |
-| RLPD | 0/30 | 12/30 | 0/30 | 6/30 | 4.5/30 |
-{: .vla-leaderboard-table }
-
-## 人工纠正：Bee
-{: id="vla-ranking-bee"}
-
-[Bee 论文 Table I](https://arxiv.org/abs/2609.27450)从同一微调后的 VLA 出发，并匹配约 20 条预收集纠正片段及各任务在线数据预算。下表只列三项真机任务的成功率（%）；**电话充电和布料对齐只考核精细阶段，零食挂架考核整任务**，因此不计算跨任务总名次。
-
-| 方法 | 电话充电：精细阶段 ↑ | 零食挂架：整任务 ↑ | 布料对齐：精细阶段 ↑ |
-|---|---:|---:|---:|
-| [Bee](#5-36-bee-2026) | **100.0** | **85.0** | **90.0** |
-| RLT | 58.3 | 21.7 | 73.3 |
-| DSRL | 93.3 | 13.3 | 31.7 |
-| 初始策略 | 90.0 | 0.0 | 36.7 |
-{: .vla-leaderboard-table }
-
-在训练期间需要人工接管的 Bee 和 RLT 两组中，Bee 对应三项任务的干预率为 **12.2% / 17.0% / 65.3%**，RLT 为 **22.5% / 62.1% / 85.3%**；初始策略和 DSRL 不使用在线人工接管，不应把其干预率当作 0% 后直接排名。
+**读表**：浅蓝条以本表最高 Score 为参照，只辅助比较分差。名次按 Score 排，SR 不一定按同一顺序变化，例如第 7 名 Liber-0 Preview 的 SR 高于第 6 名 InternW0-Δ。“类型”沿用官网标注：WAM 指同时预测未来画面与动作的世界动作模型（参见 [DreamZero](#38-dreamzero-2026)），前 8 名中有 6 个属于 WAM 或含 WAM。官方另设 **Agent 赛道**（官网类型标为 AGENT，包括 GPT-6-Astra 等通用大模型条目），这些条目展示但不参与名次；查阅时最高为 HexaShell-Preview（Score 53.18 / SR 46.85%）。仿真分数也不代表真机表现；五类能力拆分与真机榜见[官方页面](https://robodojo-benchmark.com/leaderboard)。
 
 ---
 
 <span id="vla-papers" class="vla-anchor-alias" aria-hidden="true"></span>
 
-# 5. 论文精读
+# 论文精读
+{: id="5-论文精读"}
 
-本文收录 36 项代表工作，包括 VLA 模型、动作策略、采集方法与世界模型。它们共同解释技术来源，但并非都属于 VLA，也不是穷尽全部工作的排行榜。可通过上方搜索或侧边目录跳转到相应论文。
+本文收录 39 项代表工作，包括 VLA 模型、动作策略、采集方法与世界模型。它们共同解释技术来源，但并非都属于 VLA，也不是穷尽全部工作的排行榜。可通过上方搜索或侧边目录跳转到相应论文。
 
 | 阅读主题 | 建议串联的工作 | 主要问题 |
 |---|---|---|
@@ -169,7 +70,7 @@ excerpt: "VLA 配套论文精读，链接 RoboDojo 官方统一榜，并提供�
 
 <span id="51-rt-1-2022-5-1-rt-1-2022" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.1 RT-1 (2022)
+## 1. RT-1 (2022)
 {: id="5-1-rt-1-2022"}
 Robotics Transformer for Real-World Control at Scale
 
@@ -237,7 +138,7 @@ RT-1 研究大规模多任务数据能否训练出可迁移的机器人策略。
 
 <span id="52-rt-2-2023-5-2-rt-2-2023" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.2 RT-2 (2023)
+## 2. RT-2 (2023)
 {: id="5-2-rt-2-2023"}
 Vision-Language-Action Models Transfer Web Knowledge to Robotic Control
 
@@ -303,7 +204,7 @@ RT-2方式: 视觉 + 语言 → VLA → 动作token序列（直接控制）
 
 <span id="53-rt-x--open-x-embodiment-dataset-2023-5-3-rt-x-2023" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.3 RT-X / Open X-Embodiment Dataset (2023)
+## 3. RT-X / Open X-Embodiment Dataset (2023)
 {: id="5-3-rt-x-2023"}
 Open X-Embodiment: Robotic Learning Datasets and RT-X Models
 
@@ -362,7 +263,7 @@ RLDS 提供轨迹组织规范，动作标准化和数据采样仍由训练流程
 
 <span id="54-act-2023-5-4-act-2023" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.4 ACT (2023)
+## 4. ACT (2023)
 {: id="5-4-act-2023"}
 ———Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware
 
@@ -437,8 +338,6 @@ CVAE架构：非常适合轨迹生成
 
 3. **Transformer 架构**：利用 Transformer 的编码器-解码器结构来融合多视角图像 and 关节位置信息，并生成连贯的动作块。
 
-
-
 4. **时间集成 (Temporal Ensembling)**：在推理时，系统在每一帧都进行预测，并对重叠的动作块进行加权平均。这种方式不仅提高了预测的鲁棒性，还消除了“动作块”切换时的动作不连续感。
 
 <div align="center">
@@ -475,7 +374,7 @@ ACT 详细推理/测试流程 (Testing)
 
 <span id="55-diffusion-policy-2023-5-5-diffusion-policy-2023" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.5 Diffusion Policy (2023)
+## 5. Diffusion Policy (2023)
 {: id="5-5-diffusion-policy-2023"}
 Visuomotor Policy Learning via Action Diffusion
 
@@ -555,13 +454,11 @@ $$\mathcal{L} = \mathbb{E}_{t, a_0, \epsilon}\left[\|\epsilon - \epsilon_\theta(
 
 ---
 
-
-
 ---
 
 <span id="56-umi-2024-5-6-umi-2024" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.6 UMI (2024)
+## 6. UMI (2024)
 {: id="5-6-umi-2024"}
 ———Universal Manipulation Interface: In-The-Wild Robot Teaching Without In-The-Wild Robots
 
@@ -635,10 +532,9 @@ UMI 证明了**数据多样性优于模型微调**。与其在单一环境下费
 
 ---
 
-
 <span id="57-dp3-2024-5-7-dp3-2024" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.7 DP3 (2024)
+## 7. DP3 (2024)
 {: id="5-7-dp3-2024"}
 ———3D Diffusion Policy: Generalizable Visuomotor Policy Learning via Simple 3D Representations
 
@@ -713,7 +609,7 @@ DP3 的成功再次强调了**感知表征 (Visual Representation)** 在机器�
 
 <span id="58-unisim-2024-5-8-unisim-2024" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.8 UniSim (2024)
+## 8. UniSim (2024)
 {: id="5-8-unisim-2024"}
 ———Learning Interactive Real-World Simulators
 
@@ -808,10 +704,9 @@ UniSim 最强大的地方在于它能作为一个“训练场”：
 
 ---
 
-
 <span id="59-openvla-2024-5-9-openvla-2024" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.9 OpenVLA (2024)
+## 9. OpenVLA (2024)
 {: id="5-9-openvla-2024"}
 ———开源视觉-语言-动作模型
 
@@ -937,17 +832,11 @@ print(f"Predicted Action: {action}")
 
 原版 OpenVLA 仅支持单图像观察输入,不支持多相机视角、本体感知信息或观察历史。推理速度(6Hz)对于高频控制任务(如50Hz的ALOHA)仍不够快。虽然优于现有泛化策略,但在测试任务上的成功率通常<90%,可靠性还有提升空间。由于计算限制,许多VLA设计问题(如基础VLM规模、协同训练策略、最佳视觉特征等)尚未充分探索。
 
-
-
-
 ---
-
-
-
 
 <span id="510-π-2024-5-10-pi0-2024" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.10 π₀ (2024)
+## 10. π₀ (2024)
 {: id="5-10-pi0-2024"}
 A Vision-Language-Action Flow Model for General Robot Control
 
@@ -1001,7 +890,7 @@ $$
 
 <span id="511-π5-2025-5-11-pi05-2025" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.11 π₀.5 (2025)
+## 11. π₀.5 (2025)
 {: id="5-11-pi05-2025"}
 ———a Vision-Language-Action Model with Open-World Generalization
 
@@ -1075,11 +964,9 @@ $$
 
 ---
 
-
-
 <span id="512-π6-2025-5-12-pi06-2025" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.12 π*₀.₆ / RECAP (2025)
+## 12. π*₀.₆ / RECAP (2025)
 {: id="5-12-pi06-2025"}
 ———a VLA That Learns From Experience
 
@@ -1152,7 +1039,8 @@ RECAP 工作流：从预训练的 VLA 开始，通过部署采集自主轨迹和
 
 ---
 
-## 5.13 π₀.7: a Steerable Generalist Robotic Foundation Model (2026)
+## 13. π₀.7: a Steerable Generalist Robotic Foundation Model (2026)
+{: id="513-π7-a-steerable-generalist-robotic-foundation-model-2026"}
 ———可控的通用型机器人基础模型，具备零样本跨构型迁移与任务组合能力
 
 📄 **Paper**: [arXiv:2604.15483](https://arxiv.org/abs/2604.15483)
@@ -1246,7 +1134,7 @@ RECAP 工作流：从预训练的 VLA 开始，通过部署采集自主轨迹和
 
 <span id="514-acot-vla-2026-5-13-acot-vla-2026" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.14 ACoT-VLA (2026)
+## 14. ACoT-VLA (2026)
 {: id="5-13-acot-vla-2026"}
 **副标题**: Action Chain-of-Thought for Vision-Language-Action Models
 **中文标题**: 在动作空间中进行推理的视觉-语言-动作模型
@@ -1278,7 +1166,6 @@ ACoT-VLA：直接在动作空间进行思维链推理，生成粗粒度参考轨
 **主要方法/创新点**
 
 本文提出 **Action Chain-of-Thought (ACoT)** 范式，将推理过程重新定义为结构化的动作意图序列，直接在动作空间进行deliberation。ACoT-VLA框架包含三个核心组件：
-
 
 **ACoT-VLA整体架构**（三大核心模块）：
 
@@ -1317,7 +1204,6 @@ noisy action├─→ IAR (Implicit Action Reasoner)
 - Flow matching损失同时优化EAR和action head
 - Teacher Forcing稳定化：训练时 $Z^{ex}$ 直接从ground-truth轨迹计算，推理时切换为自条件模式
 
-
 **核心结果/发现**
 
 **仿真实验**：
@@ -1325,9 +1211,7 @@ noisy action├─→ IAR (Implicit Action Reasoner)
 - LIBERO-Plus: 84.1%，在鲁棒性测试中大幅超越，尤其在相机视角变化(+11.6%)、机器人初始状态扰动(+16.3%)、传感器噪声(+12.5%)上表现突出
 - VLABench: Intention Score 63.5%、Progress Score 47.4%，在unseen-texture track上获得+12.6% IS和+7.2% PS的显著提升
 
-
 **真实世界部署**：
-
 
 - 在AgiBot G1机器人上平均成功率66.7%（vs π0.5的61.0%、π0的33.8%）
 - 跨embodiment验证：在AgileX平台上同样有效，证明方法的通用性
@@ -1359,7 +1243,7 @@ noisy action├─→ IAR (Implicit Action Reasoner)
 ---
 <span id="515-vlm4vla-2026-5-14-vlm4vla-2026" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.15 VLM4VLA (2026)
+## 15. VLM4VLA (2026)
 {: id="5-14-vlm4vla-2026"}
 **副标题**: Revisiting Vision-Language Models in Vision-Language-Action Models
 **中文标题**: 重新审视视觉-语言-动作模型中的视觉-语言模型
@@ -1497,11 +1381,10 @@ VLA任务最优区域 ←──────┘
 
 研究未在物理机器人上进行实验,主要受限于公平性和可重复性考虑。虽然分析表明 VLM-VLA 差距源于任务异质性而非简单的 sim-to-real 差距,但真实世界部署仍是最终目标。论文的全面模拟基准结果可为未来研究提供有价值的参考。
 
-
 ---
 <span id="516-twinbrainvla-2026-5-15-twinbrain-vla-2026" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.16 TwinBrainVLA (2026)
+## 16. TwinBrainVLA (2026)
 {: id="5-15-twinbrain-vla-2026"}
 **副标题**: Unleashing VLM Potential in Embodied Tasks via Asymmetric Dual-Transformer Mixture
 **中文标题**: 通过非对称双Transformer混合机制释放通用VLM在具身任务中的潜力
@@ -1628,12 +1511,11 @@ Left Brain (冻结通才VLM)          Right Brain (可训练专才VLM)
 
 当前实现要求Left Brain和Right Brain共享相同的模型架构以确保兼容的隐藏状态维度。未来研究方向包括:探索更解耦的模型架构 (如通过可学习投影层支持异构backbone)、整合专门的具身VLM checkpoints初始化Right Brain、扩展到完整OXE数据集训练以充分发挥双流架构容量、以及在更广泛基准和真实机器人场景中评估。
 
-
 ---
 
 <span id="517-internvla-a1-2026-5-16-internvla-a1-2026" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.17 InternVLA-A1 (2026)
+## 17. InternVLA-A1 (2026)
 {: id="5-16-internvla-a1-2026"}
 ——Unifying Understanding, Generation and Action for Robotic Manipulation
 
@@ -1756,7 +1638,7 @@ Express Sorting 和 In-motion Ingredient Picking 任务的成功率对比：Inte
 
 <span id="518-internvla-a15-2026-5-18-internvla-a15-2026" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.18 InternVLA-A1.5 (2026)
+## 18. InternVLA-A1.5 (2026)
 {: id="5-18-internvla-a1.5-2026"}
 ——Unifying Understanding, Latent Foresight, and Action for Compositional Generalization
 
@@ -1882,7 +1764,7 @@ InternVLA-A1.5 的多阶段训练依赖以下核心损失函数。
 
 <span id="519-interndata-a1-2025-5-17-interndata-a1-2025" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.19 InternData-A1 (2025)
+## 19. InternData-A1 (2025)
 {: id="5-17-interndata-a1-2025"}
 **副标题**: Pioneering High-Fidelity Synthetic Data for Pre-training Generalist Policy
 
@@ -1995,7 +1877,7 @@ InternData-A1 在 9 个真实世界任务上的性能对比，包括 5 个常规
 
 <span id="520-isaac-gr00t-2025-2026-5-18-gr00t-2025" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.20 Isaac GR00T (2025-2026)
+## 20. Isaac GR00T (2025-2026)
 {: id="5-18-gr00t-2025"}
 Generalist Robot 00 Technology
 
@@ -2017,11 +1899,13 @@ N1 的视觉语言模块提取条件表示，动作模块通过 Flow Matching �
 
 工具链可以降低部分集成工作，但权重、训练数据、预训练流程和部署硬件仍需分别核对。选择该路线时，重点确认当前版本支持的机器人接口、数据格式、训练资源和实测推理延迟。
 
+NVIDIA 的下一代 Isaac GR00T 2 改用世界动作模型架构，其研究基础见 [38. DreamZero](#38-dreamzero-2026)。
+
 ---
 
 <span id="521-xiaomi-robotics-0-2026-5-19-xiaomi-r0-2026" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.21 Xiaomi-Robotics-0 (2026)
+## 21. Xiaomi-Robotics-0 (2026)
 {: id="5-19-xiaomi-r0-2026"}
 MoT Architecture for Real-Time Bimanual Manipulation ———国产开源 VLA 的实时性标杆
 
@@ -2070,7 +1954,7 @@ Xiaomi-R0 针对 VLA 模型在实际部署中常见的推理延迟问题，提�
 ---
 <span id="522-x-vla-2025-5-20-xvla-2025" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.22 X-VLA (2025)
+## 22. X-VLA (2025)
 {: id="5-20-xvla-2025"}
 Scalable Cross-Embodied Learning with Soft Prompting ———学术界彻底开源的具身范本
 
@@ -2117,7 +2001,8 @@ X-VLA 是由清华 AIR 和上海 AI 实验室联合推出的彻底开源项目�
 
 ---
 
-## 5.23 Motus (2025)
+## 23. Motus (2025)
+{: id="523-motus-2025"}
 ——A Unified Latent Action World Model
 
 📄 **Paper**: [arXiv:2512.13030](https://arxiv.org/abs/2512.13030)
@@ -2280,10 +2165,9 @@ Motus VGM 模式（从观察和语言生成未来视频）在 Agilex-Aloha-2 上
 
 当前方法需要大量计算资源(总计约18,400 GPU小时训练)。某些复杂任务(如叠毛巾)的性能仍有限,部分成功率仅为39%。尽管通过潜在动作改进了跨具身泛化,但仍需进一步研究。未来工作将探索更先进的统一模型架构,追求更通用的运动先验,并从互联网规模的通用视频中学习潜在动作。此外,需要研究如何降低部署成本并提升模型在极端条件下的鲁棒性。
 
-
 <span id="524-robogen-2024-5-23-robogen-2024" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.24 RoboGen (2024)
+## 24. RoboGen (2024)
 {: id="5-23-robogen-2024"}
 ———Towards Unleashing Infinite Data for Automated Robot Learning via Generative Simulation
 
@@ -2403,7 +2287,8 @@ A) Task Proposal  →  B) Scene Generation  →  C) Training Supervision Generat
 
 ---
 
-## 5.25 Qwen-VLA (2026)
+## 25. Qwen-VLA (2026)
+{: id="525-qwen-vla-2026"}
 ———统一操作、导航与轨迹预测的具身基础模型
 
 📄 **Paper**: https://arxiv.org/abs/2605.30280
@@ -2535,7 +2420,7 @@ ROBOINF 流水线在 IsaacLab 中自动构建场景（20 桌面场景 × 10 姿�
 具身动作数据规模远小于 VL 数据，长尾物体、接触丰富任务（如布料折叠、插槽）的鲁棒性仍有不足；操作/导航/VL 联合训练存在优化权衡，动作增强训练会轻微损伤纯 VL 和导航评测指标；当前评估以短时域、基准驱动为主，长时域真实部署（故障恢复、情景记忆）仍是未解挑战。
 <span id="526-spatialvla-2025-5-26-spatialvla" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.26 SpatialVLA (2025)
+## 26. SpatialVLA (2025)
 {: id="5-26-spatialvla"}
 ——融合 3D 空间表征与自适应动作网格的具身智能基础模型
 
@@ -2645,7 +2530,7 @@ $$\mathcal{L}(\theta) = \mathbb{E}_{p(A_t|o_t)} [\mathcal{L}(a_t, \tilde{a}_t)]$
 - **高维动作扩展困难**：目前的 Gaussian 分布拟合是针对单臂 7 自由度动作设计的。如果扩展到双臂协作、灵巧手操纵等多维度高自由度任务，网格组合数会指数级增长，需要设计更高效的空间共享网格或者隐式生成解码机制。
 <span id="527-harness-vla-2026-5-27-harness-vla" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.27 Harness VLA (2026)
+## 27. Harness VLA (2026)
 {: id="5-27-harness-vla"}
 📄 **Paper**: https://arxiv.org/abs/2607.08448
 
@@ -2753,7 +2638,7 @@ Planner 将 `VLA_ACT` 视为可被重新调整姿态并重试的局部基元。�
 2. **Bootstrapping 阶段需要试错预算**：建构 Task Specific Memory 和 Global Memory 前提是在参考种子任务上允许使用 `RESET` 并提供一定的自主探索试错时间。
 <span id="528-turbovla-2026-5-28-turbovla" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.28 TurboVLA (2026)
+## 28. TurboVLA (2026)
 {: id="5-28-turbovla"}
 ——实时视语言动作模型：在 RTX 4090 上实现 32 Hz 控制与低于 1 GB 显存占用
 
@@ -2875,7 +2760,7 @@ $$\hat{A}_n = D_{\theta}(Q_a, [Z^{vl}_n; Z^s_n]) \in \mathbb{R}^{H \times d_a}$$
 - **复杂跨模态推理受限**：对于需要多步隐式推理（如“先找到开瓶器再打开最左边的饮料瓶”）的复杂任务，仍需上层大语言模型进行高层规划并输出子目标指令，与 TurboVLA 的高效执行路径相结合。
 <span id="529-zr-0-2026-5-29-zr-0" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.29 ZR-0 (2026)
+## 29. ZR-0 (2026)
 {: id="5-29-zr-0"}
 ——基于密集具身思考链 (ECoT) 监督与跨本体推理/执行解耦的 2.6B 端到端 VLA 模型
 
@@ -2964,7 +2849,7 @@ $$\mathcal{L} = \mathcal{L}_{\mathrm{ntp}} + \alpha \mathcal{L}_{\mathrm{fm}}$$
 2. **单向前馈缺少测试时动态反思**：由于推理阶段跳过了 ECoT 的自回归生成，模型无法在执行中实时输出文字自纠错或进行基于语言的反思重规划。
 <span id="530-robottt-2026-5-30-robottt" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.30 RoboTTT (2026)
+## 30. RoboTTT (2026)
 {: id="5-30-robottt"}
 ——扩展具身策略注意力上下文至 8K Timesteps 的测试时训练 (TTT) 视觉-语言-动作模型
 
@@ -3057,7 +2942,7 @@ RoboTTT 建立在流匹配（Flow-Matching）策略 Backbone（本文默认使�
 * 快权重的更新依赖基于 MSE 的辅助目标，在遇到极端环境突变（如光照大幅剧变或视角剧烈晃动）时的表征稳定性与泛化泛用边界仍有待进一步深入探索。
 <span id="531-s-vla-2026-5-31-s-vla" class="vla-anchor-alias" aria-hidden="true"></span>
 
-## 5.31 S²-VLA (2026)
+## 31. S²-VLA (2026)
 {: id="5-31-s-vla"}
 ——状态空间引导的动态自适应注意力视觉-语言-动作模型：攻克长程具身操控累积误差
 
@@ -3159,7 +3044,7 @@ $$\hat{A}_{t:t+K-1} = \text{LN}(H^{(L_{\mathrm{out}})}) W_{\mathrm{out}}^\top + 
 
 ---
 
-## 5.32 LingBot-VLA 2.0 (2026)
+## 32. LingBot-VLA 2.0 (2026)
 {: id="5-32-lingbot-vla-20-2026"}
 
 *From Foundation to Application: Improving VLA Models in Practice* · [论文](https://arxiv.org/abs/2607.06403) · [项目与代码](https://github.com/robbyant/lingbot-vla-v2)
@@ -3181,13 +3066,39 @@ $$\hat{A}_{t:t+K-1} = \text{LN}(H^{(L_{\mathrm{out}})}) W_{\mathrm{out}}^\top + 
 
 在 GM-100 的九项双臂任务、通才混合训练设置下，Agilex Cobot Magic 的平均**进度 / 成功率**为 **66.2% / 34.4%**，上一版为 58.2% / 30.0%；Galaxea R1 Pro 为 **34.6% / 15.6%**，上一版为 32.7% / 15.6%。因此“进度提高”不应写成两个平台的成功率都明显提高。两项移动操作任务中，相比论文复现的 π₀.5，域内与位置扰动设置均有增益；但例如 Astribot S1 物品入冰箱任务的域外成功率只有 **13.3%**（15 次试验）。
 
+<span id="vla-ranking-gm100" class="vla-anchor-alias" aria-hidden="true"></span>
+
+**同设置对照表：GM-100 双平台**
+
+[LingBot-VLA 2.0 论文 Table 5](https://arxiv.org/abs/2607.06403)在 *generalist mixed-training* 设置下，对每个平台的九项双臂任务分别取平均。进度衡量中间里程碑，成功率要求任务终态完成。**两台机器人分别成榜**；各模型训练数据和配方不完全一致，因此名次不能单独归因于架构。
+
+**Agilex Cobot Magic**（按成功率排序；单位：%）
+
+| 模型 | 成功率 ↑ | 进度 ↑ |
+|---|---:|---:|
+| LingBot-VLA 2.0 | **34.4** | **66.2** |
+| [π₀.5](#5-11-pi05-2025) | 32.2 | 59.1 |
+| LingBot-VLA 1.0 | 30.0 | 58.2 |
+| [GR00T N1.7](#5-18-gr00t-2025) | 17.8 | 36.3 |
+{: .vla-leaderboard-table }
+
+**Galaxea R1 Pro**（成功率并列时按进度排序；单位：%）
+
+| 模型 | 成功率 ↑ | 进度 ↑ |
+|---|---:|---:|
+| LingBot-VLA 2.0 | **15.6** | **34.6** |
+| LingBot-VLA 1.0 | **15.6** | 32.7 |
+| [π₀.5](#5-11-pi05-2025) | 8.9 | 27.4 |
+| [GR00T N1.7](#5-18-gr00t-2025) | 5.6 | 16.4 |
+{: .vla-leaderboard-table }
+
 ### 局限与启示
 
 此处的跨具身结果仍是指定平台、任务与作者训练配方下的比较，整套 60,000 小时数据也不是一个可直接复现的小规模设置。GM-100 的进度和终态成功率存在显著差距，提示**完成最后一步精细放置或释放**仍是瓶颈。评价这类基础模型应分开报告平台、任务、扰动类型和数据规模，不能只引用一个平均数。
 
 ---
 
-## 5.33 τ₀-VLA (2026)
+## 33. τ₀-VLA (2026)
 {: id="5-33-tau0-vla-2026"}
 
 *$\tau_0$-VLA: a Hierarchical Robot Foundation Model with World-Model-Guided Test-Time Computation* · [论文](https://arxiv.org/abs/2608.16885) · [项目](https://tau0-vla.github.io/)
@@ -3209,13 +3120,25 @@ $$\hat{A}_{t:t+K-1} = \text{LN}(H^{(L_{\mathrm{out}})}) W_{\mathrm{out}}^\top + 
 
 在四项最长约 12 分钟的真机长任务中，固定低层策略后，直接整任务执行的平均成功率为 **27.5%**，高层分解且不搜索的 *Plan Once* 为 **45.0%**；每项各 10 次试验。单独检验测试时搜索时，奶茶制作从 **5/10** 提高到 **7/10**，书籍整理从 **6/10** 到 **9/10**，房间整理从 **5/10** 到 **7/10**。前一组回答层级化是否有用，后一组回答在层级系统内追加搜索是否有用，二者不能混成一次增益。
 
+<span id="vla-ranking-tau0" class="vla-anchor-alias" aria-hidden="true"></span>
+
+**同设置对照表：Plan Once 与测试时搜索**
+
+[τ₀-VLA 论文 Table III](https://arxiv.org/abs/2608.16885)固定低层策略，只比较高层直接规划（Plan Once）与测试时搜索（TTC）。每项真机任务各评测 10 次；表中为**整任务成功次数**，不与论文中“直接执行 vs 层级分解”的另一组实验混用。
+
+| 高层决策方式 | 制作奶茶 ↑ | 整理书籍 ↑ | 整理房间 ↑ |
+|---|---:|---:|---:|
+| TTC 搜索 | **7/10** | **9/10** | **7/10** |
+| Plan Once | 5/10 | 6/10 | 5/10 |
+{: .vla-leaderboard-table }
+
 ### 局限与启示
 
 高层世界模型预测、候选搜索和反思会增加决策延迟与计算成本；10 次真机试验的成功率也有较大统计波动。对时间敏感的接触动作，增加高层计算未必比改善低层视觉闭环更有效。适合重点复现的是**同一低层策略下的 Plan Once / 搜索对照**，并同时报告搜索触发率、延迟和失败位置。
 
 ---
 
-## 5.34 ActionPiece (2026)
+## 34. ActionPiece (2026)
 {: id="5-34-actionpiece-2026"}
 
 *ActionPiece: Rethinking Action Tokenization for Autoregressive Vision-Language-Action Models* · [论文](https://arxiv.org/abs/2609.18487) · [项目](https://deepcybo-physai.github.io/ActionPiece/)
@@ -3242,13 +3165,31 @@ $$\hat{A}_{t:t+K-1} = \text{LN}(H^{(L_{\mathrm{out}})}) W_{\mathrm{out}}^\top + 
   <figcaption>论文将重建指标和 PRC 分别与策略成功率比较，右侧展示相同策略设置下的 LIBERO-Plus 消融及 tokenizer 对比。来源：论文 Figure 2。</figcaption>
 </div>
 
+<span id="vla-ranking-actionpiece" class="vla-anchor-alias" aria-hidden="true"></span>
+
+**同设置对照表：LIBERO / LIBERO-Plus**
+
+[ActionPiece 论文 Table 1](https://arxiv.org/abs/2609.18487)使用相同的 Qwen3-VL-4B 骨干、演示数据、提示、全局批量、训练预算及 8 步预测和执行协议；LIBERO-Plus 不参与训练。按 **LIBERO-Plus 成功率**排序，数值均为百分比。
+
+| 动作 tokenizer | LIBERO ↑ | LIBERO-Plus ↑ |
+|---|---:|---:|
+| ActionPiece | **94.8** | **68.8** |
+| FAST | 92.1 | 64.3 |
+| ActionCodec | 93.7 | 64.2 |
+| FASTerVQ* | 91.3 | 62.6 |
+| OAT | 86.1 | 60.7 |
+| Standard RVQ | 90.9 | 60.4 |
+{: .vla-leaderboard-table }
+
+\* FASTerVQ 是该论文依照公开方法自行实现的版本。比较控制了策略设置，但不同 tokenizer 保留各自的输出长度和词表；此表不能推断它们的推理延迟相同。
+
 ### 局限与启示
 
 结果主要针对**离散自回归动作表示**，不能直接推断流匹配或连续回归动作头也会获益。不同 tokenizer 保留各自原生输出长度和词表，所以延迟与 token 数也值得一并比较。方法提醒我们：评价动作压缩时应同时查看数值重建、局部关系和闭环行为。
 
 ---
 
-## 5.35 Real-Time EXPO-FT (2026)
+## 35. Real-Time EXPO-FT (2026)
 {: id="5-35-real-time-expo-ft-2026"}
 
 *Reinforcement Learning for Real-Time Vision-Language-Action Policies* · [论文](https://arxiv.org/abs/2609.18207) · [项目](https://pd-perry.github.io/real-time-expo-ft/)
@@ -3270,13 +3211,31 @@ $$\hat{A}_{t:t+K-1} = \text{LN}(H^{(L_{\mathrm{out}})}) W_{\mathrm{out}}^\top + 
 
 Kinetix 的 10 个延迟仿真环境中，论文报告该方法在 **10/10** 项达到所比较延迟与非延迟方法中的最佳结果。四项动态真机任务为动态拾取、滚球平衡、物体传递、桌上足球踢球；每项在线机器人数据最多 **10 分钟**，评价各 **30 次**。作者表中的平均成功次数从监督策略的 **12.5/30（约 42%）** 提高到 **29/30（约 97%）**；其中滚球平衡为 **28/30**，并非四项全部满分。
 
+<span id="vla-ranking-expo" class="vla-anchor-alias" aria-hidden="true"></span>
+
+**同设置对照表：四项动态真机任务**
+
+[Real-Time EXPO-FT 论文 Table I](https://arxiv.org/abs/2609.18207)在四项动态真机任务上各评测 30 次，在线机器人数据采集上限为每项 10 分钟。按四任务平均成功次数排序；不同算法的更新方式与梯度步数不相同，表格体现的是该论文报告的**系统级对照**。
+
+| 方法 | 动态拾取 ↑ | 滚球平衡 ↑ | 物体传递 ↑ | 足球踢球 ↑ | 四任务均值 ↑ |
+|---|---:|---:|---:|---:|---:|
+| Real-Time EXPO-FT | **30/30** | **28/30** | **30/30** | **28/30** | **29/30** |
+| EXPO-FT + RTC | 24/30 | 23/30 | 27/30 | 26/30 | 25/30 |
+| DSRL + RTC | 25/30 | 15/30 | 23/30 | 17/30 | 20/30 |
+| EXPO-FT | 21/30 | 18/30 | 19/30 | 17/30 | 18.8/30 |
+| DSRL | 23/30 | 11/30 | 23/30 | 16/30 | 18.3/30 |
+| SFT + RTC | 22/30 | 12/30 | 22/30 | 16/30 | 18/30 |
+| SFT | 19/30 | 8/30 | 10/30 | 13/30 | 12.5/30 |
+| RLPD | 0/30 | 12/30 | 0/30 | 6/30 | 4.5/30 |
+{: .vla-leaderboard-table }
+
 ### 局限与启示
 
 这四项任务强调快速反应，尚不能代表长时程开放式操作。在线数据上限也只计算任务交互，不应被误读为整个系统的预训练和部署成本。真正的对照应固定预训练策略、机器人控制频率与延迟，并记录编辑策略更新所需算力和失败恢复成本。
 
 ---
 
-## 5.36 Bee (2026)
+## 36. Bee (2026)
 {: id="5-36-bee-2026"}
 
 *Bee: Intervention-Adaptive Real-World Reinforcement Learning with Vision-Language-Action Models* · [论文](https://arxiv.org/abs/2609.27450)
@@ -3298,13 +3257,29 @@ Kinetix 的 10 个延迟仿真环境中，论文报告该方法在 **10/10** 项
 
 作者在电话充电、零食挂架、布料对齐三项真机任务和 LIBERO-PRO 的碗放置仿真任务上，使用匹配的机器人数据预算比较。四项平均成功率为 **91.2%**，对照 RLT 为 **57.5%**、DSRL 为 **42.1%**；三项真机任务的人工干预率也均较 RLT 更低。应注意电话充电和布料对齐只对**精细操作阶段**记成功率，零食挂架和碗放置则计整任务；论文每项在三轮、每轮 20 次评价后报告均值和标准差。
 
+<span id="vla-ranking-bee" class="vla-anchor-alias" aria-hidden="true"></span>
+
+**同设置对照表：三项真机任务**
+
+[Bee 论文 Table I](https://arxiv.org/abs/2609.27450)从同一微调后的 VLA 出发，并匹配约 20 条预收集纠正片段及各任务在线数据预算。下表只列三项真机任务的成功率（%）；**电话充电和布料对齐只考核精细阶段，零食挂架考核整任务**，因此不计算跨任务总名次。
+
+| 方法 | 电话充电：精细阶段 ↑ | 零食挂架：整任务 ↑ | 布料对齐：精细阶段 ↑ |
+|---|---:|---:|---:|
+| Bee | **100.0** | **85.0** | **90.0** |
+| RLT | 58.3 | 21.7 | 73.3 |
+| DSRL | 93.3 | 13.3 | 31.7 |
+| 初始策略 | 90.0 | 0.0 | 36.7 |
+{: .vla-leaderboard-table }
+
+在训练期间需要人工接管的 Bee 和 RLT 两组中，Bee 对应三项任务的干预率为 **12.2% / 17.0% / 65.3%**，RLT 为 **22.5% / 62.1% / 85.3%**；初始策略和 DSRL 不使用在线人工接管，不应把其干预率当作 0% 后直接排名。
+
 ### 局限与启示
 
 约 20 条预收集人工纠正片段和训练过程中的接管仍是实际成本，不能把“在线策略改进”理解为无人参与。四项任务的成功率定义也不完全相同，因此平均值只能概括作者实验，不能当作统一长任务完成率。Bee 与 Real-Time EXPO-FT 分别强调**利用人工纠正**和**动态环境快速反馈**，适合用不同成本口径评价。
 
 ---
 
-## 5.37 ACE-Brain-0.5 (2026)
+## 37. ACE-Brain-0.5 (2026)
 {: id="5-37-ace-brain-05-2026"}
 ——从动作生成走向感知、规划、执行与评估的统一具身框架
 
@@ -3446,5 +3421,71 @@ Refined 使用作者筛选的时序敏感任务并加入反向视频，属于额
 
 各任务变体、操作微调设置及附录的 2B 实现需要分别理解，现有结果不足以证明一个固定 8B 检查点在长程真机任务中同时保持全部能力；SSR+ 的接口校准解释也需要更充分的逐阶段消融与成本报告。
 外部记忆更新与依赖 oracle 的离线再训练具有不同适用条件；截至 2026-10-19 查阅，官方 GitHub 根目录主要为 README 与 assets，虽已提供模型权重入口，完整训练、动作控制和评测流程的复现条件仍有限。
+
+---
+
+## 38. DreamZero / Isaac GR00T 2 (2026)
+{: id="38-dreamzero-2026"}
+
+*World Action Models are Zero-shot Policies* · [论文](https://arxiv.org/abs/2602.15922) · [项目](https://dreamzero0.github.io/) · [NVIDIA：世界动作模型介绍](https://www.nvidia.com/en-gb/glossary/world-action-model/)
+
+### 研究问题
+
+VLA 的骨干多在静态图文数据上预训练，语义理解强，却缺少“物体被推、被抓之后会怎样运动”的物理先验，换到新任务、新环境时泛化明显下降。DreamZero 提出**世界动作模型**（World Action Model, WAM）：用预训练视频扩散模型同时预测未来画面和动作，把视频当作描述世界如何演化的稠密监督。NVIDIA 称下一代机器人基础模型 Isaac GR00T 2（常被称作 GR00T N2）基于 DreamZero 研究，采用 WAM 架构。
+
+### 核心方法
+
+- **骨干**：从 Wan2.1-I2V-14B-480P 初始化的 14B 自回归视频扩散 Transformer；消融另用 5B 版本。
+- **联合生成**：视频与动作 latent 在同一流匹配目标下共同去噪，动作相当于从预测视频反解出的逆动力学。输入为多视角图像、语言指令和本体状态。
+- **自回归分块**：每块 2 个 latent 帧，默认 4 块。每执行完一个动作块，就把 KV cache 中预测的画面替换为真实观测，抑制误差累积。AgiBot G1 上每块输出 48 步、30 Hz 的动作，约 1.6 秒。
+- **实时化**：异步执行、双 GPU 并行 CFG、DiT 缓存、torch.compile 与 CUDA Graphs、Blackwell 上的 NVFP4 量化，以及解耦视频与动作噪声日程、可一步去噪的 DreamZero-Flash。单个动作块延迟从 5.7 s 降到约 150 ms（GB200 上加速 38 倍），用 2 块 GB200 实现约 7 Hz 闭环控制。
+- **数据**：AgiBot G1 约 500 小时遥操作数据，覆盖 22 个环境。操作员从任务清单中自选任务，单个任务满 50 条即下架，刻意制造长尾多样性；Franka 平台使用公开的 DROID 数据。
+
+### 实验与证据
+
+基线为 GR00T N1.6 与 π₀.5，分别比较只加载 VLM 权重从头训练和官方预训练检查点两种设置；默认在未见环境、未见物体下评测。
+
+- **AgiBot 已见任务**：平均任务进度 **62.2%**，最好的预训练 VLA 为 **27.4%**；从头训练的 VLA 接近 0。
+- **AgiBot 10 项未见任务**：**39.5%** 对 **16.3%**。
+- **DROID-Franka 未见任务**：任务进度 / 成功率为 **49% / 22.5%**，GR00T N1.6 为 31% / 12.5%，π₀.5 为 33% / 7.5%。
+- **跨具身迁移**（9 项未见任务，只用无动作标签的视频）：基线 38.3%，加入 12 分钟人类第一视角视频后为 54.3%，加入 20 分钟 YAM 机器人视频后为 55.4%，即摘要中“相对提升超过 42%”的来源。
+- **新机器人适配**：在 YAM 双臂上用约 30 分钟、55 条轨迹的 play 数据后训练，仍保持语言跟随和对新物体的泛化，但论文只给出定性结果。
+- **消融**：14B 明显优于 5B（50% 对 21%），VLA 扩到 8B、32B 仍为 0%；多样数据优于重复数据（50% 对 33%）。
+
+### 局限与启示
+
+主要指标是**任务进度**而非成功率，且多为作者自建任务，不能与其他论文的成功率直接比较。7 Hz 依赖两块 GB200，部署成本远高于在消费级 GPU 上以 20 Hz 以上运行的 VLA；视觉记忆只有约 6 秒，长任务仍需上层规划器；亚厘米级精度任务仍是短板，多数失败来自视频生成错误。跨具身与人类视频实验也只有数十分钟的数据。
+
+NVIDIA 关于 GR00T 2“在新任务、新环境中的成功率是领先 VLA 的两倍以上”、在 MolmoSpaces 与 RoboArena 排名第一的说法来自官方介绍，官方称将于年底前推出；本文查阅时（2026-10-24）尚未见 GR00T 2 的公开权重，具体能力应以正式模型卡为准。与 [GR00T N1](#5-18-gr00t-2025) 对照，可以看出 NVIDIA 的路线从“VLM + 动作专家”转向“视频世界模型即策略”；与 [Cosmos Policy](#39-cosmos-policy-2026) 对照，二者都以视频扩散模型为骨干，DreamZero 侧重大规模预训练后的零样本泛化，Cosmos Policy 侧重少量演示后训练与测试时规划。
+
+---
+
+## 39. Cosmos Policy (2026)
+{: id="39-cosmos-policy-2026"}
+
+*Cosmos Policy: Fine-Tuning Video Models for Visuomotor Control and Planning* · ICLR 2026 · [论文](https://arxiv.org/abs/2601.16163) · [项目](https://research.nvidia.com/labs/dir/cosmos-policy/)
+
+### 研究问题
+
+视频生成模型已从海量视频中学到时空动态，能否不改结构、只做一次后训练就变成机器人策略？此前的视频策略通常要额外接动作头、逆动力学模型或分阶段训练。Cosmos Policy（NVIDIA 与 Stanford）把动作、状态和价值都编码成“视频帧”，直接复用视频扩散模型的去噪过程。
+
+### 核心方法
+
+- **骨干**：Cosmos-Predict2-2B-Video2World 潜空间视频扩散模型（Wan2.1 VAE），不改结构，全参数微调。
+- **潜帧编码**：本体状态、动作块和价值归一化到 [-1, 1] 后复制填满一个 latent 体积，按顺序插入帧序列。两个第三人称相机加一个腕部相机时共 11 帧：空白占位、当前状态、三路当前图像、动作块、未来状态、三路未来图像、未来价值。
+- **单阶段训练**：同一个模型同时充当策略、世界模型和价值函数。训练时一半样本训练策略，另一半训练世界模型和价值；用执行 rollout 继续微调时，世界模型与价值的比例提高到 90%。
+- **测试时规划**：原检查点作为策略提出 N 个候选动作块；在 rollout 上微调的规划模型为每个候选预测未来状态和价值（3 次世界模型查询、每个状态 5 次价值查询），执行价值最高的候选。
+
+### 实验与证据
+
+- **LIBERO**（每个子集 500 次 × 3 个随机种子）：Spatial / Object / Goal / Long 为 98.1 / 100.0 / 98.2 / 97.6，平均 **98.5%**；对照 OpenVLA-OFT 97.1%、CogVLA 97.4%、π₀.5 96.9%，优势主要来自 Long 子集。
+- **RoboCasa 24 项任务**：每项只用 50 条演示，平均 **67.1%**；GR00T-N1.5 为 64.1%、FLARE 为 66.4%，二者各用 300 条演示。
+- **ALOHA 双臂真机**（满分 100）：平均 **93.6**，π₀.5 为 88.6、π₀ 为 77.9；但在分布外设置下 π₀.5 略高（92.5 对 89.3）。
+- **规划收益**：在最难的两项 ALOHA 任务上，基于未来状态价值 V(s′) 的规划使平均分提高 **12.5** 分，优于直接预测 Q(s, a) 的无模型变体。
+- **消融**：去掉辅助训练目标，LIBERO 降 1.5 点；不用视频预训练、从头训练，LIBERO 降 3.9 点，叠衣服任务降 18.7 点。
+
+### 局限与启示
+
+开启规划后每个动作块约需 5 秒，并依赖多 GPU 并行做 best-of-N，不适合动态任务；世界模型要在演示分布之外预测准确，需要大量 rollout 数据；规划也只有一层 best-of-N 搜索。LIBERO 已接近饱和，98.5% 与 97% 左右的差距有限，更有说服力的是 RoboCasa 的少样本结果和真机规划消融。这篇工作说明“视频模型即策略”可以不加动作头实现，并为价值引导的测试时搜索提供了统一接口；与 [DreamZero](#38-dreamzero-2026) 的区别见上一节。
 
 ---

@@ -1,0 +1,20 @@
+{
+  "source": "_posts/weekly-reports/2026-10-24-VLN-Weekly.md",
+  "translation": "_translations/en/blog/vln-weekly-2026-10-24.md",
+  "reviewed_on": "2026-10-24",
+  "source_revision_date": "2026-10-24",
+  "sections": {
+    "metadata": "db099248ba80c2a9b720893568e1ff63c5c2bad9148885da618e251ae9477fa0",
+    "introduction": "ef88f1112a67ae1bc118be75a384ace27d13fcf3abe0d983e4d86bbcdde6f958",
+    "一、本期要点": "5e1e4beb3ac16a9da176cf560ffa8bdbc6077ac226837ed854fd8048d60894d7",
+    "二、精读": "c24cf56794e0a1d9f2e9938e4adcd01ffc78771e2067384325ff9605c2fd7079",
+    "1. SimpleVLN：保留原生架构，联合优化记忆、数据与训练": "4f9dee59b7001f2fea432ab5aaa9b4fa49cf914c70a514cc4e1001bae946d283",
+    "2. CLOSER：把停止决策改成主动取证": "62129bd8be3efb460d66658b03330c2c759e46f86fea162d9d2534fdf0b25bd4",
+    "3. PASS-VLN：同一条指令，应随机器人宽度改变执行结果": "c0bb9d5bcce5533e6c262d92fce86546a7543e8f706b2a762029ddefd681cf58",
+    "4. VeSTA：让训练反馈与严格接触执行一致": "7990e244a61b704f0fea5b475e2ef8206d0d36a05259154697c7058c1713623a",
+    "5. DialogMem：对话进入记忆后，还要绑定到可定位的对象": "4886732f5642a2e522ad0fd1cd0c36b8cbc69dcaafbab3072f39b0356c5daba6",
+    "三、也值得一看": "cf621edbabe17d4ed82db14f4ee07b3b0959fff33e107e84deed13404a1960b6",
+    "四、趋势与行动": "b7630fe21c7b56c43bc1005931248c877eff6d0118406396cada91e16109c0ee",
+    "五、全部工作索引": "6ffd019baaaf7bc4681128f454a8dac06fa821c17f37e8a1d77e508fe7d4bb2e"
+  }
+}
