@@ -294,6 +294,28 @@
     });
   }
 
+  // Demo videos use data-autoplay + preload="none" instead of autoplay, so a page with
+  // dozens of clips downloads only the ones near the viewport, and pauses them off screen.
+  function setupViewportVideos() {
+    var videos = document.querySelectorAll('video[data-autoplay]');
+    if (!videos.length) return;
+    function play(video) {
+      var started = video.play();
+      if (started && started.catch) started.catch(function () {});
+    }
+    if (!('IntersectionObserver' in window)) {
+      Array.prototype.forEach.call(videos, play);
+      return;
+    }
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) play(entry.target);
+        else entry.target.pause();
+      });
+    }, { rootMargin: '200px 0px' });
+    Array.prototype.forEach.call(videos, function (video) { observer.observe(video); });
+  }
+
   function setupProgress() {
     var bar = document.querySelector('.article-progress-bar');
     var article = document.querySelector('.posts');
@@ -324,7 +346,8 @@
     var closeButton = toc.querySelector('.article-toc-close');
     var scrollArea = toc.querySelector('.article-toc-scroll');
     var links = Array.prototype.slice.call(toc.querySelectorAll('.article-toc-link'));
-    var branches = Array.prototype.slice.call(toc.querySelectorAll('.toc-level-2'));
+    var tocList = toc.querySelector('.article-toc-list');
+    var items = Array.prototype.slice.call(toc.querySelectorAll('li[class*="toc-level-"]'));
     var drawerQuery = window.matchMedia('(max-width: 1099px)');
     var linkById = new Map();
     var activeId = '';
@@ -343,9 +366,26 @@
       linkById.set(linkTarget(link), link);
     });
 
+    function tocLevel(item) {
+      var match = /toc-level-(\d)/.exec(item.className);
+      return match ? Number(match[1]) : 0;
+    }
+
+    // 默认常显前两级；前两级条目太多时只常显第一级。文章可用 toc_expand 固定常显层数
+    var topLevel = items.reduce(function (min, item) { return Math.min(min, tocLevel(item)); }, 6);
+    var outlineCount = items.filter(function (item) { return tocLevel(item) <= topLevel + 1; }).length;
+    var expandSetting = Number(toc.getAttribute('data-toc-expand'));
+    var expandDepth = expandSetting >= 1 ? expandSetting : (outlineCount > 15 ? 1 : 2);
+    var foldLevel = topLevel + expandDepth - 1;
+    if (tocList && foldLevel === topLevel) tocList.classList.add('is-fold-top');
+
+    var branches = items.filter(function (item) {
+      var nestedList = directChildList(item);
+      return tocLevel(item) >= foldLevel && nestedList && nestedList.querySelector('li');
+    });
+
     branches.forEach(function (branch, index) {
       var nestedList = directChildList(branch);
-      if (!nestedList || !nestedList.querySelector('.toc-level-3')) return;
 
       nestedList.id = nestedList.id || 'toc-branch-' + index;
       nestedList.hidden = true;
@@ -369,6 +409,9 @@
     });
 
     function closeBranch(branch) {
+      branches.forEach(function (inner) {
+        if (inner !== branch && branch.contains(inner)) closeBranch(inner);
+      });
       var nestedList = directChildList(branch);
       var toggle = branch.querySelector(':scope > .toc-branch-toggle');
       branch.classList.remove('is-open');
@@ -381,7 +424,7 @@
 
     function openBranch(branch) {
       branches.forEach(function (other) {
-        if (other !== branch) closeBranch(other);
+        if (!other.contains(branch) && other.classList.contains('is-open')) closeBranch(other);
       });
 
       var nestedList = directChildList(branch);
@@ -420,19 +463,11 @@
       link.classList.add('is-active');
       link.setAttribute('aria-current', 'location');
 
-      var item = link.closest('li');
-      var branch = null;
-      if (item && item.classList.contains('toc-level-2')) {
-        branch = item;
-      } else if (item) {
-        branch = item.closest('.toc-level-2');
-      }
-
-      if (branch) {
-        openBranch(branch);
-      } else {
-        branches.forEach(closeBranch);
-      }
+      var chain = branches.filter(function (branch) { return branch.contains(link); });
+      branches.forEach(function (branch) {
+        if (chain.indexOf(branch) === -1 && branch.classList.contains('is-open')) closeBranch(branch);
+      });
+      chain.forEach(openBranch);
       keepActiveVisible(link);
     }
 
@@ -525,6 +560,7 @@
     enhanceCodeBlocks();
     enhanceHeadingAnchors();
     enhancePaperFigures();
+    setupViewportVideos();
     setupLightbox();
 
     var updateProgress = setupProgress();
