@@ -68,7 +68,7 @@
     "_posts/research/2026-03-05-ROS2-Survey.md": "39bcef57da6b1febaac51427e36207041e4b1bfb",
     "_posts/research/2026-03-05-VLM-Survey.md": "2f2d9fd6e4078ae8061c3ebf15190e9fa7893de9",
     "_posts/research/2026-03-06-Embodied-Agent-Papers.md": "c9026dd6515f58ee3c76f8f6545b63acba1824fd",
-    "_posts/research/2026-03-26-Deep-Learning-Survey.md": "e0274cfb09680c25403663b6e141d57077e0c8af",
+    "_posts/research/2026-03-26-Deep-Learning-Survey.md": "7376d5881663bd387475aa1a944c6bf19455c1ac",
     "_posts/research/2026-04-03-Machine-Learning-Survey.md": "6e9c4a5932e121fe5e10b9e223f2d117b7cb5749",
     "_posts/research/2026-04-16-World-Models-Survey.md": "99ff1f5031a013f29c00379de5e294679032b2dd",
     "_posts/research/2026-04-25-Reinforcement-Learning-Survey.md": "21baf9bc1d6c86a76f8ef8a6e7e9f11bff5eb3b3",
@@ -117,7 +117,7 @@
     "_translations/en/blog/vln-weekly-2026-10-17.md": "e8685b2c5ab8c902e4b4e98fafb8f331324e0d40",
     "_translations/en/blog/vln-weekly-2026-10-24.md": "e10b8f8af8de8c0d0559fdb0dcfe12ba590d50e6",
     "_translations/en/research/AI-Agent-Survey.md": "01af817eae396b12537835944bddcef28da35983",
-    "_translations/en/research/Deep-Learning-Survey.md": "f4f667cbf93a946d7bf863174e5f595a4e30e821",
+    "_translations/en/research/Deep-Learning-Survey.md": "fc98737695601e0010d167b39ac736cab1562c21",
     "_translations/en/research/Embodied-Agent-Harness-Survey.md": "f11c9c1c4f0d148ad648709f95648ec4736eeb96",
     "_translations/en/research/Embodied-Agent-Papers.md": "c1db2eb755707f62e50785a0f33109a58a01171d",
     "_translations/en/research/LLM-Training-Survey.md": "6dcfa6b6261ab00d515510e9cecef9f50097439b",
@@ -161,7 +161,7 @@
     "docs/research-notes/vla-survey-fact-check.md": "97e935436b891bc4509886e686846fad9a7848eb",
     "docs/translations/ai-agent-survey.en.json": "f47d9e0bcf2cc644ae3a84706e2559c3c6e7664e",
     "docs/translations/building-blog-with-skills.en.json": "330ba4826da410fe8118cd42b4444b7022968a18",
-    "docs/translations/deep-learning-survey.en.json": "d784311f02ee4d01d9c67251f3e28c60b3279276",
+    "docs/translations/deep-learning-survey.en.json": "51793d24dd1ca568f968bf9e55a0b896f5f39932",
     "docs/translations/embodied-agent-harness-survey.en.json": "a0e6ec5ebd1e70d86a52872dc8f5f9a2a033aa23",
     "docs/translations/embodied-agent-papers.en.json": "6b733ca41c7c469ab85289b5ea668cf58bf1c828",
     "docs/translations/llm-training-survey.en.json": "0218fc6d738fcf1cf3813c8c5fcdc3e8dd93b847",
@@ -1274,6 +1274,6 @@
     "scripts/tests/test_translation_features.py": "3ec53be4ea3c52e6346c69584041d4d0b29239b0",
     "scripts/tests/test_translation_sync.py": "0b29538b5396cc67c2191312dbecec7ddc305054"
   },
-  "revision": "4fcc42baa321b13474bd97705f4f4b546c984362",
+  "revision": "b99b0873c7dcc11d0963f7a32627587211e08f45",
   "upstream": "TingdeLiu/tingdeliu.github.io"
 }
