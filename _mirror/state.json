@@ -9,7 +9,7 @@
     "_data/projects.yml": "ce918f3f367d072f1e089daff87aaca7c94c5485",
     "_data/prose_reading.yml": "e18cd5d2972bdc07d8a84c0066f7877036e95cdb",
     "_data/research_groups.json": "22a1e724595e96e1b44948c0e009f1f1430216b7",
-    "_data/ui.yml": "80a7cfa0693ee74b4a902095d38c18a6acf6a5eb",
+    "_data/ui.yml": "7caaacc94f1016a3269450ca55fcfb3ff26719ba",
     "_includes/about-header.html": "f43e6bf369baebdaad619b9de07804d773ee8909",
     "_includes/analytics.html": "050d87ced8bf93e685788b2aa25315d5f4566fbe",
     "_includes/article-header.html": "ce8666d0ba04fbe85962fd5bdffd18e15c804d3f",
@@ -21,7 +21,7 @@
     "_includes/content-link.html": "4755b99eb6a464e4556ce2e2b14e82b85c7753fd",
     "_includes/disqus.html": "c4b4d2394f04a47787b59c74cb278ff19ba933e3",
     "_includes/featured-card.html": "babb2abb95dc3f70c4c7c76f300a2c68edd1e233",
-    "_includes/feedback.html": "4fb2cc626cc77a8f76a915adb5408b1579b18b7c",
+    "_includes/feedback.html": "665632ebc0077631efd9e77fa5963d5f008e1753",
     "_includes/fonts.html": "efe531b16be1996242193081b69993caf7c8f255",
     "_includes/footer.html": "c9253bf7b9269c2d052e193f1f57081f13632d7e",
     "_includes/gift-star.html": "bd2611517f3d0ab5263e362cb91950451eece606",
@@ -1285,6 +1285,6 @@
     "scripts/tests/test_translation_features.py": "3ec53be4ea3c52e6346c69584041d4d0b29239b0",
     "scripts/tests/test_translation_sync.py": "0b29538b5396cc67c2191312dbecec7ddc305054"
   },
-  "revision": "b2b9f5e5ccdacbed15c860691f9bc2079d9e5407",
+  "revision": "07e05ca6141bc205f53c017a7e018f6292fbfdb0",
   "upstream": "TingdeLiu/tingdeliu.github.io"
 }
