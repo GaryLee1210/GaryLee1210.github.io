@@ -242,7 +242,7 @@ def main():
         check(external(en) == external(zh), 'External citations differ between source and translation')
     else:
         print('Source changed: skipping source/translation parity until the English edition is synchronized.')
-    for slug, identity, source_path in [('VLN-Papers', 'vln-papers', '_posts/research/2026-01-05-VLN-Papers.md'), ('VLN-Papers-Extended', 'vln-papers-extended', '_posts/research/2026-01-06-VLN-Papers-Extended.md')]:
+    for slug, identity, source_path in [('VLN-Papers', 'vln-papers', '_posts/research/2026-01-05-VLN-Papers.md'), ('VLN-Papers-Extended', 'vln-papers-extended', '_posts/research/2026-01-06-VLN-Papers-Extended.md'), ('Agentic-Navigation-Papers', 'agentic-navigation-papers', '_posts/research/2026-11-07-Agentic-Navigation-Papers.md')]:
         papers_path = SITE / f'en/{slug}/index.html'
         if papers_path.exists():
             papers, original = load(papers_path), load(SITE / f'{slug}/index.html')
@@ -250,7 +250,16 @@ def main():
             if not papers_status['stale']:
                 def headings(doc):
                     return [n['attrs'].get('id') for n in doc.nodes if n['entry'] and re.fullmatch('h[1-6]', n['tag'])]
-                check(headings(papers) == headings(original), f'{slug}: heading structure/IDs differ')
+                english_ids, source_ids = headings(papers), headings(original)
+                check(english_ids == source_ids, f'{slug}: heading structure/IDs differ')
+                if english_ids != source_ids:
+                    differences = [(i, source_ids[i] if i < len(source_ids) else None,
+                                    english_ids[i] if i < len(english_ids) else None)
+                                   for i in range(max(len(source_ids), len(english_ids)))
+                                   if (source_ids[i] if i < len(source_ids) else None) !=
+                                      (english_ids[i] if i < len(english_ids) else None)]
+                    for index, source_id, english_id in differences[:5]:
+                        print(f'{slug}: heading {index + 1}: source={source_id!r}, English={english_id!r}')
                 for tag in ('table', 'img', 'pre'):
                     check(len(papers.select(tag, True)) == len(original.select(tag, True)), f'{slug}: {tag} counts differ')
                 def equations(doc):
@@ -337,7 +346,7 @@ def main():
         alternates = {n['attrs'].get('hreflang'): n['attrs'].get('href') for n in doc.select('link') if n['attrs'].get('hreflang')}
         check(alternates == {'en': 'https://tingdeliu.github.io/en/VLN-Survey/', 'zh-CN': 'https://tingdeliu.github.io/VLN-Survey/'}, f'{name}: incorrect language alternates')
     check('/en/VLN-Survey/' not in (SITE / 'feed.xml').read_text(encoding='utf-8'), 'Translation leaked into Chinese feed')
-    for slug in ('VLN-Papers', 'VLN-Papers-Extended'):
+    for slug in ('VLN-Papers', 'VLN-Papers-Extended', 'Agentic-Navigation-Papers'):
         check(f'/en/{slug}/' not in (SITE / 'feed.xml').read_text(encoding='utf-8'), f'{slug}: translation leaked into Chinese feed')
     weekly_targets = [p for p in sorted((ROOT / '_translations/en/blog').glob('vln-weekly-*.md'))
                       if read_document(p)[0].get('published', '').lower() != 'false']
