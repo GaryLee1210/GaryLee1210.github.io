@@ -121,13 +121,13 @@ def main():
         check(alternates == {'en': 'https://tingdeliu.github.io/en/', 'zh-CN': 'https://tingdeliu.github.io/'},
               f'/{route}: incorrect homepage language alternates')
         cards = [n['attrs'].get('href', '') for n in doc.select('a')
-                 if 'rc-card' in n['attrs'].get('class', '').split()]
+                 if 'data-tree-article' in n['attrs']]
         check(bool(cards) and len(cards) == len(set(cards)), f'/{route}: empty or duplicate homepage cards')
         check(all(url.startswith('/en/') == (language == 'en') for url in cards),
               f'/{route}: homepage cards use the wrong language')
     for route in ('', 'en', 'research', 'blog', 'en/research', 'en/blog'):
         doc = load(SITE / route / 'index.html')
-        heading = re.search(r'<header class="page-heading">(.*?)</header>', doc.raw, re.S)
+        heading = re.search(r'<header class="(?:page-heading|home-hero)">(.*?)</header>', doc.raw, re.S)
         check(bool(heading) and 'site-language-switch' in heading[1],
               f'/{route}/: language switch missing from content heading')
         switches = [n['attrs'].get('href') for n in doc.select('a') if 'data-language-switch' in n['attrs']]
