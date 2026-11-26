@@ -1,10 +1,10 @@
 {
   "source": "_posts/research/2026-01-05-VLN-Papers-InstructionFollowing.md",
   "translation": "_translations/en/research/VLN-Papers.md",
-  "reviewed_on": "2026-11-21",
-  "source_revision_date": "2026-11-21",
+  "reviewed_on": "2026-11-26",
+  "source_revision_date": "2026-11-26",
   "sections": {
-    "metadata": "77e9f89f14fe15eb3d058e7e10f9b48cfbf300d2f3b1a0287858847ab9eb9b04",
+    "metadata": "33b37e14a07570ee92f07f94d935fd73c30e5f780de22076e4bcf9de6a97a97c",
     "introduction": "05837fdefdeb710af454a635dc9bc78e60583324966f080a985fd08714a6d8e2",
     "性能排行榜": "9a2cf6f3f7b09b17a1a12403f1808af21030840081cad6069071e3f40443206e",
     "① R2R-CE": "f6859b7c8e0499918678562008c7f5d55ab56a13a9aeca4f21811bd4ae13c3db",
@@ -473,8 +473,8 @@
     "paper:efficient-vln / 3. 核心结果/发现": "a3bf6d4a5a1041cc7eaef477467a323fed57f3a1d20a50744ba80a1f2ce669cd",
     "paper:efficient-vln / 4. 局限性": "77aae7497f2a6b52ed206608e4c6e139c7db848984bde1314b9c303bba45d74c",
     "参考资料": "37b0f14294c325d590ec513f27a4d22572998634a6132090258473b1ca1b7f2b",
-    "已发表论文（会议 / 期刊）": "d322989713f3f8556788f26513d293106556a3e82b3aead60920efcbeca8c565",
+    "已发表论文（会议 / 期刊）": "cd643459e93d5c2413889339a62ca1db3819bc3597308720d202cb5d09b05078",
     "论文引用": "aca4897b609cd4d418457c872f8afe7921d9f0d208842b72828dd9fc07b46696",
-    "已迁移的论文精读": "0a457e67e74617628308a9e8fd674a6edbce41807fde765a4d8d77efffbc0553"
+    "已迁移的论文精读": "0bcc83f35d23ad4166f3c41d581e51c750267110d57f48b240bc01037c304a05"
   }
 }

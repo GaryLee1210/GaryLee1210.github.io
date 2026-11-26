@@ -5,10 +5,10 @@ translation_id: vln-papers-extended
 permalink: /en/VLN-Papers-Extended/
 source_path: _posts/research/2026-01-06-VLN-Papers-ObjectNav.md
 source_url: /VLN-Papers-Extended/
-source_revision_date: 2026-11-14
-translation_updated: 2026-11-19
+source_revision_date: 2026-11-26
+translation_updated: 2026-11-26
 title: "VLN Papers: Goal Navigation"
-date: 2026-11-14
+date: 2026-11-26
 tags: [VLN, VLA, Robotics, Computer Vision, Deep Learning]
 categories: research
 comments: false
@@ -93,7 +93,9 @@ Open-vocabulary object navigation; val-unseen unless otherwise noted, lines mark
 | Model | Year | Paradigm | Base model | SR ↑ | SPL ↑ | Open source |
 |:-----|:----:|:----:|:----:|:----:|:----:|:----:|
 | [EvoLife (four views)](/en/Agentic-Navigation-Papers/#evolife) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> <span class="lb-flag">100-episode subset; privileged guide</span> | 2026 | Training-free | GPT-6 Astra (ultra) | 100 | 71.4 | – |
+| [SuperNav-1.5 (four views)](/en/Agentic-Navigation-Papers/#supernav-1-5) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> <span class="lb-flag">120-episode subset, 1 m, 3600 s</span> | 2026 | Training-free | GPT-5.6-terra (high) | 80.00 | 43.17 | – |
 | [SuperNav-Geo-Astra (four views)](/en/Agentic-Navigation-Papers/#supernav) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> <span class="lb-flag">120-episode subset, 1 m</span> | 2026 | Training-free | GPT-6 Astra (medium) | 79.17 | 49.74 | – |
+| [SuperNav-1.5 (four views)](/en/Agentic-Navigation-Papers/#supernav-1-5) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> <span class="lb-flag">120-episode subset, 1 m, 500 steps</span> | 2026 | Training-free | GPT-5.6-terra (high) | 78.33 | 43.54 | – |
 | [SuperNav-Geo (four views)](/en/Agentic-Navigation-Papers/#supernav) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> <span class="lb-flag">120-episode subset, 1 m</span> | 2026 | Training-free | GPT-5.6 Terra (high) | 73.33 | 41.05 | – |
 | [SuperNav-Geo-Astra (four views)](/en/Agentic-Navigation-Papers/#supernav) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> <span class="lb-flag">120-episode subset, 0.25 m</span> | 2026 | Training-free | GPT-6 Astra (medium) | 71.67 | 45.79 | – |
 | [SuperNav-Learned (four views)](/en/Agentic-Navigation-Papers/#supernav) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> <span class="lb-flag">120-episode subset, 1 m</span> | 2026 | Trained | GPT-5.6 Terra (high) | 70.83 | 14.43 | – |
@@ -117,6 +119,8 @@ Open-vocabulary object navigation; val-unseen unless otherwise noted, lines mark
 Note: † The original text of SysNav, AstraNav-World and JanusVLN only gives one column of HM3D-OVON results, without specifying the division; NavFoM is four views setting (single viewing angle is 43.6 / 31.3); OmniNav is OmniNav* with slow thinking system enabled. LocalNav-Claude is a training-free version that directly uses Claude Sonnet 4.6 to make decisions. LocalNav-Qwen is Qwen3.5-4B that uses Claude trajectories for SFT distillation.
 
 Additional note: SuperNav uses a 120-episode val-unseen subset, reporting 0.25 m and 1 m thresholds separately; all these rows are gray. Scoring does not additionally require Habitat STOP, and two designated unreachable-goal episodes per configuration contribute one to SR and SPL under the adopted rule. SuperNav-Geo-Astra uses GPT-6 Astra (medium) with the same geometric backend and full harness; the other SuperNav rows use GPT-5.6 Terra (high), changing both the model and reasoning setting.
+
+SuperNav-1.5 reports the 120-episode val-unseen subset with a strict threshold below 1 m and an explicit STOP. The paper counts three episodes whose goals are unreachable on the navigation mesh as successful with SPL 1. The 3600-second and 500-step rows are shown separately in gray and excluded from the best-score highlighting.
 
 ## ⑥ Image goals · HM3D-IIN / Image-Goal
 {: id="-图像目标--hm3d-iin--image-goal"}
@@ -161,19 +165,25 @@ Multimodal long-range goals (GOAT-Bench), interactive instance and continuous mu
 | [ABot-N1 (three cameras)](/en/VLN-Papers/#abot-n1) | 2026 | Short-Horizon OVON | Trained | Qwen-3.5-4B + 2B | 84.9 | 51.8 | No |
 | [ABot-N1 (three cameras)](/en/VLN-Papers/#abot-n1) | 2026 | ABotN-POIBench | Trained | Qwen-3.5-4B + 2B | 77.3 | 72.6 | No |
 | [VNT-PA (monocular)](#vnt-pa) | 2026 | HM3D (Point-Goal, prior exploration frames) | Trained | – | 93.3 | 90.4 | No |
-| [SuperNav-Geo (four views)](/en/Agentic-Navigation-Papers/#supernav) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> | 2026 | InteriorGS (Single-Object) | Training-free | GPT-5.6 Terra (high) | **78.00** | **41.27** | – |
+| [SuperNav-1.5 (four views)](/en/Agentic-Navigation-Papers/#supernav-1-5) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> | 2026 | InteriorGS (Single-Object) | Training-free | GPT-5.6-terra (high) | **79.33** | **42.46** | – |
+| [SuperNav-Geo (four views)](/en/Agentic-Navigation-Papers/#supernav) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> | 2026 | InteriorGS (Single-Object) | Training-free | GPT-5.6 Terra (high) | 78.00 | 41.27 | – |
 | [SuperNav-Learned (four views)](/en/Agentic-Navigation-Papers/#supernav) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> | 2026 | InteriorGS (Single-Object) | Trained | GPT-5.6 Terra (high) | 68.00 | 20.59 | – |
-| [SuperNav-Geo (four views)](/en/Agentic-Navigation-Papers/#supernav) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> | 2026 | InteriorGS (Ordered Multi-Object) | Training-free | GPT-5.6 Terra (high) | **34.00** | **13.88** | – |
-| [SuperNav-Learned (four views)](/en/Agentic-Navigation-Papers/#supernav) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> | 2026 | InteriorGS (Ordered Multi-Object) | Trained | GPT-5.6 Terra (high) | **34.00** | 8.62 | – |
-| [SuperNav-Geo (four views)](/en/Agentic-Navigation-Papers/#supernav) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> | 2026 | Demand-Bench (Ordered Navigation) | Training-free | GPT-5.6 Terra (high) | **59.50** | **18.01** | – |
+| [SuperNav-1.5 (four views)](/en/Agentic-Navigation-Papers/#supernav-1-5) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> | 2026 | InteriorGS (Ordered Multi-Object) | Training-free | GPT-5.6-terra (high) | **52.00** | **24.94** | – |
+| [SuperNav-Geo (four views)](/en/Agentic-Navigation-Papers/#supernav) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> | 2026 | InteriorGS (Ordered Multi-Object) | Training-free | GPT-5.6 Terra (high) | 34.00 | 13.88 | – |
+| [SuperNav-Learned (four views)](/en/Agentic-Navigation-Papers/#supernav) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> | 2026 | InteriorGS (Ordered Multi-Object) | Trained | GPT-5.6 Terra (high) | 34.00 | 8.62 | – |
+| [SuperNav-1.5 (four views)](/en/Agentic-Navigation-Papers/#supernav-1-5) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> | 2026 | Demand-Bench (Ordered Navigation) | Training-free | GPT-5.6-terra (high) | **61.00** | **38.67** | – |
+| [SuperNav-Geo (four views)](/en/Agentic-Navigation-Papers/#supernav) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> | 2026 | Demand-Bench (Ordered Navigation) | Training-free | GPT-5.6 Terra (high) | 59.50 | 18.01 | – |
 | [SuperNav-Learned (four views)](/en/Agentic-Navigation-Papers/#supernav) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> | 2026 | Demand-Bench (Ordered Navigation) | Trained | GPT-5.6 Terra (high) | 45.00 | 16.03 | – |
 | [EvoLife (four views)](/en/Agentic-Navigation-Papers/#evolife) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> <span class="lb-flag">100-episode subset; privileged guide</span> | 2026 | VL-LN | Training-free | GPT-6 Astra (ultra) | 99 | 76.2 | – |
 | [EvoLife (four views)](/en/Agentic-Navigation-Papers/#evolife) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> <span class="lb-flag">100-episode subset; privileged guide</span> | 2026 | CoIN | Training-free | GPT-6 Astra (ultra) | 100 | 73.5 | – |
 | [EvoLife (four views)](/en/Agentic-Navigation-Papers/#evolife) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> <span class="lb-flag">50 sequences; privileged guide</span> | 2026 | LHPR-VLN | Training-free | GPT-6 Astra (ultra) | 98 | – | – |
+| [AgenticJevNav (monocular)](/en/Agentic-Navigation-Papers/#agenticjevnav) <span class="lb-api" title="Calls a closed model such as GPT, Gemini or Claude through an API at inference time">Closed API</span> | 2026 | AgenticJevNav (six-task simulation) | Training-free | GPT-6 Astra (low) | 73.33 | 59.1 | – |
 
 Note: GOAT-Bench is val-unseen. Multiple goals in the form of categories, text descriptions or images are given in one episode. IsaacLab 40-Scenes is the point-goal evaluation of X-NavDP; ABotN-PointBench, Short-Horizon OVON and ABotN-POIBench are the self-built settings of ABot-N1. PointBench uses a zero-collision success rate indoors (SR&lt;1col) and a three-collision success rate (SR&lt;3col) outdoors. The two judgments are different; POIBench counts arrival within 2 m of the entrance as success. HM3D (Point-Goal, a priori exploration frame) is the setting of VNT-PA: the planner only reads the depth frame and pose of a segment of the a priori exploration trajectory, without looking at the current view, and stops within 0.2 m of the target as success. Benchmarks with a single row are not bolded; custom-benchmark results should not be compared with scores in other tables.
 
 SuperNav's InteriorGS (Single-Object) and InteriorGS (Ordered Multi-Object) are custom Habitat-GS instance-navigation benchmarks with 150 tasks each. Multi-object tasks contain 2–5 goals and require ordered arrivals within a 1 m navigable distance of approved viewpoints and explicit STOP. Demand-Bench (Ordered Navigation) adapts 200 demand-driven tasks to ordered arrivals within 2 m of objects' horizontal bounding boxes, without reusing objects and with explicit STOP, but without additional visibility checks. These scores cannot be directly compared to DemandAgent's original protocol and do not show completion of moving or organizing objects. Each group compares SuperNav's geometric and learned backends, whose low-level geometric resources differ.
+
+For AgenticJevNav, SR covers 60 trials across six simulated task families, and SPL covers the 40 trials in the four static families T1–T4.
 
 # Goal-navigation readings
 {: id="goal-navigation-readings"}
@@ -3688,6 +3698,7 @@ Figure 4: Ablation of the exploration policy: the importance of goal-free pertur
     { n: "6. MOSU2 (2026)", a: "mosu2", url: "/VLN-Papers-Outdoor/", label: "Outdoor navigation (Chinese)", t: ['Agentic', 'Continuous environments', 'Real-robot deployment'] },
     { n: "7. LM-Nav (2022)", a: "lm-nav", url: "/VLN-Papers-Outdoor/", label: "Outdoor navigation (Chinese)", t: ['Zero-shot', 'Continuous environments', 'Real-robot deployment'] },
     { n: "3. DA-Nav (2026)", a: "da-nav", url: "/VLN-Papers-Outdoor/", label: "Outdoor navigation (Chinese)", t: ['CoT', 'Datasets', 'Continuous environments', 'Real-robot deployment'] },
+    { n: "9. ROAM (2026)", a: "roam", url: "/en/VLN-Papers-Outdoor/", label: "Outdoor navigation", t: ['Reinforcement learning', 'Continuous environments', 'Real-robot deployment'] },
     { n: "2. CausalNav (2026)", a: "causalnav", url: "/VLN-Papers-Outdoor/", label: "Outdoor navigation (Chinese)", t: ['Agentic', 'Topological maps'] },
     { n: "1. R2R (2018)", a: "r2r", url: "/en/VLN-Papers/", label: "Instruction following", t: ['Discrete environments', 'Datasets'] },
     { n: "2. VLN-CE (2020)", a: "vln-ce", url: "/en/VLN-Papers/", label: "Instruction following", t: ['Datasets', 'Continuous environments', 'Foundational work'] },
@@ -3765,6 +3776,8 @@ Figure 4: Ablation of the exploration policy: the importance of goal-free pertur
     { n: "24. NavGPT-3 (2026)", a: "navgpt-3", url: "/en/Agentic-Navigation-Papers/", label: "Agentic navigation", t: ['Dual systems', 'Agentic', 'Continuous environments', 'Real-robot deployment'] },
     { n: "25. HSGNav (2026)", a: "hsgnav", url: "/en/Agentic-Navigation-Papers/", label: "Agentic navigation", t: ['Agentic', 'Topological maps', 'Zero-shot', 'Datasets'] },
     { n: "26. H2E (2026)", a: "h2e", url: "/en/Agentic-Navigation-Papers/", label: "Agentic navigation", t: ['End-to-end', 'Continuous environments', 'Data augmentation'] },
+    { n: "27. AgenticJevNav (2026)", a: "agenticjevnav", url: "/en/Agentic-Navigation-Papers/", label: "Agentic navigation", t: ['Agentic', 'Zero-shot', 'Continuous environments', 'Real-robot deployment'] },
+    { n: "28. SuperNav-1.5 (2026)", a: "supernav-1-5", url: "/en/Agentic-Navigation-Papers/", label: "Agentic navigation", t: ['Agentic', 'SLAM', 'Zero-shot', 'Real-robot deployment'] },
   ];
 
   var ALL_TAGS = ['Dual systems', 'End-to-end', 'Agentic', 'CoT', 'Diffusion models', 'Topological maps', 'SLAM', 'Gaussian representations',

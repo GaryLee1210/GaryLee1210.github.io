@@ -4,7 +4,7 @@ lang: zh-CN
 translation_id: vln-papers
 permalink: /VLN-Papers/
 title: "VLN 论文精读：指令跟随篇"
-date: 2026-11-21
+date: 2026-11-26
 tags: [VLN, VLA, Robotics, Computer Vision, Deep Learning]
 categories: research
 comments: true
@@ -7204,7 +7204,7 @@ $$P_{\text{model}} = 1 - \beta_t = \alpha^{t/T}$$
 | **IROS** | [ReflectVLN](/Agentic-Navigation-Papers/#reflectvln) (2026) |
 | **CoRL** | [X-NavDP](/VLN-Papers-Extended/#x-navdp) (2026) |
 | **RO-MAN** | [R2RIE-CE & IEDL](#r2rie-ce-iedl) (2024) |
-| **期刊** | [GaussNav](/VLN-Papers-Extended/#gaussnav) (IEEE TPAMI 2025)、[CausalNav](/VLN-Papers-Outdoor/#causalnav) (IEEE RA-L)、[HumanoidVLN](#humanoidvln) (IEEE RA-L)、[Skill-Nav](/VLN-Papers-Extended/#skill-nav) (Vicinagearth / Springer 2025)、[CA-VLN](/Agentic-Navigation-Papers/#ca-vln) (Sensors 2026) |
+| **期刊** | [GaussNav](/VLN-Papers-Extended/#gaussnav) (IEEE TPAMI 2025)、[CausalNav](/VLN-Papers-Outdoor/#causalnav) (IEEE RA-L)、[HumanoidVLN](#humanoidvln) (IEEE RA-L)、[Skill-Nav](/VLN-Papers-Extended/#skill-nav) (Vicinagearth / Springer 2025)、[CA-VLN](/Agentic-Navigation-Papers/#ca-vln) (Sensors 2026)、[ROAM](/VLN-Papers-Outdoor/#roam) (Science Robotics 2026) |
 
 ## 论文引用
 {: id="论文引用"}
@@ -7341,6 +7341,7 @@ $$P_{\text{model}} = 1 - \beta_t = \alpha^{t/T}$$
     { n: "6. MOSU2 (2026)", a: "mosu2", url: "/VLN-Papers-Outdoor/", label: "户外导航篇", t: ['Agentic', '连续环境', '实机部署'] },
     { n: "7. LM-Nav (2022)", a: "lm-nav", url: "/VLN-Papers-Outdoor/", label: "户外导航篇", t: ['零样本', '连续环境', '实机部署'] },
     { n: "3. DA-Nav (2026)", a: "da-nav", url: "/VLN-Papers-Outdoor/", label: "户外导航篇", t: ['CoT', '数据集', '连续环境', '实机部署'] },
+    { n: "9. ROAM (2026)", a: "roam", url: "/VLN-Papers-Outdoor/", label: "户外导航篇", t: ['强化学习', '连续环境', '实机部署'] },
     { n: "1. VLFM (2023)", a: "vlfm", url: "/VLN-Papers-Extended/", label: "目标导航篇", t: ['SLAM', '零样本', '实机部署'] },
     { n: "2. NoMaD (2023)", a: "nomad", url: "/VLN-Papers-Extended/", label: "目标导航篇", t: ['端到端', '扩散模型', '零样本', '实机部署'] },
     { n: "3. VL-Nav (2025)", a: "vl-nav", url: "/VLN-Papers-Extended/", label: "目标导航篇", t: ['端到端', '零样本', '实机部署'] },
@@ -7394,6 +7395,8 @@ $$P_{\text{model}} = 1 - \beta_t = \alpha^{t/T}$$
     { n: "24. NavGPT-3 (2026)", a: "navgpt-3", url: "/Agentic-Navigation-Papers/", label: "Agentic 导航篇", t: ['双系统', 'Agentic', '连续环境', '实机部署'] },
     { n: "25. HSGNav (2026)", a: "hsgnav", url: "/Agentic-Navigation-Papers/", label: "Agentic 导航篇", t: ['Agentic', '拓扑图', '零样本', '数据集'] },
     { n: "26. H2E (2026)", a: "h2e", url: "/Agentic-Navigation-Papers/", label: "Agentic 导航篇", t: ['端到端', '连续环境', '数据增强'] },
+    { n: "27. AgenticJevNav (2026)", a: "agenticjevnav", url: "/Agentic-Navigation-Papers/", label: "Agentic 导航篇", t: ['Agentic', '零样本', '连续环境', '实机部署'] },
+    { n: "28. SuperNav-1.5 (2026)", a: "supernav-1-5", url: "/Agentic-Navigation-Papers/", label: "Agentic 导航篇", t: ['Agentic', 'SLAM', '零样本', '实机部署'] },
   ];
 
   var ALL_TAGS = ['双系统', '端到端', 'Agentic', 'CoT', '扩散模型', '拓扑图', 'SLAM', '高斯表示',
