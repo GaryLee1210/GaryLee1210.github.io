@@ -12,11 +12,6 @@
   .home-hero { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; padding: 24px 0 56px; }
   h1 { font-size: clamp(30px, 3.6vw, 42px); line-height: 1.2; font-weight: 600; }
   .home-lede { margin: 14px 0 0; max-width: 34em; color: var(--muted); font-size: 16px; line-height: 1.7; }
-  .home-latest {
-    display: inline-flex; align-items: center; gap: 10px; margin-top: 22px; color: var(--ink); font-size: 14px;
-    > span:first-child { padding: 2px 8px; border-radius: 4px; background: var(--accent); color: #fff; font: 12px $code-font; }
-    &:hover { color: var(--accent); }
-  }
   .home-section { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; font-size: 22px; font-weight: 600; }
   .home-section span, h3 span { color: var(--muted); font: 12px $code-font; }
   .home-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 56px; }
@@ -31,6 +26,22 @@
     &:hover { color: var(--accent); }
   }
   time, .weekly-period { flex-shrink: 0; color: var(--muted); font: 12px $code-font; }
+  .home-updates {
+    margin-bottom: 56px;
+    ol { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--ink); }
+    .home-section { flex-wrap: wrap; }
+    .home-unseen { color: var(--accent); }
+    li a { justify-content: flex-start; }
+    time { margin-left: auto; }
+  }
+  .home-update-kind {
+    flex-shrink: 0; min-width: 4.5em; padding: 1px 6px; border: 1px solid var(--rule); border-radius: 4px;
+    color: var(--muted); font: 12px $code-font; text-align: center;
+    &.is-new { border-color: var(--accent); color: var(--accent); }
+  }
+  .is-unseen .home-update-kind { border-color: var(--accent); background: var(--accent); color: #fff; }
+  .home-update-body { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 14px; min-width: 0; }
+  .home-update-note { color: var(--muted); font-size: 14px; }
   .home-feeds { margin-top: 24px; }
   .home-all { display: inline-block; margin-top: 14px; color: var(--accent); font-size: 14px; }
   @media (max-width: 760px) {
